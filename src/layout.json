@@ -1,0 +1,3073 @@
+{
+  "_hinweis": "Alle Maße in Metern. Ursprung = vordere linke Ecke von der Straße aus. x = Breite (0–17,8), z = Tiefe (0 = Straßenfront). Verkaufsraum x 0–15,8 · z 0–12 (≈190 m²), L-Lager hinten und rechts. Rechtecke als [x1, x2, z1, z2].",
+  "raum": {
+    "breite": 17.8,
+    "tiefe": 13.8,
+    "hoehe": 3.2,
+    "wandstaerke": 0.2,
+    "verkaufsraum": [
+      0,
+      15.8,
+      0,
+      12
+    ]
+  },
+  "oeffnungen": [
+    {
+      "id": "schaufenster",
+      "name": "Schaufenster",
+      "wand": "front",
+      "von": 0.5,
+      "bis": 5.6,
+      "unten": 0.3,
+      "hoehe": 2.8,
+      "typ": "glas"
+    },
+    {
+      "id": "eingang",
+      "name": "Eingang",
+      "wand": "front",
+      "von": 6.2,
+      "bis": 8.0,
+      "hoehe": 2.4,
+      "typ": "tuer"
+    },
+    {
+      "id": "ausgang",
+      "name": "Ausgang",
+      "wand": "front",
+      "von": 9.6,
+      "bis": 11.0,
+      "hoehe": 2.4,
+      "typ": "tuer",
+      "richtung": "raus"
+    },
+    {
+      "id": "notausgang",
+      "name": "Notausgang",
+      "wand": "links",
+      "von": 7.9,
+      "bis": 8.9,
+      "hoehe": 2.2,
+      "typ": "notausgang"
+    },
+    {
+      "id": "anlieferung",
+      "name": "Anlieferung",
+      "wand": "rueck",
+      "von": 15.9,
+      "bis": 17.5,
+      "hoehe": 2.6,
+      "typ": "rolltor"
+    }
+  ],
+  "innenwaende": [
+    {
+      "id": "lager-rueck",
+      "name": "Wand zum Lager",
+      "von": [
+        0,
+        12
+      ],
+      "bis": [
+        15.8,
+        12
+      ],
+      "hoehe": 3.2
+    },
+    {
+      "id": "lager-seite",
+      "name": "Wand zum Lager",
+      "von": [
+        15.8,
+        0
+      ],
+      "bis": [
+        15.8,
+        12
+      ],
+      "hoehe": 3.2,
+      "tuer": {
+        "von": 9.95,
+        "bis": 10.85,
+        "hoehe": 2.1,
+        "schild": "LAGER\nNur Personal",
+        "richtung": 1
+      }
+    },
+    {
+      "id": "sozial",
+      "name": "Wand Sozialraum",
+      "von": [
+        15.8,
+        3.6
+      ],
+      "bis": [
+        17.8,
+        3.6
+      ],
+      "hoehe": 3.2
+    }
+  ],
+  "sperrflaechen": [
+    {
+      "id": "notausgang-frei",
+      "name": "Notausgang freihalten",
+      "rechteck": [
+        0,
+        1.2,
+        7.7,
+        9.1
+      ],
+      "darstellung": "schraffur-rot",
+      "begehbar": true
+    },
+    {
+      "id": "sozialraum",
+      "name": "Personal & WC",
+      "rechteck": [
+        15.8,
+        17.8,
+        0,
+        3.6
+      ]
+    }
+  ],
+  "zonen": [
+    {
+      "id": "Z1",
+      "name": "Eingang & Entscheidung",
+      "rechteck": [
+        5,
+        10.4,
+        0,
+        4.3
+      ],
+      "typ": "Kundenfläche (Übergangszone)",
+      "farbe": "#b9b4ab",
+      "licht": {
+        "kelvin": 3500,
+        "staerke": 1,
+        "leuchte": "panel",
+        "abstand": 2.2,
+        "lichtquellen": 1
+      },
+      "boden": "beton",
+      "beschriftung": {
+        "x": 8.9,
+        "z": 1.3
+      }
+    },
+    {
+      "id": "Z2",
+      "name": "Obst & Gemüse",
+      "rechteck": [
+        0,
+        5,
+        0.9,
+        4.9
+      ],
+      "typ": "Warenfläche (Frische)",
+      "farbe": "#5fa83a",
+      "licht": {
+        "kelvin": 3300,
+        "staerke": 1.1,
+        "leuchte": "strahler",
+        "abstand": 1.4,
+        "lichtquellen": 1
+      },
+      "boden": "holz",
+      "beschriftung": {
+        "x": 1.15,
+        "z": 1.5
+      }
+    },
+    {
+      "id": "Z3",
+      "name": "Kochwelten (Kojen)",
+      "rechteck": [
+        0,
+        7.9,
+        4.9,
+        10.4
+      ],
+      "typ": "Warenfläche (Querplatzierung)",
+      "farbe": "#e8862e",
+      "licht": {
+        "kelvin": 2900,
+        "staerke": 1.05,
+        "leuchte": "pendel",
+        "abstand": 2.1,
+        "lichtquellen": 2
+      },
+      "boden": "holz",
+      "beschriftung": {
+        "x": 7.15,
+        "z": 8.1,
+        "drehung": 90
+      }
+    },
+    {
+      "id": "Z4",
+      "name": "Showküche",
+      "rechteck": [
+        7.9,
+        11.4,
+        4.3,
+        9.4
+      ],
+      "typ": "Erlebnis- & Beratungszone",
+      "farbe": "#d64527",
+      "licht": {
+        "kelvin": 3000,
+        "staerke": 1.15,
+        "leuchte": "pendel",
+        "abstand": 1.7,
+        "lichtquellen": 2
+      },
+      "boden": "fliese",
+      "beschriftung": {
+        "x": 9.65,
+        "z": 8.45
+      }
+    },
+    {
+      "id": "Z5",
+      "name": "Kühlung & Frische",
+      "rechteck": [
+        0,
+        7.6,
+        10.4,
+        12
+      ],
+      "typ": "Warenfläche (gekühlt)",
+      "farbe": "#3f8fd0",
+      "licht": {
+        "kelvin": 4000,
+        "staerke": 1.05,
+        "leuchte": "panel",
+        "abstand": 2.2,
+        "lichtquellen": 1
+      },
+      "boden": "beton",
+      "beschriftung": {
+        "x": 3.8,
+        "z": 10.75
+      }
+    },
+    {
+      "id": "Z6",
+      "name": "Dessert & Wein",
+      "rechteck": [
+        7.6,
+        15.8,
+        10.4,
+        12
+      ],
+      "typ": "Warenfläche (Ergänzen)",
+      "farbe": "#8a4fc7",
+      "licht": {
+        "kelvin": 2900,
+        "staerke": 1,
+        "leuchte": "strahler",
+        "abstand": 1.6,
+        "lichtquellen": 2
+      },
+      "boden": "holz",
+      "beschriftung": {
+        "x": 10.9,
+        "z": 10.85
+      }
+    },
+    {
+      "id": "Z7",
+      "name": "Basissortiment",
+      "rechteck": [
+        11.4,
+        15.8,
+        3.9,
+        10.4
+      ],
+      "typ": "Warenfläche (Längsplatzierung)",
+      "farbe": "#3b6fb0",
+      "licht": {
+        "kelvin": 4000,
+        "staerke": 1.15,
+        "leuchte": "panel",
+        "abstand": 1.9,
+        "lichtquellen": 1
+      },
+      "boden": "beton",
+      "beschriftung": {
+        "x": 14.35,
+        "z": 6.9,
+        "drehung": 90
+      }
+    },
+    {
+      "id": "Z8",
+      "name": "Kasse & SB-Kasse",
+      "rechteck": [
+        10.2,
+        15.8,
+        0,
+        3.9
+      ],
+      "typ": "sonstige Fläche + Impulsware",
+      "farbe": "#7a7a84",
+      "licht": {
+        "kelvin": 3500,
+        "staerke": 1,
+        "leuchte": "panel",
+        "abstand": 2,
+        "lichtquellen": 1
+      },
+      "boden": "beton",
+      "beschriftung": {
+        "x": 13.6,
+        "z": 0.55
+      }
+    },
+    {
+      "id": "Z9",
+      "name": "Lager hinten",
+      "rechteck": [
+        0,
+        17.8,
+        12,
+        13.8
+      ],
+      "typ": "sonstige Fläche · Hinterbefüllung",
+      "farbe": "#4a4a4f",
+      "licht": {
+        "kelvin": 4000,
+        "staerke": 0.8,
+        "leuchte": "panel",
+        "abstand": 2.6,
+        "lichtquellen": 1
+      },
+      "boden": "beton",
+      "beschriftung": {
+        "x": 11.2,
+        "z": 12.9
+      }
+    },
+    {
+      "id": "Z10",
+      "name": "Lager Seite",
+      "rechteck": [
+        15.8,
+        17.8,
+        3.6,
+        12
+      ],
+      "typ": "sonstige Fläche · Anlieferung",
+      "farbe": "#4a4a4f",
+      "licht": {
+        "kelvin": 4000,
+        "staerke": 0.8,
+        "leuchte": "panel",
+        "abstand": 2.4,
+        "lichtquellen": 1
+      },
+      "boden": "beton",
+      "beschriftung": {
+        "x": 16.8,
+        "z": 7.6,
+        "drehung": 90
+      }
+    },
+    {
+      "id": "Z11",
+      "name": "Personal & WC",
+      "rechteck": [
+        15.8,
+        17.8,
+        0,
+        3.6
+      ],
+      "typ": "sonstige Fläche",
+      "farbe": "#33333a",
+      "boden": "beton",
+      "beschriftung": {
+        "x": 16.8,
+        "z": 1.8,
+        "drehung": 90
+      }
+    }
+  ],
+  "moebel": [
+    {
+      "id": "M1",
+      "name": "Schaufenster „Kochwelt des Monats“",
+      "typ": "schaufenster",
+      "rechteck": [
+        0.7,
+        3,
+        0.3,
+        0.85
+      ],
+      "hoehe": 1.5,
+      "schild": "Pasta Night"
+    },
+    {
+      "id": "M2",
+      "name": "Matrix-Dashboard",
+      "typ": "matrix-dashboard",
+      "rechteck": [
+        5.3,
+        7.7,
+        3,
+        3.4
+      ],
+      "hoehe": 2.15
+    },
+    {
+      "id": "M3",
+      "name": "Obst & Gemüse (schräg)",
+      "typ": "obst-stand",
+      "mitte": [
+        3,
+        2.9
+      ],
+      "laenge": 2.8,
+      "tiefe": 1.1,
+      "richtung": [
+        -0.66,
+        0.75
+      ],
+      "hoehe": 0.95
+    },
+    {
+      "id": "M4",
+      "name": "Kochwelt-Gondel Pasta",
+      "typ": "kochwelt-gondel",
+      "rechteck": [
+        1.4,
+        6.4,
+        5,
+        5.55
+      ],
+      "hoehe": 1.8,
+      "welt": "Pasta Night",
+      "farbe": "#d64527",
+      "vorne": "aktion",
+      "hinten": "matrix",
+      "rezepte": [
+        "#03",
+        "#02",
+        "#01"
+      ]
+    },
+    {
+      "id": "M5",
+      "name": "Kochwelt-Gondel Asian",
+      "typ": "kochwelt-gondel",
+      "rechteck": [
+        1.4,
+        6.4,
+        7.05,
+        7.6
+      ],
+      "hoehe": 1.8,
+      "welt": "Asian Night",
+      "farbe": "#c9a227",
+      "vorne": "ergaenzung-pasta",
+      "hinten": "matrix",
+      "rezepte": [
+        "#06",
+        "#05",
+        "#04"
+      ]
+    },
+    {
+      "id": "M6",
+      "name": "Kochwelt-Gondel Mexican",
+      "typ": "kochwelt-gondel",
+      "rechteck": [
+        1.4,
+        6.4,
+        9.1,
+        9.65
+      ],
+      "hoehe": 1.8,
+      "welt": "Mexican Night",
+      "farbe": "#2f9e6e",
+      "vorne": "ergaenzung-asian",
+      "hinten": "matrix",
+      "rezepte": [
+        "#09",
+        "#08",
+        "#07"
+      ]
+    },
+    {
+      "id": "M7",
+      "name": "Kühlregal Frische",
+      "typ": "kuehlregal",
+      "rechteck": [
+        0.15,
+        7.4,
+        11.2,
+        12
+      ],
+      "hoehe": 2.05,
+      "faecher": [
+        {
+          "code": "K1",
+          "name": "Molkerei & Eier"
+        },
+        {
+          "code": "K2",
+          "name": "Käse"
+        },
+        {
+          "code": "K3",
+          "name": "Frische Pasta & Teig"
+        },
+        {
+          "code": "K4",
+          "name": "Fleisch & Fisch"
+        },
+        {
+          "code": "K5",
+          "name": "Tofu & Veggie"
+        },
+        {
+          "code": "K6",
+          "name": "Kräuter & Salat"
+        }
+      ]
+    },
+    {
+      "id": "M8",
+      "name": "Dessert & TK",
+      "typ": "glastuer-kuehlung",
+      "rechteck": [
+        7.8,
+        10.8,
+        11.3,
+        12
+      ],
+      "hoehe": 2.05,
+      "faecher": [
+        {
+          "code": "D1",
+          "name": "Eis & Mochi"
+        },
+        {
+          "code": "D2",
+          "name": "Desserts gekühlt"
+        },
+        {
+          "code": "D3",
+          "name": "TK-Gemüse & Teig"
+        }
+      ]
+    },
+    {
+      "id": "M9",
+      "name": "Wein & Getränke",
+      "typ": "weinregal",
+      "rechteck": [
+        11.2,
+        15.7,
+        11.35,
+        12
+      ],
+      "hoehe": 2.1,
+      "faecher": [
+        {
+          "code": "G1",
+          "name": "Rotwein"
+        },
+        {
+          "code": "G2",
+          "name": "Weißwein & Rosé"
+        },
+        {
+          "code": "G3",
+          "name": "Alkoholfrei & Limo"
+        }
+      ]
+    },
+    {
+      "id": "M10",
+      "name": "Basis-Wandregal",
+      "typ": "basis-regal",
+      "rechteck": [
+        15.25,
+        15.8,
+        4,
+        9.7
+      ],
+      "hoehe": 2,
+      "seiten": {
+        "links": [
+          {
+            "code": "B1",
+            "name": "Nudeln & Reis"
+          },
+          {
+            "code": "B2",
+            "name": "Öl & Essig"
+          },
+          {
+            "code": "B3",
+            "name": "Gewürze & Brühe"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M11",
+      "name": "Basis-Gondel (längs)",
+      "typ": "basis-regal",
+      "rechteck": [
+        12.7,
+        13.5,
+        4.2,
+        9.6
+      ],
+      "hoehe": 1.6,
+      "seiten": {
+        "rechts": [
+          {
+            "code": "B4",
+            "name": "Konserven & Saucen"
+          },
+          {
+            "code": "B5",
+            "name": "Backen & Mehl"
+          }
+        ],
+        "links": [
+          {
+            "code": "B6",
+            "name": "Frühstück & Brot"
+          },
+          {
+            "code": "B7",
+            "name": "Snacks & Süßes"
+          }
+        ]
+      }
+    },
+    {
+      "id": "M12",
+      "name": "Show-Kochtresen",
+      "typ": "kochtresen",
+      "rechteck": [
+        8.3,
+        11.1,
+        5,
+        5.7
+      ],
+      "hoehe": 0.92
+    },
+    {
+      "id": "M13",
+      "name": "Kurstisch (8 Plätze)",
+      "typ": "kurstisch",
+      "rechteck": [
+        8.6,
+        10.9,
+        6.85,
+        7.85
+      ],
+      "hoehe": 0.75,
+      "stuehle_x": [
+        8.95,
+        9.55,
+        10.15,
+        10.75
+      ],
+      "stuehle_z": [
+        6.5,
+        8.2
+      ]
+    },
+    {
+      "id": "M14",
+      "name": "Küchenzeile (Spüle, Ofen, Vorrat)",
+      "typ": "kuechenzeile",
+      "rechteck": [
+        8,
+        11.4,
+        8.8,
+        9.4
+      ],
+      "hoehe": 0.92
+    },
+    {
+      "id": "M15",
+      "name": "Zuschauer-Hocker",
+      "typ": "hocker",
+      "stationen": [
+        [
+          8.75,
+          4.6
+        ],
+        [
+          9.45,
+          4.6
+        ],
+        [
+          10.15,
+          4.6
+        ],
+        [
+          10.85,
+          4.6
+        ]
+      ],
+      "durchmesser": 0.4,
+      "hoehe": 0.75
+    },
+    {
+      "id": "M16",
+      "name": "Bedienkasse",
+      "typ": "kasse-band",
+      "rechteck": [
+        11.6,
+        12.4,
+        1.2,
+        3.2
+      ],
+      "hoehe": 0.9
+    },
+    {
+      "id": "M17",
+      "name": "SB-Kassen (2)",
+      "typ": "sb-kasse",
+      "rechteck": [
+        14.7,
+        15.4,
+        1,
+        3
+      ],
+      "hoehe": 1.35
+    },
+    {
+      "id": "M18",
+      "name": "Impulsregal „Ergänzen“",
+      "typ": "impulsregal",
+      "rechteck": [
+        10.3,
+        10.7,
+        1.6,
+        3.2
+      ],
+      "hoehe": 1.3
+    },
+    {
+      "id": "M19",
+      "name": "Glasbrüstung Showküche",
+      "typ": "glasbruestung",
+      "rechteck": [
+        7.95,
+        8.05,
+        5.75,
+        8.8
+      ],
+      "hoehe": 1.0
+    },
+    {
+      "id": "L1",
+      "name": "Kühlzelle (Hinterbefüllung)",
+      "typ": "kuehlzelle",
+      "rechteck": [
+        0.2,
+        7.4,
+        12.05,
+        12.85
+      ],
+      "hoehe": 2.4
+    },
+    {
+      "id": "L2",
+      "name": "Lagerregal hinten",
+      "typ": "lagerregal",
+      "rechteck": [
+        8,
+        15,
+        13.25,
+        13.75
+      ],
+      "hoehe": 2.2,
+      "kartons": [
+        "PASTA",
+        "REIS",
+        "KONSERVEN",
+        "SAUCEN",
+        "WEIN",
+        "LIMO",
+        "GEWÜRZE",
+        "SNACKS",
+        "TORTILLAS",
+        "KURS-VORRAT"
+      ]
+    },
+    {
+      "id": "L3",
+      "name": "Lagerregal Seite",
+      "typ": "lagerregal",
+      "rechteck": [
+        17.25,
+        17.75,
+        4.2,
+        10.4
+      ],
+      "hoehe": 2.2,
+      "kartons": [
+        "ÖL",
+        "MEHL",
+        "NUDELN",
+        "DOSEN",
+        "TÜTEN",
+        "KASSENROLLEN"
+      ]
+    },
+    {
+      "id": "L4",
+      "name": "Rollcontainer Wareneingang",
+      "typ": "kartonstapel",
+      "rechteck": [
+        16.1,
+        16.9,
+        12.3,
+        13.1
+      ],
+      "hoehe": 1.1
+    }
+  ],
+  "regalzonen": {
+    "_hinweis": "Höhenbereiche (m) nach Ahlert/Kenning/Brock 2020, S. 302–303. 'moebel' = Regalflächen, an denen die Bänder erscheinen (seite: vorne = Richtung Straße, hinten = Richtung Rückwand, links/rechts).",
+    "zonen": [
+      {
+        "name": "Reckzone",
+        "von": 1.7,
+        "bis": 2.2,
+        "inhalt": "Kochwelt- & Anlass-Schilder",
+        "farbe": "#9aa0a6"
+      },
+      {
+        "name": "Sichtzone",
+        "von": 1.2,
+        "bis": 1.7,
+        "inhalt": "Rezeptkarten & Bundles „für 2“",
+        "farbe": "#3fbf7f"
+      },
+      {
+        "name": "Greifzone",
+        "von": 0.8,
+        "bis": 1.2,
+        "inhalt": "Zutaten des Rezepts",
+        "farbe": "#f2c230"
+      },
+      {
+        "name": "Bückzone",
+        "von": 0,
+        "bis": 0.8,
+        "inhalt": "Großpackungen & Getränke",
+        "farbe": "#e06c4f"
+      }
+    ],
+    "moebel": [
+      {
+        "id": "M4",
+        "seite": "hinten"
+      },
+      {
+        "id": "M5",
+        "seite": "hinten"
+      },
+      {
+        "id": "M6",
+        "seite": "hinten"
+      },
+      {
+        "id": "M10",
+        "seite": "links"
+      }
+    ]
+  },
+  "rezepte": [
+    {
+      "nr": "#01",
+      "titel": "Creamy Tomato Pasta",
+      "welt": "Pasta Night",
+      "anlass": "schnell",
+      "zeit": "20 Min.",
+      "preis": "4,60 €/Portion",
+      "zutaten": [
+        [
+          "Pasta",
+          "W1"
+        ],
+        [
+          "Tomatensauce",
+          "W1"
+        ],
+        [
+          "Sahne",
+          "K1"
+        ],
+        [
+          "Parmesan",
+          "K2"
+        ],
+        [
+          "Basilikum",
+          "K6"
+        ],
+        [
+          "Knoblauch",
+          "O1"
+        ],
+        [
+          "Olivenöl",
+          "B2"
+        ]
+      ],
+      "ergaenzung": [
+        [
+          "Limonade",
+          "G3"
+        ],
+        [
+          "Cantuccini",
+          "W1"
+        ]
+      ]
+    },
+    {
+      "nr": "#02",
+      "titel": "Tagliatelle al Limone + Tiramisu",
+      "welt": "Pasta Night",
+      "anlass": "besonders",
+      "zeit": "35 Min.",
+      "preis": "für 2",
+      "zutaten": [
+        [
+          "Frische Tagliatelle",
+          "K3"
+        ],
+        [
+          "Zitronen",
+          "O1"
+        ],
+        [
+          "Butter",
+          "K1"
+        ],
+        [
+          "Parmesan",
+          "K2"
+        ],
+        [
+          "Tiramisu",
+          "D2"
+        ]
+      ],
+      "ergaenzung": [
+        [
+          "Weißwein",
+          "G2"
+        ]
+      ]
+    },
+    {
+      "nr": "#03",
+      "titel": "Pasta e Fagioli",
+      "welt": "Pasta Night",
+      "anlass": "günstig",
+      "zeit": "30 Min.",
+      "preis": "3,20 €/Portion",
+      "zutaten": [
+        [
+          "Pasta",
+          "W1"
+        ],
+        [
+          "Bohnen",
+          "W1"
+        ],
+        [
+          "Passata",
+          "W1"
+        ],
+        [
+          "Zwiebel & Karotte",
+          "O1"
+        ],
+        [
+          "Olivenöl",
+          "B2"
+        ]
+      ],
+      "ergaenzung": []
+    },
+    {
+      "nr": "#04",
+      "titel": "Gebratene Udon",
+      "welt": "Asian Night",
+      "anlass": "schnell",
+      "zeit": "15 Min.",
+      "preis": "4,40 €/Portion",
+      "zutaten": [
+        [
+          "Udon-Nudeln",
+          "W2"
+        ],
+        [
+          "Sojasauce",
+          "W2"
+        ],
+        [
+          "Pak Choi",
+          "O1"
+        ],
+        [
+          "Tofu",
+          "K5"
+        ],
+        [
+          "Sesam",
+          "W2"
+        ]
+      ],
+      "ergaenzung": [
+        [
+          "Eistee",
+          "G3"
+        ]
+      ]
+    },
+    {
+      "nr": "#05",
+      "titel": "Ramen-Abend + Mochi",
+      "welt": "Asian Night",
+      "anlass": "besonders",
+      "zeit": "40 Min.",
+      "preis": "für 2",
+      "zutaten": [
+        [
+          "Ramen-Nudeln",
+          "W2"
+        ],
+        [
+          "Miso-Paste",
+          "W2"
+        ],
+        [
+          "Eier",
+          "K1"
+        ],
+        [
+          "Lauchzwiebeln",
+          "O1"
+        ],
+        [
+          "Mochi",
+          "D1"
+        ]
+      ],
+      "ergaenzung": [
+        [
+          "Sake (alkoholfrei)",
+          "G3"
+        ]
+      ]
+    },
+    {
+      "nr": "#06",
+      "titel": "Gemüse-Fried-Rice",
+      "welt": "Asian Night",
+      "anlass": "günstig",
+      "zeit": "20 Min.",
+      "preis": "2,90 €/Portion",
+      "zutaten": [
+        [
+          "Reis",
+          "B1"
+        ],
+        [
+          "TK-Gemüse",
+          "D3"
+        ],
+        [
+          "Eier",
+          "K1"
+        ],
+        [
+          "Sojasauce",
+          "W2"
+        ]
+      ],
+      "ergaenzung": []
+    },
+    {
+      "nr": "#07",
+      "titel": "Quesadillas",
+      "welt": "Mexican Night",
+      "anlass": "schnell",
+      "zeit": "15 Min.",
+      "preis": "4,20 €/Portion",
+      "zutaten": [
+        [
+          "Tortillas",
+          "W3"
+        ],
+        [
+          "Käse",
+          "K2"
+        ],
+        [
+          "Paprika",
+          "O1"
+        ],
+        [
+          "Bohnen",
+          "W3"
+        ]
+      ],
+      "ergaenzung": [
+        [
+          "Limonade",
+          "G3"
+        ]
+      ]
+    },
+    {
+      "nr": "#08",
+      "titel": "Taco-Abend mit Guacamole",
+      "welt": "Mexican Night",
+      "anlass": "besonders",
+      "zeit": "35 Min.",
+      "preis": "für 2",
+      "zutaten": [
+        [
+          "Taco-Shells",
+          "W3"
+        ],
+        [
+          "Avocados",
+          "O1"
+        ],
+        [
+          "Limetten",
+          "O1"
+        ],
+        [
+          "Veggie-Hack",
+          "K5"
+        ],
+        [
+          "Schmand",
+          "K1"
+        ]
+      ],
+      "ergaenzung": [
+        [
+          "Nachos & Salsa",
+          "W3"
+        ],
+        [
+          "Bier alkoholfrei",
+          "G3"
+        ]
+      ]
+    },
+    {
+      "nr": "#09",
+      "titel": "Chili sin Carne",
+      "welt": "Mexican Night",
+      "anlass": "günstig",
+      "zeit": "30 Min.",
+      "preis": "2,80 €/Portion",
+      "zutaten": [
+        [
+          "Kidneybohnen",
+          "W3"
+        ],
+        [
+          "Mais",
+          "W3"
+        ],
+        [
+          "Tomaten (Dose)",
+          "W3"
+        ],
+        [
+          "Zwiebeln",
+          "O1"
+        ],
+        [
+          "Gewürze",
+          "B3"
+        ],
+        [
+          "Reis",
+          "B1"
+        ]
+      ],
+      "ergaenzung": []
+    }
+  ],
+  "beleuchtung": {
+    "_hinweis": "kelvin = Farbtemperatur (2700 warm, 4000 neutral), staerke = Helligkeitsfaktor. Licht je Zone steht bei den Zonen.",
+    "grundlicht": {
+      "himmel": "#fff6ea",
+      "boden": "#6a6158",
+      "staerke": 1.05
+    },
+    "spots": [
+      {
+        "name": "Schaufenster M1",
+        "von": [
+          1.85,
+          3.1,
+          1.6
+        ],
+        "auf": [
+          1.85,
+          0.8,
+          0.6
+        ],
+        "kelvin": 3000,
+        "staerke": 30,
+        "winkel": 40
+      },
+      {
+        "name": "Matrix-Dashboard M2",
+        "von": [
+          6.5,
+          3.1,
+          1.4
+        ],
+        "auf": [
+          6.5,
+          1.4,
+          3.0
+        ],
+        "kelvin": 3200,
+        "staerke": 26,
+        "winkel": 46
+      },
+      {
+        "name": "Obst & Gemüse M3",
+        "von": [
+          3,
+          3.1,
+          2.9
+        ],
+        "auf": [
+          3,
+          0.8,
+          2.9
+        ],
+        "kelvin": 3000,
+        "staerke": 24,
+        "winkel": 55
+      },
+      {
+        "name": "Show-Kochtresen M12",
+        "von": [
+          9.7,
+          3.1,
+          4.4
+        ],
+        "auf": [
+          9.7,
+          0.95,
+          5.35
+        ],
+        "kelvin": 2900,
+        "staerke": 30,
+        "winkel": 50
+      }
+    ]
+  },
+  "materialien": {
+    "_hinweis": "Farben der Oberflächen. Böden je Zone stehen bei den Zonen (holz/beton/fliese).",
+    "wand": "#e9e2d6",
+    "decke": "#2b2a2c",
+    "akzent": "#d64527",
+    "beton": "#b3ada4",
+    "holz": "#b98a5a",
+    "fliese": "#e7e3dc",
+    "filz": "#40594a",
+    "akzentstreifen_hoehe": 2.62,
+    "filz_paneele": []
+  },
+  "wege": [
+    {
+      "id": "rezeptweg",
+      "name": "Rezeptweg (Rundlauf)",
+      "punkte": [
+        [
+          7.1,
+          -0.6
+        ],
+        [
+          7.1,
+          2.2
+        ],
+        [
+          5,
+          1.5
+        ],
+        [
+          1.2,
+          1.5
+        ],
+        [
+          0.7,
+          2.2
+        ],
+        [
+          0.7,
+          10.45
+        ],
+        [
+          1.2,
+          10.5
+        ],
+        [
+          13.6,
+          10.5
+        ],
+        [
+          14.4,
+          9.9
+        ],
+        [
+          14.4,
+          4.3
+        ],
+        [
+          13.9,
+          3.75
+        ],
+        [
+          11.1,
+          3.75
+        ],
+        [
+          11.1,
+          0.7
+        ],
+        [
+          10.3,
+          -0.6
+        ]
+      ],
+      "farbe": "#e8473a",
+      "stil": "linie"
+    },
+    {
+      "id": "schnellweg",
+      "name": "Schnellweg (≤ 15 Min.)",
+      "punkte": [
+        [
+          7.1,
+          -0.6
+        ],
+        [
+          7.3,
+          2.1
+        ],
+        [
+          8.2,
+          3.85
+        ],
+        [
+          14.2,
+          3.85
+        ],
+        [
+          14.35,
+          4.4
+        ],
+        [
+          14.35,
+          9.85
+        ],
+        [
+          13.1,
+          10
+        ],
+        [
+          12.1,
+          9.4
+        ],
+        [
+          12.1,
+          3.9
+        ],
+        [
+          11.1,
+          3.55
+        ],
+        [
+          11.1,
+          0.7
+        ],
+        [
+          10.3,
+          -0.6
+        ]
+      ],
+      "farbe": "#46c06a",
+      "stil": "gestrichelt"
+    },
+    {
+      "id": "blickachse",
+      "name": "Blickachse Eingang → Showküche",
+      "punkte": [
+        [
+          7.1,
+          0.3
+        ],
+        [
+          9.7,
+          5.35
+        ]
+      ],
+      "farbe": "#f2c230",
+      "stil": "gestrichelt"
+    }
+  ],
+  "draufsicht": {
+    "titel": "One Hour Kitchen – Food-Store mit Kochwelten & Showküche",
+    "untertitel": "Draufsicht · Verkaufsraum 15,8 × 12 m ≈ 190 m² · L-Lager hinten/rechts"
+  },
+  "personen": [
+    {
+      "pos": [
+        9.7,
+        6.05
+      ],
+      "blick": [
+        0,
+        -1
+      ],
+      "haltung": "arbeiten",
+      "personal": true,
+      "_wer": "Koch am Show-Kochtresen"
+    },
+    {
+      "pos": [
+        12.85,
+        2.2
+      ],
+      "blick": [
+        -1,
+        0
+      ],
+      "haltung": "arbeiten",
+      "personal": true,
+      "_wer": "Kasse"
+    },
+    {
+      "pos": [
+        9.0,
+        9.0
+      ],
+      "blick": [
+        0,
+        1
+      ],
+      "haltung": "arbeiten",
+      "personal": true,
+      "_wer": "Kursleitung an der Küchenzeile"
+    },
+    {
+      "pos": [
+        6.4,
+        2.45
+      ],
+      "blick": [
+        0,
+        1
+      ],
+      "haltung": "stehen",
+      "_wer": "Kundin am Matrix-Dashboard"
+    },
+    {
+      "pos": [
+        4.3,
+        4.0
+      ],
+      "blick": [
+        -0.75,
+        -0.66
+      ],
+      "haltung": "stoebern",
+      "_wer": "Obst & Gemüse"
+    },
+    {
+      "pos": [
+        5.75,
+        6.35
+      ],
+      "blick": [
+        0,
+        -1
+      ],
+      "haltung": "stoebern",
+      "_wer": "Pasta-Koje"
+    },
+    {
+      "pos": [
+        2.3,
+        10.55
+      ],
+      "blick": [
+        0,
+        1
+      ],
+      "haltung": "stoebern",
+      "_wer": "Kühlung"
+    },
+    {
+      "pos": [
+        9.35,
+        4.15
+      ],
+      "blick": [
+        0,
+        1
+      ],
+      "haltung": "stehen",
+      "_wer": "Zuschauer Showküche"
+    },
+    {
+      "pos": [
+        10.55,
+        4.15
+      ],
+      "blick": [
+        0,
+        1
+      ],
+      "haltung": "stehen",
+      "_wer": "Zuschauer Showküche"
+    },
+    {
+      "pos": [
+        14.5,
+        6.8
+      ],
+      "blick": [
+        1,
+        0
+      ],
+      "haltung": "stoebern",
+      "_wer": "Basissortiment"
+    },
+    {
+      "pos": [
+        12.6,
+        10.75
+      ],
+      "blick": [
+        0,
+        1
+      ],
+      "haltung": "stoebern",
+      "_wer": "Wein"
+    }
+  ],
+  "stationen": [
+    {
+      "nr": 1,
+      "titel": "Schaufenster & getrennter Ein-/Ausgang",
+      "bezug": "M1 · Eingang · Ausgang",
+      "objekte": [
+        "M1"
+      ],
+      "kamera": {
+        "position": [
+          4.4,
+          -5.4
+        ],
+        "hoehe": 1.7,
+        "ziel": [
+          5.4,
+          1.25,
+          0.6
+        ]
+      },
+      "entscheidung": "Fantasiefenster „Kochwelt des Monats“ links; Eingang (1,8 m) und Ausgang (1,4 m) getrennt, die Kasse sitzt direkt vor dem Ausgang.",
+      "begruendung": "Das Fenster zeigt der Laufkundschaft vom Campus schon draußen, was es heute zu kochen gibt. Getrennte Türen geben eine klare Laufrichtung vor: rein links, raus rechts an der Kasse vorbei.",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 303–306 (Fensterarten) ✓; S. 297–302 (Eingang, Kasse, Wege anordnen) ✓",
+      "annahme": "Ein monatlicher Wechsel des Fensters ist personell leistbar; ein zweiter Türausschnitt ist im Mietobjekt möglich.",
+      "skizze": "Skizze: eine Doppeltür in der Mitte. Neu: Ein- und Ausgang getrennt, Schaufenster links ergänzt.",
+      "ebenen": {
+        "zonen": false,
+        "wege": true
+      }
+    },
+    {
+      "nr": 2,
+      "titel": "Matrix-Dashboard",
+      "bezug": "M2",
+      "objekte": [
+        "M2"
+      ],
+      "kamera": {
+        "position": [
+          7.2,
+          0.5
+        ],
+        "hoehe": 1.62,
+        "ziel": [
+          6.5,
+          1.35,
+          3.2
+        ]
+      },
+      "entscheidung": "Ca. 3 m hinter dem Eingang steht das Dashboard: Küche (Spalten) × Anlass (Zeilen) = genau ein Rezept. Rückseite: Kursprogramm. Es steht links der Blickachse, damit der Blick zur Showküche frei bleibt.",
+      "begruendung": "Die Kundin hat eine Kaufabsicht („heute kochen“), offen ist nur das Gericht. Das Dashboard macht aus neun Rezepten zwei einfache Fragen und gibt Orientierung, bevor der Einkauf beginnt. Je länger Kunden im Laden sind, desto zielgerichteter werden sie – Inspiration gehört deshalb an den Anfang des Weges.",
+      "quelle": "Seminarskript HD25A23: Leitdifferenz kaufrelevant (in Anlehnung an Luhmann 1984, S. 63) ✓; Hui/Bradlow/Fader 2009, J. of Consumer Research 36(3) ✓; Scheuch 2001, der markt 40(2–3), S. 90 u. 92 (Cognitive Maps) ◐",
+      "annahme": "Dass die Wahl dadurch schneller fällt, ist nicht belegt.",
+      "skizze": "Skizze: „Dashboard“ mittig vor der Tür. Neu: etwas nach links versetzt, die Blickachse zur Küche bleibt frei.",
+      "ebenen": {
+        "zonen": false,
+        "wege": false
+      }
+    },
+    {
+      "nr": 3,
+      "titel": "Obst & Gemüse schräg",
+      "bezug": "M3 · Z2",
+      "objekte": [
+        "M3",
+        "Z2"
+      ],
+      "kamera": {
+        "position": [
+          5.6,
+          0.9
+        ],
+        "hoehe": 1.85,
+        "ziel": [
+          2.6,
+          0.6,
+          3.3
+        ]
+      },
+      "entscheidung": "Obst & Gemüse als schräg gestellter Marktstand direkt links vom Eingang; der Rezeptweg führt an ihm vorbei nach links in den Rundlauf.",
+      "begruendung": "Frische Zutaten (Fachcode O1) stehen auf fast jeder Rezeptkarte. Die schräge Stellung unterbricht den Lauf wie eine Querplatzierung, lenkt nach links und ist durchs Schaufenster sichtbar.",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3 (Querplatzierung, Bremseffekt) ✓",
+      "annahme": "Frische am Eingang stärkt das Frische-Image (Fallannahme).",
+      "skizze": "Wie in der Skizze (schräg, links vorn). Neu: 0,9 m Abstand zum Dashboard und Rundlauf links daran vorbei.",
+      "ebenen": {
+        "zonen": false,
+        "wege": true
+      }
+    },
+    {
+      "nr": 4,
+      "titel": "Kochwelten als Kojen (quer)",
+      "bezug": "M4–M6 · Z3",
+      "objekte": [
+        "M4",
+        "M5",
+        "M6",
+        "Z3"
+      ],
+      "kamera": {
+        "position": [
+          7.35,
+          4.4
+        ],
+        "hoehe": 2.6,
+        "ziel": [
+          3.6,
+          0.6,
+          8.2
+        ]
+      },
+      "entscheidung": "Drei querstehende Gondeln bilden die Kojen Pasta, Asian und Mexican mit je 1,5 m Gang. In jeder Koje steht auf der einen Seite die Rezept-Matrix, gegenüber die passenden Ergänzungen. Am Regalkopf zum Gang steht „» schnell“ mit Rezeptkarten.",
+      "begruendung": "Querplatzierung bremst und schafft neue Kaufrelevanz: Wer nur das Rezept holen wollte, entdeckt Getränk und Dessert daneben. Die Kojen sind von beiden Seiten erreichbar (Rundlauf links, Gang zur Küche rechts).",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3 ✓; Seminarskript: Querplatzierung → „neue Kaufrelevanz“ ✓; Larson/Bradlow/Fader 2005, IJRM 22(4), S. 395–414 (Laufwege, Gänge) ◐",
+      "annahme": "Zusätzliche Käufe sind beabsichtigt, nicht belegt.",
+      "skizze": "Skizze: drei Themenwelten mit ca. 0,7 m Abstand. Neu: 1,4–1,5 m Gänge (Einkaufswagen + Gegenverkehr) und ein Gang an der linken Wand.",
+      "ebenen": {
+        "zonen": true,
+        "wege": false
+      }
+    },
+    {
+      "nr": 5,
+      "titel": "Regalbild Pasta Night",
+      "bezug": "M4 (Rückseite)",
+      "objekte": [
+        "M4"
+      ],
+      "kamera": {
+        "position": [
+          2.9,
+          6.98
+        ],
+        "hoehe": 1.6,
+        "ziel": [
+          3.3,
+          1.05,
+          5.55
+        ]
+      },
+      "entscheidung": "Die Matrix wiederholt sich im Regal: senkrecht die Anlässe (€ günstig · ★ besonders · » schnell am Regalkopf), waagerecht die Regalzonen: Schilder oben, Rezeptkarten und Bundles in der Sichtzone, Zutaten in der Greifzone, Großpackungen unten.",
+      "begruendung": "Wer am Dashboard gewählt hat, findet sein Feld sofort wieder (gleiche Nummern und Symbole). Mehr Facings und eine höhere Platzierung erhöhen nachweislich die Aufmerksamkeit für ein Produkt.",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 302–303 (Regalzonen, Kreuzblock) ✓; Chandon et al. 2009, J. of Marketing 73(6), S. 1–17 (Facings & Regalhöhe → Aufmerksamkeit) ✓",
+      "annahme": "Belegung der Fächer ist Fallannahme; die Wirkung im eigenen Store ist nicht gemessen.",
+      "skizze": "Neu ausgearbeitet (in der Skizze nicht enthalten).",
+      "ebenen": {
+        "zonen": false,
+        "wege": false,
+        "regalzonen": true
+      },
+      "regalbild": "M4"
+    },
+    {
+      "nr": 6,
+      "titel": "Kühlung an der Rückwand",
+      "bezug": "M7 · L1",
+      "objekte": [
+        "M7",
+        "Z5"
+      ],
+      "kamera": {
+        "position": [
+          5.4,
+          9.9
+        ],
+        "hoehe": 1.75,
+        "ziel": [
+          2.4,
+          1.0,
+          11.8
+        ]
+      },
+      "entscheidung": "Ein 7,2 m langes Kühlregal (K1–K6) über die ganze linke Rückwand, das vom L-Lager aus über eine Kühlzelle befüllt wird.",
+      "begruendung": "Kühlpflichtige Zutaten stehen auf fast jeder Rezeptkarte und ziehen die Kundschaft in die Tiefe des Raums. Die Befüllung von hinten trennt den Warenweg vom Kundenweg: Nachfüllen ohne Rollwagen im Gang.",
+      "quelle": "Seminar-Checkliste Tag 2: F4 Warenweg, F5 Arbeitsweg, F6 Wegkreuzungen ✓; Ahlert/Kenning/Brock 2020, S. 297–302 ✓",
+      "annahme": "Frische wirkt als Zielartikel (nicht belegt); Kosten der Kühlzelle sind nicht kalkuliert.",
+      "skizze": "Wie in der Skizze (Kühlung hinten links). Neu: Hinterbefüllung aus dem L-Lager.",
+      "ebenen": {
+        "zonen": false,
+        "wege": true
+      }
+    },
+    {
+      "nr": 7,
+      "titel": "Showküche",
+      "bezug": "M12–M15 · Z4",
+      "objekte": [
+        "M12",
+        "M13",
+        "M14",
+        "M15",
+        "Z4"
+      ],
+      "kamera": {
+        "position": [
+          9.4,
+          2.25
+        ],
+        "hoehe": 1.95,
+        "ziel": [
+          9.7,
+          0.9,
+          7.0
+        ]
+      },
+      "entscheidung": "Showküche (ca. 18 m² inkl. Zuschauer) in der Raummitte als visueller Anker: Kochtresen zum Eingang, dahinter der Kurstisch mit 8 Plätzen und die Küchenzeile. Die Zuschauer stehen vorn in der Übergangszone, nicht in den Regalgängen.",
+      "begruendung": "Die Blickachse vom Eingang endet auf dem Kochtresen (Arena-Prinzip). Andere Kunden ziehen Aufmerksamkeit auf eine Zone, senken dort aber die Einkaufsneigung – deshalb liegt der Zuschauerbereich außerhalb der Warenzonen.",
+      "quelle": "Seminarskript (Arena-Prinzip, Blickachse mit visuellem Anker) ✓; Ahlert/Kenning/Brock 2020, S. 297–302 ✓; Hui/Bradlow/Fader 2009 (Einfluss anderer Kunden) ✓; Gröppel 1991 (Erlebnisstrategien) ◐",
+      "annahme": "Wirtschaftlich ab ca. 2,7 Kursbelegungen pro Woche (siehe Folie Wirtschaftlichkeit).",
+      "skizze": "Skizze: Zuschauer-Hocker an der Rückseite der Küche. Neu: Zuschauer vorn – der hintere Gang bleibt frei für den Rezeptweg.",
+      "ebenen": {
+        "zonen": false,
+        "wege": false,
+        "blickachse": true
+      }
+    },
+    {
+      "nr": 8,
+      "titel": "Dessert & Wein",
+      "bezug": "M8 · M9",
+      "objekte": [
+        "M8",
+        "M9",
+        "Z6"
+      ],
+      "kamera": {
+        "position": [
+          10.2,
+          9.75
+        ],
+        "hoehe": 1.7,
+        "ziel": [
+          12.0,
+          1.1,
+          11.8
+        ]
+      },
+      "entscheidung": "Die Ergänzungen „Dessert & TK“ (D1–D3) und „Wein & Getränke“ (G1–G3) liegen an der Rückwand rechts – auf dem Rezeptweg nach der Kühlung.",
+      "begruendung": "Studien zeigen einen „Licensing“-Effekt: Wer zuerst „vernünftige“ Produkte gekauft hat, steuert danach eher Genussartikel an. Erst Frische, dann Dessert und Wein folgt dieser Reihenfolge – und dem Schritt „Ergänzen“ der Rezeptkarte.",
+      "quelle": "Hui/Bradlow/Fader 2009, J. of Consumer Research 36(3), S. 478–493 (Licensing) ✓",
+      "annahme": "Die Reihenfolge erhöht den Warenkorb – nicht gemessen.",
+      "skizze": "Wie in der Skizze (Dessert und Wein an der Rückwand).",
+      "ebenen": {
+        "zonen": false,
+        "wege": true
+      }
+    },
+    {
+      "nr": 9,
+      "titel": "Basissortiment längs",
+      "bezug": "M10 · M11 · Z7",
+      "objekte": [
+        "M10",
+        "M11",
+        "Z7"
+      ],
+      "kamera": {
+        "position": [
+          14.35,
+          3.0
+        ],
+        "hoehe": 1.7,
+        "ziel": [
+          14.3,
+          1.0,
+          9.5
+        ]
+      },
+      "entscheidung": "Basis (B1–B7) längs: Wandregal plus eine Gondel mit 1,75 m Gang – das ist der Schnellweg vom Eingang zur Kasse.",
+      "begruendung": "Längsplatzierung unterstützt bestehende Kaufabsichten: Wer gezielt Olivenöl sucht, erkennt die Warengruppe im Vorbeigehen, vergleicht und greift. Das Basissortiment sichert die Grundfrequenz (Lehre aus dem Kochhaus).",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3 ✓; Seminarskript: Längsplatzierung → „bestehende Kaufrelevanz“ ✓; Meyer, Tagesspiegel 28.03.2019 (Kochhaus) ✓",
+      "annahme": "Schnellkauf ≤ 15 Minuten ist ein Zielwert.",
+      "skizze": "Skizze: eine Gondel ca. 0,8 m vor der Wand (Gang zu schmal). Neu: Wandregal + Gondel, Gang 1,75 m.",
+      "ebenen": {
+        "zonen": false,
+        "wege": true
+      }
+    },
+    {
+      "nr": 10,
+      "titel": "Kasse & SB-Kasse",
+      "bezug": "M16–M18 · Z8",
+      "objekte": [
+        "M16",
+        "M17",
+        "M18",
+        "Z8"
+      ],
+      "kamera": {
+        "position": [
+          12.9,
+          5.4
+        ],
+        "hoehe": 2.1,
+        "ziel": [
+          12.6,
+          0.8,
+          1.6
+        ]
+      },
+      "entscheidung": "Eine Bedienkasse mit Band und zwei SB-Kassen direkt vor dem Ausgang. Dazu ein Impulsregal „Ergänzen“ (Kräuter, Schokolade, Rezeptkarten) an der Warteschlange.",
+      "begruendung": "Die Kasse liegt am Ende beider Wege. SB-Kassen fangen die Spitzen nach Vorlesung und Feierabend ab (Checkliste K8: Wartezeit). Ob SB-Technik angenommen wird, hängt laut Studien vom wahrgenommenen Nutzen ab – deshalb gibt es weiter eine Bedienkasse.",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 297–302 ✓; Inman/Nikolova 2017, J. of Retailing 93(1), S. 7–28 ◐; Seminar-Checkliste K8 ✓",
+      "annahme": "Spitzenlast ca. 25 Kunden pro Stunde (Fallannahme).",
+      "skizze": "Wie in der Skizze (Kasse 1 + SB-Kasse rechts vorn). Neu: Ausgang direkt hinter den Kassen, Impulsregal an der Schlange.",
+      "ebenen": {
+        "zonen": true,
+        "wege": true
+      }
+    },
+    {
+      "nr": 11,
+      "titel": "L-Lager & Warenweg",
+      "bezug": "Z9 · Z10 · L1–L4",
+      "objekte": [
+        "Z9",
+        "Z10",
+        "L1",
+        "L2"
+      ],
+      "kamera": {
+        "position": [
+          8.9,
+          4.0
+        ],
+        "hoehe": 14,
+        "ziel": [
+          8.9,
+          0,
+          9.4
+        ]
+      },
+      "entscheidung": "Das L-Lager umfasst die Rückseite und die rechte Seite (ca. 49 m²). Anlieferung über ein Rolltor hinten rechts, die Lagertür liegt am Basissortiment, die Kühlung wird von hinten befüllt.",
+      "begruendung": "Waren-, Arbeits- und Kundenweg kreuzen sich kaum: Die Ware kommt hinten rein und geht direkt in Kühlzelle und Regale. Der Personalraum liegt abgetrennt vorn rechts.",
+      "quelle": "Seminar-Checkliste Tag 2: F4–F6, E9 Anlieferung ✓",
+      "annahme": "Anlieferzeiten und Rolltor sind am Standort zulässig (Fallannahme).",
+      "skizze": "Skizze: „L-Lager“ ohne Lage. Neu: L-Form hinten/rechts mit Anlieferung und Hinterbefüllung.",
+      "ebenen": {
+        "zonen": true,
+        "wege": false
+      }
+    },
+    {
+      "nr": 12,
+      "titel": "Atmosphäre",
+      "bezug": "Licht · Duft · Material · Klang",
+      "objekte": [
+        "Z3",
+        "Z4"
+      ],
+      "kamera": {
+        "position": [
+          7.1,
+          1.3
+        ],
+        "hoehe": 1.7,
+        "ziel": [
+          5.5,
+          1.3,
+          9.0
+        ]
+      },
+      "entscheidung": "Warmes Licht (2.900–3.000 K) über Kochwelten und Küche, neutral-helles (4.000 K) in Basis und Kühlung. Kochduft nur zu festen Zeiten mit Dunstabzug, Holz in den Warenträgern, Edelstahl in der Küche, leise Musik.",
+      "begruendung": "Stimmung dort, wo inspiriert werden soll, Klarheit dort, wo schnell gekauft wird. Studien zeigen: Mehr Licht an Displays führt dazu, dass mehr Artikel angefasst werden. Duft wirkt auf die Wahrnehmung von Umfeld und Ware, wenn er zum Sortiment passt.",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 303–306 ✓; Summers/Hebert 2001, JBR 54(2), S. 145–150 ◐; Chebat/Michon 2003, JBR 56(7), S. 529–539 ◐; Spence et al. 2014, Psychology & Marketing 31(7), S. 472–488 ◐; Baker et al. 2002, J. of Marketing 66(2), S. 120–141 ◐",
+      "annahme": "Die Wirkungen sind im eigenen Store nicht gemessen; die Lautstärke ist ein Zielwert.",
+      "skizze": "Neu ausgearbeitet.",
+      "ebenen": {
+        "zonen": false,
+        "wege": false
+      }
+    }
+  ],
+  "praesentation": {
+    "_hinweis": "Ablauf im Präsentationsmodus. Einträge: {\"folie\": \"id\"} oder {\"station\": nr}. Folien stehen unter 'folien'. ✓ = an Skript/Abstract geprüft, ◐ = Fundstelle im Volltext prüfen.",
+    "ablauf": [
+      {
+        "folie": "titel"
+      },
+      {
+        "folie": "problem"
+      },
+      {
+        "folie": "wettbewerb"
+      },
+      {
+        "folie": "rahmen"
+      },
+      {
+        "folie": "wirtschaft"
+      },
+      {
+        "folie": "grundriss"
+      },
+      {
+        "folie": "optimierung"
+      },
+      {
+        "station": 1
+      },
+      {
+        "station": 2
+      },
+      {
+        "station": 3
+      },
+      {
+        "station": 4
+      },
+      {
+        "station": 5
+      },
+      {
+        "station": 6
+      },
+      {
+        "station": 7
+      },
+      {
+        "station": 8
+      },
+      {
+        "station": 9
+      },
+      {
+        "station": 10
+      },
+      {
+        "station": 11
+      },
+      {
+        "station": 12
+      },
+      {
+        "folie": "flaechen"
+      },
+      {
+        "folie": "konflikte"
+      },
+      {
+        "folie": "fazit"
+      },
+      {
+        "folie": "quellen"
+      }
+    ],
+    "folien": {
+      "titel": {
+        "typ": "einleitung",
+        "titel": "One Hour Kitchen",
+        "untertitel": "Shop. Cook. Enjoy. – Food-Store mit Kochwelten, Rezept-Matrix und Showküche",
+        "zeile": "Store-Konzept · Kurs HD25A23 · DHBW Heilbronn · Prüfung 19.10.2026",
+        "team": "Gruppe: Name 1 · Name 2 · Name 3",
+        "fragestellung": "Wie muss ein 190-m²-Store gestaltet sein, damit Studierende und Berufstätige auf dem Heimweg in wenigen Minuten entscheiden, was sie heute Abend kochen – und alles dafür finden?",
+        "agenda": [
+          "Kundenproblem, Wettbewerb, Rahmen, Wirtschaftlichkeit",
+          "Von der Skizze zum Grundriss",
+          "Rundgang: 12 Stationen entlang des Rezeptwegs",
+          "Flächenbilanz, Zielkonflikte, Fazit, Quellen"
+        ],
+        "legende": [
+          "✓ Quelle an Skript/Abstract geprüft",
+          "◐ Fundstelle im Volltext prüfen",
+          "Annahme = gekennzeichnete Fallannahme"
+        ],
+        "kamera": {
+          "position": [
+            3.0,
+            -7.0
+          ],
+          "hoehe": 2.2,
+          "ziel": [
+            7.5,
+            1.4,
+            3.0
+          ]
+        }
+      },
+      "problem": {
+        "typ": "folie",
+        "kicker": "1 · Kundenproblem und Idee",
+        "titel": "Zwei Entscheidungen am Eingang, ein Rezept für heute Abend.",
+        "lead": "„Was kochen wir heute Abend?“ – Die Kundin weiß, dass sie kocht, und will schnell entscheiden. Offen ist nur das Gericht.",
+        "punkte": [
+          "Matrix-Dashboard am Eingang: Küche (Pasta · Asian · Mexican) × Anlass (» schnell · ★ besonders · € günstig) = genau ein Rezept",
+          "Die Rezeptkarte ist der Wegweiser: Fachcodes zeigen, wo jede Zutat liegt (O = Obst/Gemüse, W = Kochwelt, K = Kühlung, B = Basis, D = Dessert, G = Getränke)",
+          "Showküche als Zusatz: Live-Cooking mittags, Kurse abends"
+        ],
+        "kpis": [
+          [
+            "≤ 15 Min.",
+            "Einkauf"
+          ],
+          [
+            "≤ 45 Min.",
+            "Kochzeit laut Karte"
+          ],
+          [
+            "9",
+            "Rezepte im Monat"
+          ]
+        ],
+        "tags": [
+          [
+            "A",
+            "Kundenproblem aus eigener Zielgruppenannahme; Zeiten sind Zielwerte, nicht gemessen"
+          ]
+        ],
+        "kamera": {
+          "position": [
+            7.3,
+            -1.6
+          ],
+          "hoehe": 1.7,
+          "ziel": [
+            6.5,
+            1.4,
+            3.2
+          ]
+        }
+      },
+      "wettbewerb": {
+        "typ": "folie",
+        "kicker": "1 · Wettbewerb und USP",
+        "titel": "Wir lösen die Frage für heute Abend, nicht für nächste Woche.",
+        "tabelle": {
+          "kopf": [
+            "",
+            "heute spontan",
+            "Rezept + Zutaten an einem Ort",
+            "live probieren",
+            "gemeinsam kochen"
+          ],
+          "zeilen": [
+            [
+              "Supermarkt",
+              "✓",
+              "–",
+              "–",
+              "–"
+            ],
+            [
+              "Kochbox (z. B. HelloFresh)",
+              "– Tage vorher",
+              "✓ per Lieferung",
+              "–",
+              "–"
+            ],
+            [
+              "Kochschule",
+              "– fester Termin",
+              "–",
+              "✓",
+              "✓"
+            ],
+            [
+              "Kochhaus (2010–2019)",
+              "✓",
+              "✓",
+              "–",
+              "✓ Kurse"
+            ],
+            [
+              "One Hour Kitchen",
+              "✓",
+              "✓",
+              "✓",
+              "✓"
+            ]
+          ]
+        },
+        "punkte": [
+          "Referenz Kochhaus: bis zu 12 Läden und über 8 Mio. € Umsatz, „offenkundig nicht profitabel“, unter Druck durch Online-Kochboxen wie HelloFresh; 2019 Insolvenz",
+          "Unsere Lehre daraus: Basissortiment für Grundfrequenz, 9 Rezepte statt 18–20, Küche sichtbar im Laden"
+        ],
+        "tags": [
+          [
+            "Q",
+            "Meyer, L.: Kochhaus meldet Insolvenz an, Tagesspiegel, 28.03.2019 ✓"
+          ],
+          [
+            "A",
+            "Einordnung der Wettbewerber und Größe der spontanen Zielgruppe sind eigene Einschätzung"
+          ]
+        ],
+        "kamera": {
+          "position": [
+            3.0,
+            -7.0
+          ],
+          "hoehe": 2.2,
+          "ziel": [
+            7.5,
+            1.4,
+            3.0
+          ]
+        }
+      },
+      "rahmen": {
+        "typ": "folie",
+        "kicker": "2 · Rahmen",
+        "titel": "Wer, wo, was – und auf welcher Fläche.",
+        "felder": [
+          [
+            "Store",
+            "Food-Store mit drei Kochwelten, Rezept-Matrix und mietbarer Showküche (8 Plätze)",
+            "A"
+          ],
+          [
+            "Kundengruppe",
+            "18–35-jährige Studierende und Berufstätige: wenig Zeit, kochaffin, entscheiden spontan auf dem Heimweg",
+            "A"
+          ],
+          [
+            "Standort",
+            "Heilbronn, Nähe Bildungscampus, auf dem Heimweg zu ÖPNV-Haltestellen; Laufkundschaft nach Vorlesung und Feierabend",
+            "A"
+          ],
+          [
+            "Sortiment",
+            "ca. 800 Artikel: 9 Matrix-Rezepte in 3 Kochwelten, Obst & Gemüse, Kühlung, Basissortiment, Dessert, Wein & Getränke",
+            "A"
+          ],
+          [
+            "Fläche",
+            "Verkaufsraum 15,8 × 12 m ≈ 190 m² (davon Showküche ca. 18 m² inkl. Zuschauerbereich) + L-Lager ca. 49 m² + Personal/WC ca. 7 m²",
+            "A"
+          ],
+          [
+            "Öffnungszeiten",
+            "Mo–Sa 10–21 Uhr; Live-Cooking 12–13:30 Uhr, Kurse 18:30–21 Uhr",
+            "A"
+          ]
+        ],
+        "kamera": {
+          "position": [
+            8.9,
+            4.5
+          ],
+          "hoehe": 17,
+          "ziel": [
+            8.9,
+            0,
+            6.9
+          ]
+        }
+      },
+      "wirtschaft": {
+        "typ": "folie",
+        "kicker": "2 · Wirtschaftliche Größe: Kapazität der Showküche",
+        "titel": "Ab rund 3 Kursbelegungen pro Woche trägt sich die Showküche.",
+        "rechnung": [
+          [
+            "Zielumsatz Verkauf",
+            "140 Kunden/Tag × 24 € × 300 Tage",
+            "1.008.000 €"
+          ],
+          [
+            "Flächenleistung",
+            "1.008.000 € ÷ 172 m² (190 m² ohne Showküche)",
+            "≈ 5.860 €/m²"
+          ],
+          [
+            "Entgangener Umsatz",
+            "18 m² Showküche × 5.860 €/m²",
+            "≈ 105.500 €"
+          ],
+          [
+            "davon Rohertrag (30 %)",
+            "105.500 € × 30 %",
+            "≈ 31.600 €/Jahr"
+          ],
+          [
+            "DB je Kurs-Belegung",
+            "7 Pers. × 59 € × 60 % DB-Quote",
+            "≈ 248 €"
+          ],
+          [
+            "Mindestauslastung",
+            "31.600 € ÷ (248 € × 48 Wochen)",
+            "≈ 2,7 Belegungen/Woche"
+          ]
+        ],
+        "punkte": [
+          "Wir planen mit mindestens 4 Belegungen pro Woche (Kurse abends + Firmen-Events), dazu Live-Cooking mittags als Frequenzbringer.",
+          "Vergleich: Kochhaus Berlin 2010 nennt 250 Kunden/Tag und 20 € Ø-Bon – unsere Werte sind bewusst vorsichtiger."
+        ],
+        "tags": [
+          [
+            "A",
+            "Kundenfrequenz, Warenkorb, Kurspreis, Auslastung (7 von 8 Plätzen), Rohertrags- und DB-Quote sind angenommen"
+          ],
+          [
+            "A",
+            "Nicht enthalten: Investition Küche, Personal, Energie"
+          ]
+        ],
+        "kamera": {
+          "position": [
+            9.6,
+            2.0
+          ],
+          "hoehe": 2.6,
+          "ziel": [
+            9.7,
+            0.7,
+            7.2
+          ]
+        }
+      },
+      "grundriss": {
+        "typ": "folie",
+        "kicker": "3 · Grundriss",
+        "titel": "Zwei Wege durch einen Laden: Rezeptweg und Schnellweg.",
+        "punkte": [
+          "Rezeptweg (rot): Eingang → Dashboard → Obst & Gemüse → Rundlauf links an den Kojen vorbei → Kühlung → Dessert & Wein → Basis → Kasse",
+          "Schnellweg (grün): Eingang → Basissortiment (längs) → Kasse",
+          "Blickachse (gelb): vom Eingang auf den Show-Kochtresen",
+          "Rundlauf am Rand: Frische und Ergänzungen liegen an den Wänden, die Kojen sind kurze Abstecher"
+        ],
+        "tags": [
+          [
+            "Q",
+            "Ahlert/Kenning/Brock 2020, S. 297–302 (Ladenlayout, Kundenlauf) ✓; Larson et al. 2005 (Laufwege) ◐"
+          ],
+          [
+            "A",
+            "Positionen und Maße sind Fallannahmen"
+          ]
+        ],
+        "ebenen": {
+          "zonen": true,
+          "wege": true
+        },
+        "kamera": {
+          "position": [
+            7.9,
+            4.6
+          ],
+          "hoehe": 17.5,
+          "ziel": [
+            7.9,
+            0,
+            6.6
+          ]
+        },
+        "ansicht": "draufsicht",
+        "panel": false
+      },
+      "optimierung": {
+        "typ": "folie",
+        "kicker": "3 · Von der Skizze zum Layout",
+        "titel": "Acht Optimierungen gegenüber unserer Basisidee.",
+        "tabelle": {
+          "kopf": [
+            "Skizze",
+            "Optimiert",
+            "Grund"
+          ],
+          "zeilen": [
+            [
+              "Doppeltür mittig",
+              "Eingang links, Ausgang rechts an der Kasse",
+              "klare Laufrichtung"
+            ],
+            [
+              "Dashboard mittig vor der Tür",
+              "leicht links, Blickachse frei",
+              "Showküche als Anker sichtbar"
+            ],
+            [
+              "Themenwelten ca. 0,7 m Abstand",
+              "1,4–1,5 m Gänge, linker Rundlauf",
+              "Gegenverkehr, Wagen, Notausgang"
+            ],
+            [
+              "Hocker hinter der Küche",
+              "Zuschauer vorn",
+              "hinterer Gang bleibt frei"
+            ],
+            [
+              "Basis-Gondel 0,8 m vor der Wand",
+              "Wandregal + Gondel, Gang 1,75 m",
+              "Schnellweg, mehr Facings"
+            ],
+            [
+              "L-Lager ohne Lage",
+              "hinten + rechts, Rolltor",
+              "Warenweg ≠ Kundenweg"
+            ],
+            [
+              "Kühlung an der Wand",
+              "Hinterbefüllung aus der Kühlzelle",
+              "Nachfüllen ohne Gang"
+            ],
+            [
+              "–",
+              "Impulsregal + Notausgang links",
+              "Ergänzen; Fluchtweg"
+            ]
+          ]
+        },
+        "tags": [
+          [
+            "A",
+            "Alle Änderungen sind eigene Entscheidungen; Begründungen und Quellen je Station im Rundgang"
+          ]
+        ],
+        "ebenen": {
+          "zonen": true,
+          "wege": true
+        },
+        "kamera": {
+          "position": [
+            7.9,
+            4.6
+          ],
+          "hoehe": 17.5,
+          "ziel": [
+            7.9,
+            0,
+            6.6
+          ]
+        }
+      },
+      "flaechen": {
+        "typ": "folie",
+        "kicker": "4 · Raumzuteilung",
+        "titel": "Flächenbilanz des Verkaufsraums (≈ 190 m²).",
+        "flaechen": "auto",
+        "punkte": [
+          "Die Flächenarten folgen dem Seminar: Warenfläche, Kundenfläche, Beratungs-/Erlebniszone, sonstige Fläche",
+          "Die Kundenfläche ist bewusst groß: Übergangszone mit Dashboard, Zuschauerbereich vor der Showküche und 1,4–1,75 m breite Gänge",
+          "Alle Werte sind aus dem maßstäblichen Grundriss berechnet (Stellflächen der Warenträger)"
+        ],
+        "tags": [
+          [
+            "Q",
+            "Ahlert/Kenning/Brock 2020, S. 297–302 (Flächenarten) ✓"
+          ],
+          [
+            "A",
+            "Zuordnung der Flächen ist Fallannahme; Werte gerundet"
+          ]
+        ],
+        "ebenen": {
+          "zonen": true,
+          "wege": false
+        },
+        "kamera": {
+          "position": [
+            7.9,
+            4.6
+          ],
+          "hoehe": 17.5,
+          "ziel": [
+            7.9,
+            0,
+            6.6
+          ]
+        }
+      },
+      "konflikte": {
+        "typ": "folie",
+        "kicker": "5 · Zielkonflikte",
+        "titel": "Sechs Zielkonflikte und unsere Antworten.",
+        "tabelle": {
+          "kopf": [
+            "Konflikt",
+            "Unsere Antwort"
+          ],
+          "zeilen": [
+            [
+              "Showküche braucht Fläche",
+              "Kompakt (ca. 18 m²), wirtschaftlich ab ca. 2,7 Belegungen/Woche; geplant ≥ 4"
+            ],
+            [
+              "Erlebnis vs. schneller Einkauf",
+              "Zwei Wege: Rezeptweg als Rundlauf, Schnellweg längs durch die Basis; die Küche ist kein Pflichtweg"
+            ],
+            [
+              "Zuschauer vs. Warenfluss",
+              "Zuschauer vorn in der Übergangszone, nicht in den Gängen (Hui et al. 2009)"
+            ],
+            [
+              "Wechselnde Rezepte",
+              "Monatlich wechseln nur die Rezepte in den Feldern; Spalten, Zeilen und Kojen bleiben fest"
+            ],
+            [
+              "Geruch & Lärm",
+              "Dunstabzug, Kurse vorwiegend abends, Live-Cooking zu festen Zeiten"
+            ],
+            [
+              "Schnellweg kreuzt den Kassenbereich",
+              "Querung oberhalb der Kassen (z ≈ 3,9 m), Kassenschlange endet vorher"
+            ]
+          ]
+        },
+        "tags": [
+          [
+            "A",
+            "Alle Lösungen sind eigene Entscheidungen"
+          ]
+        ],
+        "kamera": {
+          "position": [
+            12.3,
+            9.3
+          ],
+          "hoehe": 2.6,
+          "ziel": [
+            8.5,
+            0.6,
+            2.5
+          ]
+        }
+      },
+      "fazit": {
+        "typ": "schluss",
+        "titel": "Orientieren und irritieren in einem Store.",
+        "punkte": [
+          "Orientieren: Matrix-Dashboard, gespiegelte Matrix im Regal, Basissortiment längs, Schnellweg",
+          "Irritieren: Kochwelten quer als Kojen, Ergänzungen gegenüber der Matrix",
+          "Verführen: Showküche als Anker, Dessert & Wein nach der Frische, Impulsregal an der Kasse",
+          "Funktionieren: L-Lager mit Hinterbefüllung, getrennter Ein-/Ausgang, freier Notausgang"
+        ],
+        "ausblick": "Der Händler erzeugt keinen Kauf, er macht die Entscheidung leichter. Offene Annahmen (Frequenz, Warenkorb, Auslastung) prüfen wir nach der Eröffnung mit einer Kundenlaufstudie.",
+        "kamera": {
+          "position": [
+            7.1,
+            0.35
+          ],
+          "hoehe": 2.4,
+          "ziel": [
+            8.2,
+            0.8,
+            9.0
+          ]
+        }
+      },
+      "quellen": {
+        "typ": "quellen",
+        "titel": "Quellen und Kennzeichnung",
+        "liste": [
+          "Ahlert, D.; Kenning, P.; Brock, C. (2020): Handelsmarketing. Grundlagen der marktorientierten Führung von Handelsbetrieben. 3. Aufl., Springer Gabler, Kap. 10, S. 295–309. ✓ (Fundstellen laut Seminarskript)",
+          "Baker, J.; Parasuraman, A.; Grewal, D.; Voss, G. B. (2002): The Influence of Multiple Store Environment Cues on Perceived Merchandise Value and Patronage Intentions. Journal of Marketing, 66(2), S. 120–141. ◐",
+          "Chandon, P.; Hutchinson, J. W.; Bradlow, E. T.; Young, S. H. (2009): Does In-Store Marketing Work? Journal of Marketing, 73(6), S. 1–17. ✓",
+          "Chebat, J.-C.; Michon, R. (2003): Impact of ambient odors on mall shoppers' emotions, cognition, and spending. Journal of Business Research, 56(7), S. 529–539. ◐",
+          "Gröppel, A. (1991): Erlebnisstrategien im Einzelhandel. Physica-Verlag, Heidelberg. ◐",
+          "Hui, S. K.; Bradlow, E. T.; Fader, P. S. (2009): Testing Behavioral Hypotheses Using an Integrated Model of Grocery Store Shopping Path and Purchase Behavior. Journal of Consumer Research, 36(3), S. 478–493. ✓",
+          "Inman, J. J.; Nikolova, H. (2017): Shopper-Facing Retail Technology. Journal of Retailing, 93(1), S. 7–28. ◐",
+          "Larson, J. S.; Bradlow, E. T.; Fader, P. S. (2005): An exploratory look at supermarket shopping paths. International Journal of Research in Marketing, 22(4), S. 395–414. ✓ (Abstract) / ◐ (Fundstelle)",
+          "Luhmann, N. (1984): Soziale Systeme. Suhrkamp, S. 63 (über das Seminarskript HD25A23). ✓",
+          "Meyer, L. (2019): Kochhaus meldet Insolvenz an. Der Tagesspiegel, 28.03.2019. ✓",
+          "Scheuch, M. (2001): Orientierungsfreundlichkeit im Verkaufsraum. der markt, 40(2–3), S. 88–97 (zit. S. 90, 92). ◐",
+          "Spence, C.; Puccinelli, N. M.; Grewal, D.; Roggeveen, A. L. (2014): Store Atmospherics: A Multisensory Perspective. Psychology & Marketing, 31(7), S. 472–488. ◐",
+          "Summers, T. A.; Hebert, P. R. (2001): Shedding some light on store atmospherics. Journal of Business Research, 54(2), S. 145–150. ◐",
+          "Seminarunterlagen HD25A23 (Bender 2026): Skript Store Layout; Checkliste Lernsicherung Tag 2. ✓"
+        ],
+        "hinweise": [
+          "✓ = Inhalt an Seminarskript bzw. Abstract/Volltext geprüft · ◐ = Fundstelle vor der Prüfung im Volltext prüfen",
+          "Annahme = gekennzeichnete Fallannahme der Gruppe",
+          "Alle Marken- und Produktnamen im 3D-Modell sind fiktiv. 3D-Prototyp: eigene Darstellung (Three.js)."
+        ],
+        "kamera": {
+          "position": [
+            7.1,
+            0.35
+          ],
+          "hoehe": 2.4,
+          "ziel": [
+            8.2,
+            0.8,
+            9.0
+          ]
+        }
+      }
+    }
+  },
+  "simulation": {
+    "_hinweis": "Simulierte Kunden. Punkte [x, z]; mit „text“ bleibt der Kunde stehen (dauer in s) und schaut zum Punkt „blick“ [x, z].",
+    "tempo": 1.15,
+    "kunden": [
+      {
+        "name": "Lena, 24, Studentin",
+        "beschreibung": "nimmt den Rezeptweg",
+        "farbe": "#d64527",
+        "punkte": [
+          {
+            "p": [
+              7.1,
+              -3.2
+            ]
+          },
+          {
+            "p": [
+              7.1,
+              0.5
+            ],
+            "text": "Kommt nach der Vorlesung rein – der Blick fällt sofort auf die Showküche",
+            "dauer": 2.2,
+            "blick": [
+              9.7,
+              5.4
+            ]
+          },
+          {
+            "p": [
+              6.6,
+              2.2
+            ],
+            "text": "Matrix-Dashboard: „Asian“ × „günstig“ → Rezept #06 Gemüse-Fried-Rice. Sie zieht die Rezeptkarte.",
+            "dauer": 3.5,
+            "blick": [
+              6.5,
+              3.2
+            ]
+          },
+          {
+            "p": [
+              5.0,
+              1.5
+            ]
+          },
+          {
+            "p": [
+              2.6,
+              1.45
+            ],
+            "text": "Obst & Gemüse (O1): Lauchzwiebeln für später – der schräge Stand lenkt nach links",
+            "dauer": 2.5,
+            "blick": [
+              2.9,
+              2.8
+            ]
+          },
+          {
+            "p": [
+              1.2,
+              1.5
+            ]
+          },
+          {
+            "p": [
+              0.7,
+              2.2
+            ]
+          },
+          {
+            "p": [
+              0.7,
+              8.35
+            ]
+          },
+          {
+            "p": [
+              1.9,
+              8.35
+            ],
+            "text": "Kurzer Abstecher in die Asian-Koje: Sojasauce (W2) aus der Matrix – direkt vor ihr das Feld „€ günstig“",
+            "dauer": 3,
+            "blick": [
+              1.9,
+              7.6
+            ]
+          },
+          {
+            "p": [
+              0.7,
+              8.35
+            ]
+          },
+          {
+            "p": [
+              0.7,
+              10.45
+            ]
+          },
+          {
+            "p": [
+              1.2,
+              10.5
+            ]
+          },
+          {
+            "p": [
+              1.5,
+              10.55
+            ],
+            "text": "Kühlung: Eier aus K1 – laut Karte der einzige Kühlartikel",
+            "dauer": 2.5,
+            "blick": [
+              1.5,
+              11.6
+            ]
+          },
+          {
+            "p": [
+              8.6,
+              10.5
+            ],
+            "text": "Dessert & TK: TK-Gemüse aus D3 – das Eis daneben lacht sie an (Licensing)",
+            "dauer": 2.8,
+            "blick": [
+              8.6,
+              11.6
+            ]
+          },
+          {
+            "p": [
+              13.6,
+              10.5
+            ]
+          },
+          {
+            "p": [
+              14.4,
+              9.9
+            ]
+          },
+          {
+            "p": [
+              14.4,
+              8.4
+            ],
+            "text": "Basis: Reis aus B1 – Längsplatzierung, findet ihn im Vorbeigehen",
+            "dauer": 2.5,
+            "blick": [
+              15.3,
+              8.4
+            ]
+          },
+          {
+            "p": [
+              14.4,
+              4.3
+            ]
+          },
+          {
+            "p": [
+              13.9,
+              3.75
+            ]
+          },
+          {
+            "p": [
+              14.1,
+              2.0
+            ],
+            "text": "SB-Kasse: 4 Artikel, keine Schlange – Einkauf in unter 10 Minuten",
+            "dauer": 2.6,
+            "blick": [
+              15.0,
+              2.0
+            ]
+          },
+          {
+            "p": [
+              13.9,
+              0.6
+            ]
+          },
+          {
+            "p": [
+              10.3,
+              0.5
+            ]
+          },
+          {
+            "p": [
+              10.3,
+              -3.0
+            ],
+            "text": "Verlässt den Laden durch den Ausgang – Rezeptweg komplett",
+            "dauer": 1.5
+          }
+        ]
+      },
+      {
+        "name": "Tom, 31, Berufstätiger",
+        "beschreibung": "nimmt den Schnellweg",
+        "farbe": "#2f9e6e",
+        "punkte": [
+          {
+            "p": [
+              7.1,
+              -3.2
+            ]
+          },
+          {
+            "p": [
+              7.2,
+              0.8
+            ],
+            "text": "Weiß, was er braucht: Olivenöl und Pasta für zu Hause – kein Halt am Dashboard",
+            "dauer": 1.6,
+            "blick": [
+              13,
+              6
+            ]
+          },
+          {
+            "p": [
+              8.2,
+              3.85
+            ]
+          },
+          {
+            "p": [
+              14.2,
+              3.85
+            ]
+          },
+          {
+            "p": [
+              14.35,
+              4.4
+            ]
+          },
+          {
+            "p": [
+              14.35,
+              6.0
+            ],
+            "text": "Basis-Wandregal B2: Olivenöl – Warengruppe im Vorbeigehen erkennbar",
+            "dauer": 2.4,
+            "blick": [
+              15.3,
+              6.0
+            ]
+          },
+          {
+            "p": [
+              14.35,
+              9.85
+            ]
+          },
+          {
+            "p": [
+              13.1,
+              10.0
+            ],
+            "text": "Am Ende des Gangs: der Wein (G1) liegt direkt im Blick",
+            "dauer": 2.2,
+            "blick": [
+              13.1,
+              11.6
+            ]
+          },
+          {
+            "p": [
+              12.1,
+              9.4
+            ]
+          },
+          {
+            "p": [
+              12.1,
+              7.6
+            ],
+            "text": "Gondel B4: Tomatensauce – dahinter sieht er durchs Glas die Kursvorbereitung",
+            "dauer": 2.4,
+            "blick": [
+              12.7,
+              7.6
+            ]
+          },
+          {
+            "p": [
+              12.1,
+              3.9
+            ]
+          },
+          {
+            "p": [
+              11.1,
+              3.55
+            ]
+          },
+          {
+            "p": [
+              11.1,
+              2.2
+            ],
+            "text": "Bedienkasse: greift am Impulsregal noch frisches Basilikum („Ergänzen“)",
+            "dauer": 2.6,
+            "blick": [
+              10.6,
+              2.2
+            ]
+          },
+          {
+            "p": [
+              11.1,
+              0.7
+            ]
+          },
+          {
+            "p": [
+              10.3,
+              0.4
+            ]
+          },
+          {
+            "p": [
+              10.3,
+              -3.0
+            ],
+            "text": "Schnellweg in ca. 6 Minuten",
+            "dauer": 1.5
+          }
+        ]
+      }
+    ]
+  },
+  "wanddeko": {
+    "_hinweis": "Deko an den Wänden. pos = [x, z], richtung = wohin die Vorderseite zeigt, y = Mittelhöhe in m.",
+    "elemente": [
+      {
+        "typ": "neon",
+        "text": "ONE HOUR KITCHEN",
+        "pos": [
+          3.3,
+          -0.21
+        ],
+        "richtung": [
+          0,
+          -1
+        ],
+        "y": 3.0,
+        "hoehe": 0.34,
+        "farbe": "#ff5a3c",
+        "_ort": "Fassade über dem Schaufenster"
+      },
+      {
+        "typ": "neon",
+        "text": "Shop. Cook. Enjoy.",
+        "pos": [
+          9.7,
+          11.93
+        ],
+        "richtung": [
+          0,
+          -1
+        ],
+        "y": 2.55,
+        "hoehe": 0.36,
+        "farbe": "#ff8a3d",
+        "schrift": "italic 700"
+      },
+      {
+        "typ": "tafel",
+        "pos": [
+          15.74,
+          2.2
+        ],
+        "richtung": [
+          -1,
+          0
+        ],
+        "y": 1.75,
+        "breite": 1.1,
+        "hoehe": 0.85,
+        "titel": "KURSE DIESE WOCHE",
+        "zeilen": [
+          "Mo  Pasta Basics · 18:30",
+          "Mi  Ramen-Abend · 18:30",
+          "Do  Taco Night · 18:30",
+          "Fr  Firmen-Event",
+          "Sa  Live-Cooking 12–13:30"
+        ]
+      },
+      {
+        "typ": "tafel",
+        "pos": [
+          0.04,
+          3.3
+        ],
+        "richtung": [
+          1,
+          0
+        ],
+        "y": 1.7,
+        "breite": 1.0,
+        "hoehe": 0.8,
+        "titel": "HEUTE FRISCH",
+        "zeilen": [
+          "Pak Choi  1,49 €",
+          "Avocado   0,99 €",
+          "Zitronen  0,39 €",
+          "Basilikum 1,79 €"
+        ]
+      },
+      {
+        "typ": "pflanze",
+        "pos": [
+          0.45,
+          0.45
+        ]
+      },
+      {
+        "typ": "pflanze",
+        "pos": [
+          15.35,
+          10.9
+        ]
+      }
+    ]
+  },
+  "audio": {
+    "quellen": [
+      [
+        9.7,
+        1.6,
+        5.3
+      ]
+    ]
+  },
+  "start": {
+    "position": [
+      7.1,
+      0.6
+    ],
+    "blickrichtung_grad": 0,
+    "_blickrichtung": "0 = Blick in den Laden (Richtung Rückwand), 90 = nach rechts"
+  },
+  "deckenhaenger": [
+    {
+      "text": "OBST & GEMÜSE",
+      "pos": [
+        2.6,
+        2.0
+      ],
+      "farbe": "#2f7d32",
+      "w": 1.7
+    },
+    {
+      "text": "KOCHWELTEN",
+      "pos": [
+        3.9,
+        8.35
+      ],
+      "farbe": "#e8862e",
+      "w": 1.6,
+      "richtung": [
+        1,
+        0
+      ]
+    },
+    {
+      "text": "KÜHLUNG · K1–K6",
+      "pos": [
+        3.8,
+        10.6
+      ],
+      "farbe": "#3f8fd0",
+      "w": 1.9
+    },
+    {
+      "text": "DESSERT & WEIN",
+      "pos": [
+        11.2,
+        10.45
+      ],
+      "farbe": "#8a4fc7",
+      "w": 1.8
+    },
+    {
+      "text": "BASIS · B1–B7",
+      "pos": [
+        14.35,
+        6.0
+      ],
+      "farbe": "#3b6fb0",
+      "w": 1.7,
+      "richtung": [
+        0,
+        -1
+      ]
+    },
+    {
+      "text": "KASSE",
+      "pos": [
+        13.0,
+        3.75
+      ],
+      "farbe": "#d64527",
+      "w": 1.0
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
+import { writeFileSync } from 'node:fs';
+const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage({ viewport: { width: 900, height: 600 } });
+page.on('pageerror', (e) => console.log('PAGEERROR', e.message));
+await page.goto('file://' + process.cwd() + '/dist/index.html?debug');
+await page.waitForTimeout(3000);
+const url = await page.evaluate(() => { const r = window.rille; r.bus.emit('zonen'); r.bus.emit('png'); return document.querySelector('#export-dialog img').src; });
+const data = url.startsWith('data:') ? url : await page.evaluate(async (u) => { const b = await (await fetch(u)).blob(); return await new Promise((res) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.readAsDataURL(b); }); }, url);
+writeFileSync(process.argv[2], Buffer.from(data.split(',')[1], 'base64'));
+await browser.close();

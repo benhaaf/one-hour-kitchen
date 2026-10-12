@@ -1,0 +1,12 @@
+import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
+const [,, query = '', js = '', wait = '3000', js2 = ''] = process.argv;
+const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage({ viewport: { width: 640, height: 400 } });
+page.on('pageerror', (e) => console.log('PAGEERROR', e.message));
+page.on('console', (m) => console.log('console', m.type(), m.text().slice(0, 300)));
+await page.goto('file://' + process.cwd() + '/dist/index.html' + query);
+await page.waitForTimeout(2500);
+if (js) console.log('->', JSON.stringify(await page.evaluate(js)));
+await page.waitForTimeout(+wait);
+if (js2) console.log('->', JSON.stringify(await page.evaluate(js2)));
+await browser.close();

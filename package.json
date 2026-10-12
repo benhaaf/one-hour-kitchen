@@ -1,0 +1,10 @@
+{
+  "name": "one-hour-kitchen",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "bun scripts/build.mjs",
+    "shot": "node scripts/shot.mjs"
+  }
+}

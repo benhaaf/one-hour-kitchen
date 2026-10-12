@@ -13,55 +13,100 @@ const SERIF = 'Georgia, "Times New Roman", serif';
 // m = Maße [Breite, Höhe, Tiefe] in m; c = Grundfarbe, a = Akzent, b = Marke, n = Produktname, s = Zeile darunter
 const P = (form, m, c, a, b, n, s = '', font = SANS) => ({ form, m, c, a, b, n, s, font });
 export const CATALOG = {
-  // Kochwelt Pasta (W1)
-  W1: [
+  // ---------- Kochwelten: je Rezept die UNGEKÜHLTEN Zutaten (Zweitplatzierung, Parmesan-Regel) ----------
+  // Rxx = Greifzone (Zutaten des Rezepts), RxxB = Bückzone (Großpackungen), RxxD = Bückzone unten (Getränke zum Rezept)
+  R01: [
     P('packung', [0.1, 0.2, 0.06], '#1f4e9c', '#f2c230', 'Nonna Lia', 'Spaghetti', '500 g', SERIF),
-    P('packung', [0.1, 0.2, 0.06], '#1f4e9c', '#f4f1ec', 'Nonna Lia', 'Penne', '500 g', SERIF),
-    P('glas', [0.08, 0.15, 0.08], '#c0392b', '#f4f1ec', 'Casa Verde', 'Sugo', 'Tomate-Basilikum'),
-    P('tetra', [0.07, 0.17, 0.05], '#b03a2e', '#2f7d32', 'Casa Verde', 'Passata', '500 g'),
+    P('glas', [0.08, 0.15, 0.08], '#c0392b', '#f4f1ec', 'Casa Verde', 'Sugo', 'Tomate'),
+    P('flasche', [0.05, 0.19, 0.05], '#4d6b2a', '#f2c230', 'Casa Verde', 'Olivenöl', '250 ml'),
+    P('beutel', [0.09, 0.13, 0.03], '#efe7d6', '#d64527', 'One Hour', 'Gewürz', 'Pasta-Mix'),
+  ],
+  R01B: [P('packung', [0.13, 0.25, 0.08], '#1f4e9c', '#f2c230', 'Nonna Lia', 'Spaghetti', '1 kg', SERIF), P('glas', [0.1, 0.2, 0.1], '#c0392b', '#f4f1ec', 'Casa Verde', 'Sugo', '680 g')],
+  R01D: [P('flasche', [0.065, 0.24, 0.065], '#f2c230', '#1f4e9c', 'Limonata', 'Limone', '0,5 l')],
+  R02: [
+    P('packung', [0.13, 0.08, 0.2], '#f2e3b0', '#5d3a1a', 'Forno Lia', 'Löffelbiskuits', '200 g'),
+    P('dose', [0.08, 0.12, 0.08], '#5d3a1a', '#f2c230', 'Kakaowerk', 'Kakao', 'ungesüßt'),
+    P('glas', [0.05, 0.1, 0.05], '#f2d43a', '#1c1c1f', 'Kochwerk', 'Zitronen-', 'pfeffer'),
+    P('beutel', [0.12, 0.17, 0.05], '#e9d8b0', '#7a3b1e', 'Forno Lia', 'Amaretti', 'Mandel'),
+  ],
+  R02B: [P('flasche', [0.07, 0.26, 0.07], '#c0392b', '#f4f1ec', 'Casa Verde', 'Aperitivo', 'alkoholfrei')],
+  R02D: [P('wein', [0.075, 0.31, 0.075], '#4d6b2a', '#efe8d8', 'Weingut Neckar', 'Riesling', 'zum Menü')],
+  R03: [
+    P('packung', [0.1, 0.18, 0.06], '#1f4e9c', '#f4f1ec', 'Nonna Lia', 'Ditalini', '500 g', SERIF),
     P('dose', [0.075, 0.11, 0.075], '#8d6e3f', '#f4f1ec', 'Nonna Lia', 'Borlotti', 'Bohnen'),
-    P('beutel', [0.12, 0.17, 0.05], '#e9d8b0', '#7a3b1e', 'Forno Lia', 'Cantuccini', 'Mandel'),
+    P('tetra', [0.07, 0.17, 0.05], '#b03a2e', '#2f7d32', 'Casa Verde', 'Passata', '500 g'),
+    P('packung', [0.1, 0.12, 0.05], '#f2c230', '#1c1c1f', 'Kochwerk', 'Brühe', 'Gemüse'),
   ],
-  // Kochwelt Asian (W2)
-  W2: [
+  R03B: [P('packung', [0.13, 0.25, 0.08], '#1f4e9c', '#f4f1ec', 'Nonna Lia', 'Ditalini', '1 kg', SERIF), P('dose', [0.1, 0.15, 0.1], '#8d6e3f', '#f4f1ec', 'Nonna Lia', 'Borlotti', '800 g')],
+  R03D: [P('flasche', [0.07, 0.28, 0.07], '#6fa8dc', '#f4f1ec', 'Neckarquelle', 'Wasser', 'still 1 l')],
+  R04: [
     P('packung', [0.11, 0.18, 0.05], '#f4f1ec', '#c0392b', 'Kaizen', 'Udon', '3 × 200 g'),
-    P('packung', [0.11, 0.18, 0.05], '#f2c230', '#1c1c1f', 'Umami Lab', 'Ramen', 'Weizennudeln'),
     P('flasche', [0.06, 0.2, 0.06], '#2b1a12', '#c0392b', 'Kaizen', 'Shoyu', 'Sojasauce'),
-    P('glas', [0.08, 0.11, 0.08], '#d9b26a', '#3b2a1a', 'Umami Lab', 'Miso', 'hell'),
     P('beutel', [0.1, 0.15, 0.04], '#3b3b3b', '#f2c230', 'Kaizen', 'Sesam', 'geröstet'),
-    P('dose', [0.07, 0.12, 0.07], '#2f7d32', '#f4f1ec', 'Umami Lab', 'Kokosmilch', '400 ml'),
+    P('glas', [0.06, 0.11, 0.06], '#8b1e1e', '#f2c230', 'Umami Lab', 'Chili-Öl', 'scharf'),
   ],
-  // Kochwelt Mexican (W3)
-  W3: [
+  R04B: [P('packung', [0.14, 0.22, 0.07], '#f4f1ec', '#c0392b', 'Kaizen', 'Udon', '6er-Pack')],
+  R04D: [P('dose', [0.066, 0.125, 0.066], '#2f7d32', '#f4f1ec', 'Umami Lab', 'Eistee', 'Jasmin')],
+  R05: [
+    P('packung', [0.11, 0.18, 0.05], '#f2c230', '#1c1c1f', 'Umami Lab', 'Ramen', 'Weizennudeln'),
+    P('glas', [0.08, 0.11, 0.08], '#d9b26a', '#3b2a1a', 'Umami Lab', 'Miso', 'hell'),
+    P('packung', [0.16, 0.2, 0.02], '#1f2a1f', '#7fb04a', 'Kaizen', 'Nori', '10 Blatt'),
+    P('tetra', [0.07, 0.17, 0.05], '#3b2a1a', '#f2c230', 'Umami Lab', 'Ramen-', 'Brühe'),
+  ],
+  R05B: [P('packung', [0.1, 0.1, 0.06], '#3a7d44', '#f4f1ec', 'Kaizen', 'Grüntee', '20 Beutel')],
+  R05D: [P('flasche', [0.07, 0.26, 0.07], '#f4f1ec', '#7a1f3d', 'Kaizen', 'Sake', 'alkoholfrei')],
+  R06: [
+    P('beutel', [0.13, 0.2, 0.06], '#f4f1ec', '#2f7d32', 'Kaizen', 'Jasminreis', '1 kg'),
+    P('flasche', [0.06, 0.2, 0.06], '#2b1a12', '#c0392b', 'Kaizen', 'Shoyu', 'Sojasauce'),
+    P('flasche', [0.05, 0.18, 0.05], '#7a4b1a', '#f2c230', 'Kaizen', 'Sesamöl', '250 ml'),
+  ],
+  R06B: [P('beutel', [0.2, 0.3, 0.1], '#f4f1ec', '#2f7d32', 'Kaizen', 'Jasminreis', '5 kg')],
+  R06D: [P('flasche', [0.07, 0.28, 0.07], '#6fa8dc', '#f4f1ec', 'Neckarquelle', 'Wasser', 'still 1 l')],
+  R07: [
     P('beutel', [0.18, 0.22, 0.04], '#f2c230', '#2f7d32', 'La Milpa', 'Tortillas', '8 Stück'),
+    P('dose', [0.075, 0.11, 0.075], '#1c1c1f', '#f2c230', 'Sol & Maíz', 'Bohnen', 'schwarz'),
+    P('glas', [0.08, 0.13, 0.08], '#c0392b', '#f2c230', 'La Milpa', 'Salsa', 'medium'),
+  ],
+  R07B: [P('beutel', [0.22, 0.26, 0.05], '#f2c230', '#2f7d32', 'La Milpa', 'Tortillas', '16 Stück')],
+  R07D: [P('flasche', [0.065, 0.24, 0.065], '#7fb04a', '#1c1c1f', 'Sol & Maíz', 'Limo', 'Limette')],
+  R08: [
     P('packung', [0.16, 0.12, 0.08], '#e8862e', '#1c1c1f', 'La Milpa', 'Taco Shells', '12 Stück'),
+    P('beutel', [0.09, 0.13, 0.03], '#c0392b', '#f2c230', 'La Milpa', 'Taco-', 'Gewürz'),
+    P('glas', [0.08, 0.13, 0.08], '#3a7d44', '#f4f1ec', 'La Milpa', 'Salsa Verde', 'mild'),
+    P('glas', [0.07, 0.12, 0.07], '#2f7d32', '#f2c230', 'Sol & Maíz', 'Jalapeños', 'Scheiben'),
+  ],
+  R08B: [P('beutel', [0.2, 0.28, 0.07], '#2f7d32', '#f2c230', 'La Milpa', 'Nachos', 'XXL')],
+  R08D: [P('flasche', [0.065, 0.24, 0.065], '#7a4b1a', '#f4f1ec', 'Neckarbräu', 'Alkoholfrei', 'Hell')],
+  R09: [
     P('dose', [0.075, 0.11, 0.075], '#8b1e1e', '#f4f1ec', 'Sol & Maíz', 'Kidney', 'Bohnen'),
     P('dose', [0.075, 0.11, 0.075], '#f2c230', '#2f7d32', 'Sol & Maíz', 'Mais', 'süß'),
-    P('glas', [0.08, 0.13, 0.08], '#c0392b', '#f2c230', 'La Milpa', 'Salsa', 'medium'),
-    P('beutel', [0.16, 0.24, 0.06], '#2f7d32', '#f2c230', 'La Milpa', 'Nachos', 'Salz'),
+    P('dose', [0.075, 0.11, 0.075], '#c0392b', '#f4f1ec', 'Sol & Maíz', 'Tomaten', 'gehackt'),
+    P('glas', [0.05, 0.1, 0.05], '#c0392b', '#1c1c1f', 'Kochwerk', 'Chili', 'gemahlen'),
   ],
-  // Ergänzungen / Aktion
+  R09B: [P('dose', [0.1, 0.15, 0.1], '#8b1e1e', '#f4f1ec', 'Sol & Maíz', 'Kidney', '800 g'), P('beutel', [0.13, 0.2, 0.06], '#f4f1ec', '#2f6fb0', 'Basis+', 'Langkornreis', '1 kg')],
+  R09D: [P('flasche', [0.07, 0.28, 0.07], '#6fa8dc', '#f4f1ec', 'Neckarquelle', 'Wasser', 'still 1 l')],
+  // ---------- Ergänzen: Drink + Dessert je Kochwelt (Schritt 04 der Rezeptkarte) ----------
   ERG_PASTA: [
     P('flasche', [0.065, 0.24, 0.065], '#f2c230', '#1f4e9c', 'Limonata', 'Limone', '0,5 l'),
+    P('flasche', [0.07, 0.26, 0.07], '#c0392b', '#f4f1ec', 'Casa Verde', 'Aperitivo', 'alkoholfrei'),
+    P('beutel', [0.12, 0.17, 0.05], '#e9d8b0', '#7a3b1e', 'Forno Lia', 'Cantuccini', 'Mandel'),
+    P('packung', [0.14, 0.1, 0.1], '#5d3a1a', '#f2c230', 'Forno Lia', 'Tiramisu-Set', 'für 2'),
     P('glas', [0.09, 0.12, 0.09], '#556b2f', '#f4f1ec', 'Casa Verde', 'Oliven', 'Antipasti'),
-    P('packung', [0.14, 0.1, 0.1], '#5d3a1a', '#f2c230', 'Forno Lia', 'Tiramisu', 'Set für 2'),
-    P('beutel', [0.12, 0.17, 0.05], '#e9d8b0', '#7a3b1e', 'Forno Lia', 'Grissini', 'Rosmarin'),
+    P('beutel', [0.12, 0.2, 0.05], '#e9d8b0', '#7a3b1e', 'Forno Lia', 'Grissini', 'Rosmarin'),
   ],
   ERG_ASIAN: [
     P('dose', [0.066, 0.125, 0.066], '#2f7d32', '#f4f1ec', 'Umami Lab', 'Eistee', 'Jasmin'),
-    P('packung', [0.12, 0.08, 0.12], '#f4c6cf', '#7a1f3d', 'Kaizen', 'Mochi', '6 Stück'),
-    P('beutel', [0.14, 0.18, 0.05], '#c0392b', '#f2c230', 'Umami Lab', 'Crackers', 'Krabbe'),
+    P('tetra', [0.07, 0.2, 0.07], '#f4c6cf', '#7a1f3d', 'Kaizen', 'Lychee', 'Saft'),
     P('packung', [0.1, 0.1, 0.06], '#3a7d44', '#f4f1ec', 'Kaizen', 'Grüntee', '20 Beutel'),
-  ],
-  AKTION: [
-    P('kiste', [0.3, 0.2, 0.22], '#b98a5a', '#d64527', 'One Hour', 'Bundle', 'Rezept #01 für 2'),
-    P('packung', [0.16, 0.2, 0.1], '#d64527', '#f4f1ec', 'One Hour', 'Kochbox', 'Rezept des Monats'),
-    P('beutel', [0.12, 0.17, 0.05], '#efe7d6', '#d64527', 'One Hour', 'Gewürz-Mix', 'Pasta Night'),
+    P('beutel', [0.14, 0.18, 0.05], '#efe7d6', '#c0392b', 'Umami Lab', 'Reiscracker', 'Sesam'),
+    P('packung', [0.12, 0.08, 0.12], '#c0392b', '#f2c230', 'Kaizen', 'Glückskekse', '12 Stück'),
+    P('packung', [0.12, 0.06, 0.12], '#7fb04a', '#f4f1ec', 'Kaizen', 'Matcha', 'Kekse'),
   ],
   ERG_MEX: [
     P('flasche', [0.065, 0.24, 0.065], '#7fb04a', '#1c1c1f', 'Sol & Maíz', 'Limo', 'Limette'),
     P('beutel', [0.16, 0.24, 0.06], '#2f7d32', '#f2c230', 'La Milpa', 'Nachos', 'Chili'),
     P('glas', [0.08, 0.13, 0.08], '#7fb04a', '#f4f1ec', 'La Milpa', 'Guacamole', 'Dip'),
+    P('packung', [0.12, 0.18, 0.06], '#e8862e', '#5d3a1a', 'La Milpa', 'Churros', 'Backmischung'),
   ],
   // Kühlung
   K1: [
@@ -246,7 +291,10 @@ const GEOS = {
 };
 
 export class Products {
-  constructor() {
+  constructor(rezepte = []) {
+    // Kochbox „für 2“ je Rezept (ungekühlter Teil, Etikett mit Rezeptnummer)
+    const WF = { 'Pasta Night': '#d64527', 'Asian Night': '#c9a227', 'Mexican Night': '#2f9e6e' };
+    for (const r of rezepte) CATALOG[`BOX${r.nr.slice(1)}`] = [P('kiste', [0.3, 0.17, 0.22], WF[r.welt] || '#d64527', '#f4f1ec', `Kochbox ${r.nr}`, r.titel.split(' + ')[0], 'für 2 · ohne Kühlware')];
     this.kinds = []; // { p, tile }
     this.byCode = {};
     const c = document.createElement('canvas');

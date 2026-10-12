@@ -353,9 +353,9 @@ const BUILDERS = {
     const P = ctx.products;
     b.box('kiste', [x1 + 1.05, x1 + 1.5, z1 + 0.08, z1 + 0.42], top, top + 0.16);
     ctx.fresh.crate(b, x1 + 1.275, top + 0.16, z1 + 0.25, 0.4, 0.3, 'tomate', 0);
-    for (let i = 0; i < 4; i++) P.add(P.pick('W1', i), x1 + 1.65 + i * 0.12, top, z1 + 0.2, [0, -1]);
+    for (let i = 0; i < 4; i++) P.add(P.pick('R01', i), x1 + 1.65 + i * 0.12, top, z1 + 0.2, [0, -1]);
     for (let i = 0; i < 3; i++) P.add(P.pick('B2', 0), x2 - 0.18 - i * 0.09, top, z1 + 0.2, [0, -1]);
-    P.add(P.pick('W1', 5), x2 - 0.5, top, z1 + 0.35, [0, -1], { scale: 1.3 });
+    P.add(P.pick('BOX01', 0), x2 - 0.5, top, z1 + 0.35, [0, -1]);
   },
 
   'matrix-dashboard'(b, m, ctx) {
@@ -478,9 +478,11 @@ const BUILDERS = {
     for (const y of [0.45, 0.85, 1.25]) b.box('holzHell', [x2, x2 + 0.16, z1 + 0.04, z2 - 0.04], y - 0.025, y);
     const P = ctx.products;
     const code = m.welt.startsWith('Pasta') ? 'W1' : m.welt.startsWith('Asian') ? 'W2' : 'W3';
-    const ergCode = m.welt.startsWith('Mexican') ? 'ERG_MEX' : code;
-    P.shelf(ergCode, { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.45, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 2 });
-    P.shelf(code, { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.85, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 2, start: 2 });
+    const rS = ctx.layout.rezepte.find((r) => r.welt === m.welt && r.anlass === 'schnell');
+    const rk = rS ? `R${rS.nr.slice(1)}` : 'R01';
+    // Regalkopf = Zeile » schnell: Kochbox und Zutaten des schnellen Rezepts, unten Getränk bzw. (Mexican) Ergänzungen
+    P.shelf(m.welt.startsWith('Mexican') ? 'ERG_MEX' : `${rk}D`, { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.45, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 2 });
+    P.shelf(rk, { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.85, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 1 });
     const rSchnell = ctx.layout.rezepte.find((r) => r.welt === m.welt && r.anlass === 'schnell');
     if (rSchnell) {
       if (!ctx.cardMats[rSchnell.nr]) ctx.cardMats[rSchnell.nr] = lit(recipeCardTexture(rSchnell));
@@ -494,7 +496,9 @@ const BUILDERS = {
     sign(ctx.extra, m.welt.toUpperCase(), { w: 0.5, h: 0.3, bg: col, fg: '#fff', font: '800' }, x2 + 0.035, H + 0.22, zc, [1, 0]);
     // Kopfschild über die ganze Gondel (beidseitig)
     b.box('anthrazit', [(x1 + x2) / 2 - 0.01, (x1 + x2) / 2 + 0.01, zc - 0.01, zc + 0.01], H, H + 0.18);
-    for (const d of [[0, -1], [0, 1]]) sign(ctx.extra, `${m.welt.toUpperCase()}  ·  ${code}`, { w: 2.2, h: 0.26, bg: col, fg: '#fff', font: '800' }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
+    // Kopfschild nur auf der Matrix-Seite (die andere Seite gehört zur Nachbar-Koje)
+    const md = m.hinten === 'matrix' ? [0, 1] : [0, -1];
+    sign(ctx.extra, `${m.welt.toUpperCase()}  ·  ${code}  ·  Rezepte ${m.rezepte.slice().reverse().join(' ')}`, { w: 2.6, h: 0.26, bg: col, fg: '#fff', font: '800' }, (x1 + x2) / 2, H + 0.3, zc + md[1] * 0.012, md);
   },
 
   kuehlregal(b, m, ctx) {
@@ -818,50 +822,107 @@ const BUILDERS = {
   },
 };
 
-// Inhalte der Kochwelt-Gondeln
+// Inhalte der Kochwelt-Gondeln (Folien 9–11): jede Spalte = ein Feld des Dashboards.
+// Reckzone: Anlass-Schild · Sichtzone: Rezeptkarten + Kochbox „für 2“ · Greifzone: UNGEKÜHLTE Zutaten des Rezepts
+// (Zweitplatzierung) + Hinweis auf Kühlware · Bückzone: Großpackungen und das Getränk zum Rezept.
+const KUEHL = /^[KDO]/; // Kühlung, Dessert/TK, Obst & Gemüse stehen nie in der Kochwelt (Parmesan-Regel)
+
+function talkerTexture(r) {
+  const cold = [...r.zutaten, ...r.ergaenzung].filter(([, c]) => KUEHL.test(c));
+  return canvasTex(320, 200, (g, w, h) => {
+    g.fillStyle = '#eaf3fb';
+    g.fillRect(0, 0, w, h);
+    g.fillStyle = '#3f8fd0';
+    g.fillRect(0, 0, w, 44);
+    g.fillStyle = '#fff';
+    g.textBaseline = 'middle';
+    g.font = `800 20px ${SANS}`;
+    g.fillText(`${r.nr} · auch dazu:`, 12, 23);
+    g.fillStyle = '#1c1c1f';
+    g.font = `600 19px ${SANS}`;
+    cold.slice(0, 5).forEach(([n, c], i) => {
+      g.fillText(n, 12, 66 + i * 28);
+      g.fillStyle = '#3f8fd0';
+      g.textAlign = 'right';
+      g.font = `800 19px ${SANS}`;
+      g.fillText(c, w - 12, 66 + i * 28);
+      g.textAlign = 'left';
+      g.fillStyle = '#1c1c1f';
+      g.font = `600 19px ${SANS}`;
+    });
+  });
+}
+
 BUILDERS['kochwelt-gondel'].matrixFace = function (b, m, ctx, f, levels) {
   const [x1, x2] = m.rechteck;
   const L = (x2 - x1 - 0.06) / 3;
   const P = ctx.products;
-  const code = m.welt.startsWith('Pasta') ? 'W1' : m.welt.startsWith('Asian') ? 'W2' : 'W3';
   m.rezepte.forEach((nr, i) => {
     const r = ctx.layout.rezepte.find((x) => x.nr === nr);
+    const rk = `R${nr.slice(1)}`;
     const a1 = x1 + 0.03 + i * L;
     const a2 = a1 + L;
     const an = ANLASS[r.anlass];
     const key = `anlass-${r.anlass}`;
     if (!b.materials[key]) b.materials[key] = std(new THREE.Color(an.farbe), 0.6);
-    // Trennstreifen in Anlass-Farbe
     if (i > 0) b.box(key, faceRect(f, a1 - 0.012, a1 + 0.012, 0.005, -0.25), 0.1, m.hoehe);
-    // Sichtzone: Rezeptkarten-Spender + Bundle
+    // Sichtzone: zwei Kartenspender links, Kochboxen „für 2“ rechts
     if (!ctx.cardMats[r.nr]) ctx.cardMats[r.nr] = lit(recipeCardTexture(r));
-    for (const k of [0.25, 0.42]) {
+    for (const k of [0.1, 0.24]) {
       const [cx, cz] = f.at(a1 + k * L, -0.08);
       b.geo('glas', G.box(0.13, 0.17, 0.05), cx, levels[3] + 0.09, cz, yawFacing(...f.dir), -0.2);
       const [px, pz] = f.at(a1 + k * L, -0.05);
       plane(ctx.extra, ctx.cardMats[r.nr], 0.1, 0.14, px, levels[3] + 0.1, pz, f.dir, -0.2);
     }
-    const bundle = ctx.products.byCode.AKTION[r.anlass === 'besonders' ? 0 : 1];
-    const [bx, bz] = f.at(a1 + 0.75 * L, -0.13);
-    P.add(bundle, bx, levels[3], bz, f.dir, { scale: r.anlass === 'besonders' ? 0.9 : 0.8 });
-    // Greifzone: Zutaten des Rezepts (Kochwelt-Code), darunter Großpackungen & Getränke
-    P.shelf(code, { along: 'x', from: a1, to: a2, front: f.front, y: levels[2], depth: 0.24, dir: f.dir, maxH: 0.35, rows: 2, start: i * 2 });
-    P.shelf([code, 'B1'], { along: 'x', from: a1, to: a2, front: f.front, y: levels[1], depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, start: i * 3 + 1 });
-    P.shelf(m.welt.startsWith('Pasta') ? ['G3', 'B2'] : m.welt.startsWith('Asian') ? ['G3', 'B1'] : ['G3', 'ERG_MEX'], { along: 'x', from: a1, to: a2, front: f.front, y: levels[0], depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, start: i });
-    // Reckzone: Anlass-Schild über der Gondel
+    P.shelf(`BOX${nr.slice(1)}`, { along: 'x', from: a1 + 0.34 * L, to: a2, front: f.front, y: levels[3], depth: 0.24, dir: f.dir, maxH: 0.3, rows: 1, facings: 4, gap: 0.02 });
+    // Greifzone: ungekühlte Zutaten + Hinweiskarte auf die Kühlware (Fachcodes)
+    P.shelf(rk, { along: 'x', from: a1, to: a2 - 0.33, front: f.front, y: levels[2], depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, facings: 2 });
+    const tk = `talker-${nr}`;
+    if (!b.materials[tk]) b.materials[tk] = lit(talkerTexture(r));
+    const [tx, tz] = f.at(a2 - 0.17, -0.06);
+    plane(ctx.extra, b.materials[tk], 0.29, 0.18, tx, levels[2] + 0.12, tz, f.dir, -0.12);
+    // Bückzone: Großpackungen (oben) und Getränk zum Rezept (unten)
+    P.shelf(`${rk}B`, { along: 'x', from: a1, to: a2, front: f.front, y: levels[1], depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, facings: 3 });
+    P.shelf(`${rk}D`, { along: 'x', from: a1, to: a2, front: f.front, y: levels[0], depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, facings: 4, gap: 0.006 });
+    // Reckzone: Anlass-Schild
     const [sx, sz] = f.at((a1 + a2) / 2, 0.01);
-    sign(ctx.extra, `${an.sym} ${an.text} · ${r.nr}`, { w: Math.min(1.4, L - 0.15), h: 0.2, bg: an.farbe, fg: '#fff', font: '800' }, sx, m.hoehe - 0.13, sz, f.dir);
+    sign(ctx.extra, `${an.sym} ${an.text} · ${r.nr} ${r.titel.split(' + ')[0]}`, { w: Math.min(1.55, L - 0.1), h: 0.2, bg: an.farbe, fg: '#fff', font: '800' }, sx, m.hoehe - 0.13, sz, f.dir);
   });
 };
 
 BUILDERS['kochwelt-gondel'].otherFace = function (b, m, ctx, f, levels, content) {
   const [x1, x2] = m.rechteck;
   const P = ctx.products;
-  const codes = content === 'aktion' ? ['AKTION', 'W1'] : content === 'ergaenzung-pasta' ? ['ERG_PASTA', 'G3'] : ['ERG_ASIAN', 'G3'];
-  levels.forEach((y, i) => P.shelf(i === 3 && content === 'aktion' ? 'AKTION' : codes, { along: 'x', from: x1 + 0.03, to: x2 - 0.03, front: f.front, y, depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, start: i * 2 }));
-  const title = content === 'aktion' ? 'REZEPT DES MONATS · Bundles für 2' : content === 'ergaenzung-pasta' ? 'PASTA NIGHT · Ergänzen: Antipasti, Limo, Dessert' : 'ASIAN NIGHT · Ergänzen: Tee, Snacks, Mochi';
+  const span = { along: 'x', from: x1 + 0.03, to: x2 - 0.03, front: f.front, depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2 };
+  let title;
+  let farbe;
+  if (content === 'aktion') {
+    // Zur Obst-&-Gemüse-Zone: alle Kochboxen „für 2“ nach Dashboard-Reihenfolge
+    title = 'KOCHBOXEN FÜR 2 · ungekühlter Teil – Kühlware laut Karte';
+    farbe = '#2b2c30';
+    const boxes = ctx.layout.rezepte.map((r) => `BOX${r.nr.slice(1)}`);
+    P.shelf(boxes.slice(0, 3), { ...span, y: levels[3], facings: 2, rows: 1, gap: 0.02 });
+    P.shelf(boxes.slice(3, 6), { ...span, y: levels[2], facings: 2, rows: 1, gap: 0.02 });
+    P.shelf(boxes.slice(6, 9), { ...span, y: levels[1], facings: 2, rows: 1, gap: 0.02 });
+    P.shelf(['R01D', 'R07D', 'R04D'], { ...span, y: levels[0], facings: 4 });
+  } else {
+    // Gegenüber der Matrix: Schritt 04 „Ergänzen“ – Drink + Dessert derselben Kochwelt
+    const welt = content === 'ergaenzung-pasta' ? 'Pasta Night' : 'Asian Night';
+    const code = content === 'ergaenzung-pasta' ? 'ERG_PASTA' : 'ERG_ASIAN';
+    farbe = content === 'ergaenzung-pasta' ? '#d64527' : '#c9a227';
+    title = `${welt.toUpperCase()} · 04 ERGÄNZEN: DRINK + DESSERT`;
+    const list = ctx.products.byCode[code];
+    const drinks = list.map((_, i) => i).filter((i) => ['flasche', 'dose', 'tetra'].includes(list[i].p.form));
+    const sweets = list.map((_, i) => i).filter((i) => !drinks.includes(i));
+    // Dessert & Snacks in Sicht- und Greifzone, Getränke in der Bückzone
+    for (const [lv, set] of [[3, sweets], [2, sweets], [1, drinks], [0, drinks]]) {
+      const tmp = `${code}-${lv}`;
+      if (!ctx.products.byCode[tmp]) ctx.products.byCode[tmp] = set.map((i) => list[i]);
+      P.shelf(tmp, { ...span, y: levels[lv], facings: lv < 2 ? 4 : 3, start: lv });
+    }
+  }
   const [sx, sz] = f.at((x1 + x2) / 2, 0.01);
-  sign(ctx.extra, title, { w: 2.6, h: 0.2, bg: '#2b2c30', fg: '#f4f1ec', font: '700' }, sx, m.hoehe - 0.13, sz, f.dir);
+  sign(ctx.extra, title, { w: 2.9, h: 0.2, bg: farbe, fg: '#fff', font: '800' }, sx, m.hoehe - 0.13, sz, f.dir);
 };
 
 // ---------- Obst/Gemüse: Kugeln, Ovale, Stangen in einer Kiste ----------
@@ -921,7 +982,7 @@ export function buildFurniture(layout) {
   Object.assign(b.materials, decor.builderMaterials);
   b.materials.glas = MATERIALS.glas;
   const colliders = [];
-  const products = new Products();
+  const products = new Products(layout.rezepte);
   const railMat = lit(TEX.preisleiste(), { roughness: 0.8 });
   railMat.map.wrapS = THREE.RepeatWrapping;
   b.materials.preis = railMat;

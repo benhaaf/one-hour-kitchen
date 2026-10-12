@@ -92,16 +92,19 @@ export class Panels {
     const zonen = L.regalzonen.zonen;
     const code = m.welt.startsWith('Pasta') ? 'W1' : m.welt.startsWith('Asian') ? 'W2' : 'W3';
     const cell = (zone, r) => {
+      const warm = r.zutaten.filter(([, c]) => !/^[KDO]/.test(c)).map(([n]) => n);
+      const cold = [...r.zutaten, ...r.ergaenzung].filter(([, c]) => /^[KDO]/.test(c)).map(([n, c]) => `${n} ${c}`);
       if (zone.name === 'Reckzone') return `<b style="color:${col[r.anlass]}">${sym[r.anlass]} ${esc(r.anlass)}</b> · ${esc(r.nr)}`;
-      if (zone.name === 'Sichtzone') return `Rezeptkarte ${esc(r.nr)}${r.anlass === 'besonders' ? ' + Bundle „für 2“' : ' + Kochbox'}`;
-      if (zone.name === 'Greifzone') return esc(r.zutaten.filter(([, c]) => c === code).map(([n]) => n).join(', ') || 'Zutaten');
-      return 'Großpackungen (B1/B2), Getränke (G3)';
+      if (zone.name === 'Sichtzone') return `Rezeptkarten ${esc(r.nr)} + Kochbox „für 2“`;
+      if (zone.name === 'Greifzone') return `${esc(warm.join(', '))}<br><small>Karte: ${esc(cold.join(' · '))}</small>`;
+      const drink = r.ergaenzung.find(([, c]) => c === 'G3' || c === 'G2');
+      return `Großpackung · ${esc(drink ? drink[0] : 'Wasser')}`;
     };
     const fmtH = (z) => (z.von === 0 ? `< ${z.bis}` : `${z.von}–${z.bis}`).replace(/\./g, ',');
     return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · Kreuzblock (senkrecht Anlass, waagerecht Regalzone)</span>
       <table class="planogram"><thead><tr><th></th>${R.map((r) => `<th style="border-top:3px solid ${col[r.anlass]}">${sym[r.anlass]} ${esc(r.anlass)}</th>`).join('')}</tr></thead>
       <tbody>${zonen.map((z) => `<tr><th style="border-left:4px solid ${z.farbe}">${esc(z.name)}<small>${fmtH(z)} m</small></th>${R.map((r) => `<td>${cell(z, r)}</td>`).join('')}</tr>`).join('')}</tbody></table>
-      <p class="pg-note">← linke Wand (Rundlauf) · Regalkopf zum Gang an der Showküche →</p></div>`;
+      <p class="pg-note">Kühlware steht nie in der Kochwelt (Parmesan-Regel): Die Karte nennt ihr Fach. Aus Kundensicht liegt » schnell links am Regalkopf zum Gang, € günstig an der Wand.</p></div>`;
   }
 
   hideCard() {

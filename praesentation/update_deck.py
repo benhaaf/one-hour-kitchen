@@ -268,3 +268,12 @@ x = open(os.path.join(UN, S(19)), encoding='utf-8').read()
 x = re.sub(r'<a:t>([^<]*)Dessert vor der Kasse([^<]*)</a:t>', lambda m: f'<a:t>{m.group(1)}Dessert & Wein nach der Frische{m.group(2)}</a:t>'.replace('&', '&amp;').replace('&amp;amp;', '&amp;'), x)
 open(os.path.join(UN, S(19)), 'w', encoding='utf-8').write(x)
 print('Feinschliff fertig')
+
+# ---------- Keine fertigen Pakete: Zutaten werden nach Rezeptkarte gesammelt ----------
+sub(S(10), {
+    'Karte #01 Creamy Tomato Pasta + Bundle für 2': 'Karte #01 Creamy Tomato Pasta',
+    'Rezeptkarten und Bundles stehen dort, wo Ware am leichtesten gesehen wird; schwere Gebinde in der Bückzone.': 'Rezeptkarten und ein Bild des Gerichts stehen dort, wo am leichtesten gesehen wird; schwere Gebinde in der Bückzone.',
+})
+sub(N(10), {'Das Regal der Pasta Night zeigt, wie der Präsenter im Laden weiterlebt. Jede Koje ist eine Spalte der Matrix, geteilt in günstig, besonders und schnell. Der Abschnitt schnell liegt am Regalkopf direkt am Hauptgang. Waagerecht bleiben die Regalzonen: oben die Anlass-Schilder, in der Sichtzone Rezeptkarten und Bundles, darunter die Zutaten. Kühlpflichtige Zutaten stehen nicht hier, dazu die nächste Folie.':
+    'Das Regal der Pasta Night zeigt, wie das Dashboard im Laden weiterlebt. Jede Koje ist eine Spalte der Matrix, geteilt in günstig, besonders und schnell. Der Abschnitt schnell liegt am Regalkopf direkt am Gang. Waagerecht bleiben die Regalzonen: oben die Anlass-Schilder, in der Sichtzone Rezeptkarten und ein Bild des Gerichts, darunter die Zutaten. Es gibt keine fertigen Pakete: Die Kundin sammelt die Zutaten selbst anhand ihrer Karte. Kühlpflichtige Zutaten stehen nicht hier, dazu die nächste Folie.'})
+print('ohne Bundles fertig')

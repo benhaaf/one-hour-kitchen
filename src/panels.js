@@ -95,7 +95,7 @@ export class Panels {
       const warm = r.zutaten.filter(([, c]) => !/^[KDO]/.test(c)).map(([n]) => n);
       const cold = [...r.zutaten, ...r.ergaenzung].filter(([, c]) => /^[KDO]/.test(c)).map(([n, c]) => `${n} ${c}`);
       if (zone.name === 'Reckzone') return `<b style="color:${col[r.anlass]}">${sym[r.anlass]} ${esc(r.anlass)}</b> · ${esc(r.nr)}`;
-      if (zone.name === 'Sichtzone') return `Rezeptkarten ${esc(r.nr)} + Kochbox „für 2“`;
+      if (zone.name === 'Sichtzone') return `Rezeptkarten ${esc(r.nr)} + Schild „So sieht's aus“`;
       if (zone.name === 'Greifzone') return `${esc(warm.join(', '))}<br><small>Karte: ${esc(cold.join(' · '))}</small>`;
       const drink = r.ergaenzung.find(([, c]) => c === 'G3' || c === 'G2');
       return `Großpackung · ${esc(drink ? drink[0] : 'Wasser')}`;

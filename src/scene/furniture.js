@@ -355,7 +355,7 @@ const BUILDERS = {
     ctx.fresh.crate(b, x1 + 1.275, top + 0.16, z1 + 0.25, 0.4, 0.3, 'tomate', 0);
     for (let i = 0; i < 4; i++) P.add(P.pick('R01', i), x1 + 1.65 + i * 0.12, top, z1 + 0.2, [0, -1]);
     for (let i = 0; i < 3; i++) P.add(P.pick('B2', 0), x2 - 0.18 - i * 0.09, top, z1 + 0.2, [0, -1]);
-    P.add(P.pick('BOX01', 0), x2 - 0.5, top, z1 + 0.35, [0, -1]);
+    P.add(P.pick('R01B', 0), x2 - 0.5, top, z1 + 0.35, [0, -1]);
   },
 
   'matrix-dashboard'(b, m, ctx) {
@@ -472,7 +472,7 @@ const BUILDERS = {
       if (content === 'matrix') this.matrixFace(b, m, ctx, f, levels);
       else this.otherFace(b, m, ctx, f, levels, content);
     }
-    // Regalkopf zum Gang (+x): Kochwelt-Stele mit Rezeptkarten und Bundles „» schnell“
+    // Regalkopf zum Gang (+x): Kochwelt-Stele mit Rezeptkarten „» schnell“
     const ex = x2 + 0.005;
     b.box(wm, [x2 - 0.03, ex + 0.02, z1, z2], 0, 0.1);
     for (const y of [0.45, 0.85, 1.25]) b.box('holzHell', [x2, x2 + 0.16, z1 + 0.04, z2 - 0.04], y - 0.025, y);
@@ -480,7 +480,7 @@ const BUILDERS = {
     const code = m.welt.startsWith('Pasta') ? 'W1' : m.welt.startsWith('Asian') ? 'W2' : 'W3';
     const rS = ctx.layout.rezepte.find((r) => r.welt === m.welt && r.anlass === 'schnell');
     const rk = rS ? `R${rS.nr.slice(1)}` : 'R01';
-    // Regalkopf = Zeile » schnell: Kochbox und Zutaten des schnellen Rezepts, unten Getränk bzw. (Mexican) Ergänzungen
+    // Regalkopf = Zeile » schnell: Zutaten des schnellen Rezepts, unten Getränk bzw. (Mexican) Ergänzungen
     P.shelf(m.welt.startsWith('Mexican') ? 'ERG_MEX' : `${rk}D`, { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.45, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 2 });
     P.shelf(rk, { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.85, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 1 });
     const rSchnell = ctx.layout.rezepte.find((r) => r.welt === m.welt && r.anlass === 'schnell');
@@ -823,9 +823,61 @@ const BUILDERS = {
 };
 
 // Inhalte der Kochwelt-Gondeln (Folien 9–11): jede Spalte = ein Feld des Dashboards.
-// Reckzone: Anlass-Schild · Sichtzone: Rezeptkarten + Kochbox „für 2“ · Greifzone: UNGEKÜHLTE Zutaten des Rezepts
+// Reckzone: Anlass-Schild · Sichtzone: Rezeptkarten + Gericht-Bild · Greifzone: UNGEKÜHLTE Zutaten des Rezepts
 // (Zweitplatzierung) + Hinweis auf Kühlware · Bückzone: Großpackungen und das Getränk zum Rezept.
 const KUEHL = /^[KDO]/; // Kühlung, Dessert/TK, Obst & Gemüse stehen nie in der Kochwelt (Parmesan-Regel)
+
+// Schild „So sieht's aus“: Teller mit dem Gericht (gezeichnet), Name, Zeit
+function dishTexture(r) {
+  const pal = { 'Pasta Night': ['#f2d27a', '#d8352a', '#7fb04a'], 'Asian Night': ['#e9d8b0', '#7fb04a', '#c9a227'], 'Mexican Night': ['#e8862e', '#3b4f22', '#c0392b'] }[r.welt] || ['#f2d27a', '#d8352a', '#7fb04a'];
+  return canvasTex(470, 330, (g, w, h) => {
+    g.fillStyle = '#2b2c30';
+    g.fillRect(0, 0, w, h);
+    g.fillStyle = '#f4f1ec';
+    g.beginPath();
+    g.arc(118, 165, 98, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = '#e2ddd3';
+    g.beginPath();
+    g.arc(118, 165, 72, 0, Math.PI * 2);
+    g.fill();
+    let seed = r.nr.charCodeAt(2) * 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < 26; i++) {
+      g.fillStyle = pal[i % 3];
+      const a = rnd() * Math.PI * 2;
+      const d = rnd() * 52;
+      g.beginPath();
+      g.ellipse(118 + Math.cos(a) * d, 165 + Math.sin(a) * d, 10 + rnd() * 12, 6 + rnd() * 8, rnd() * 3, 0, Math.PI * 2);
+      g.fill();
+    }
+    g.fillStyle = '#f2c230';
+    g.textBaseline = 'middle';
+    g.font = `700 18px ${SANS}`;
+    g.fillText("SO SIEHT'S AUS", 236, 48);
+    g.fillStyle = '#fff';
+    g.font = `800 34px ${SANS}`;
+    g.fillText(r.nr, 236, 92);
+    const words = r.titel.split(' ');
+    let line = '';
+    let y = 136;
+    g.font = `700 22px ${SANS}`;
+    for (const wd of words) {
+      const t = line ? `${line} ${wd}` : wd;
+      if (g.measureText(t).width > w - 250) {
+        g.fillText(line, 236, y);
+        y += 28;
+        line = wd;
+      } else line = t;
+    }
+    g.fillText(line, 236, y);
+    g.fillStyle = '#c9c4bc';
+    g.font = `500 18px ${SANS}`;
+    g.fillText(`${r.zeit} · ${r.preis}`, 236, h - 64);
+    g.fillText('Karte ziehen, Zutaten', 236, h - 38);
+    g.fillText('nach Fachcode holen', 236, h - 16);
+  });
+}
 
 function talkerTexture(r) {
   const cold = [...r.zutaten, ...r.ergaenzung].filter(([, c]) => KUEHL.test(c));
@@ -866,15 +918,20 @@ BUILDERS['kochwelt-gondel'].matrixFace = function (b, m, ctx, f, levels) {
     const key = `anlass-${r.anlass}`;
     if (!b.materials[key]) b.materials[key] = std(new THREE.Color(an.farbe), 0.6);
     if (i > 0) b.box(key, faceRect(f, a1 - 0.012, a1 + 0.012, 0.005, -0.25), 0.1, m.hoehe);
-    // Sichtzone: zwei Kartenspender links, Kochboxen „für 2“ rechts
+    // Sichtzone: Kartenspender und ein Schild „So sieht's aus“ – keine fertigen Pakete, eingekauft wird nach Karte
     if (!ctx.cardMats[r.nr]) ctx.cardMats[r.nr] = lit(recipeCardTexture(r));
-    for (const k of [0.1, 0.24]) {
+    for (const k of [0.12, 0.27, 0.42]) {
       const [cx, cz] = f.at(a1 + k * L, -0.08);
       b.geo('glas', G.box(0.13, 0.17, 0.05), cx, levels[3] + 0.09, cz, yawFacing(...f.dir), -0.2);
       const [px, pz] = f.at(a1 + k * L, -0.05);
       plane(ctx.extra, ctx.cardMats[r.nr], 0.1, 0.14, px, levels[3] + 0.1, pz, f.dir, -0.2);
     }
-    P.shelf(`BOX${nr.slice(1)}`, { along: 'x', from: a1 + 0.34 * L, to: a2, front: f.front, y: levels[3], depth: 0.24, dir: f.dir, maxH: 0.3, rows: 1, facings: 4, gap: 0.02 });
+    const dk = `gericht-${nr}`;
+    if (!b.materials[dk]) b.materials[dk] = lit(dishTexture(r));
+    const [dx, dz] = f.at(a1 + 0.75 * L, -0.12);
+    b.geo('holzDunkel', G.box(0.5, 0.36, 0.02), dx, levels[3] + 0.19, dz, yawFacing(...f.dir), -0.12);
+    const [ex, ez] = f.at(a1 + 0.75 * L, -0.105);
+    plane(ctx.extra, b.materials[dk], 0.47, 0.33, ex, levels[3] + 0.19, ez, f.dir, -0.12);
     // Greifzone: ungekühlte Zutaten + Hinweiskarte auf die Kühlware (Fachcodes)
     P.shelf(rk, { along: 'x', from: a1, to: a2 - 0.33, front: f.front, y: levels[2], depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, facings: 2 });
     const tk = `talker-${nr}`;
@@ -897,14 +954,13 @@ BUILDERS['kochwelt-gondel'].otherFace = function (b, m, ctx, f, levels, content)
   let title;
   let farbe;
   if (content === 'aktion') {
-    // Zur Obst-&-Gemüse-Zone: alle Kochboxen „für 2“ nach Dashboard-Reihenfolge
-    title = 'KOCHBOXEN FÜR 2 · ungekühlter Teil – Kühlware laut Karte';
-    farbe = '#2b2c30';
-    const boxes = ctx.layout.rezepte.map((r) => `BOX${r.nr.slice(1)}`);
-    P.shelf(boxes.slice(0, 3), { ...span, y: levels[3], facings: 2, rows: 1, gap: 0.02 });
-    P.shelf(boxes.slice(3, 6), { ...span, y: levels[2], facings: 2, rows: 1, gap: 0.02 });
-    P.shelf(boxes.slice(6, 9), { ...span, y: levels[1], facings: 2, rows: 1, gap: 0.02 });
-    P.shelf(['R01D', 'R07D', 'R04D'], { ...span, y: levels[0], facings: 4 });
+    // Zur Obst-&-Gemüse-Zone: weitere Pasta-Sorten, Saucen und Pasta-Getränke (Auswahl zur Pasta Night)
+    title = 'PASTA NIGHT · MEHR AUSWAHL: Sorten, Saucen, Antipasti';
+    farbe = '#d64527';
+    P.shelf(['R03', 'ERG_PASTA'], { ...span, y: levels[3], facings: 3 });
+    P.shelf(['R01', 'R03'], { ...span, y: levels[2], facings: 3, start: 1 });
+    P.shelf(['R01B', 'R03B'], { ...span, y: levels[1], facings: 3 });
+    P.shelf(['R01D', 'R02B'], { ...span, y: levels[0], facings: 4 });
   } else {
     // Gegenüber der Matrix: Schritt 04 „Ergänzen“ – Drink + Dessert derselben Kochwelt
     const welt = content === 'ergaenzung-pasta' ? 'Pasta Night' : 'Asian Night';
@@ -982,7 +1038,7 @@ export function buildFurniture(layout) {
   Object.assign(b.materials, decor.builderMaterials);
   b.materials.glas = MATERIALS.glas;
   const colliders = [];
-  const products = new Products(layout.rezepte);
+  const products = new Products();
   const railMat = lit(TEX.preisleiste(), { roughness: 0.8 });
   railMat.map.wrapS = THREE.RepeatWrapping;
   b.materials.preis = railMat;

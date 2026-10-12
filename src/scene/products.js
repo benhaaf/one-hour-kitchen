@@ -291,10 +291,7 @@ const GEOS = {
 };
 
 export class Products {
-  constructor(rezepte = []) {
-    // Kochbox „für 2“ je Rezept (ungekühlter Teil, Etikett mit Rezeptnummer)
-    const WF = { 'Pasta Night': '#d64527', 'Asian Night': '#c9a227', 'Mexican Night': '#2f9e6e' };
-    for (const r of rezepte) CATALOG[`BOX${r.nr.slice(1)}`] = [P('kiste', [0.3, 0.17, 0.22], WF[r.welt] || '#d64527', '#f4f1ec', `Kochbox ${r.nr}`, r.titel.split(' + ')[0], 'für 2 · ohne Kühlware')];
+  constructor() {
     this.kinds = []; // { p, tile }
     this.byCode = {};
     const c = document.createElement('canvas');

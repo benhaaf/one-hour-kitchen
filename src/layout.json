@@ -855,7 +855,7 @@
         "name": "Sichtzone",
         "von": 1.2,
         "bis": 1.7,
-        "inhalt": "Rezeptkarten & Bundles „für 2“",
+        "inhalt": "Rezeptkarten & Gericht-Schild",
         "farbe": "#3fbf7f"
       },
       {
@@ -1720,7 +1720,7 @@
           5.55
         ]
       },
-      "entscheidung": "Jede Spalte ist ein Feld des Dashboards (» schnell am Regalkopf · ★ besonders · € günstig an der Wand). Waagerecht die Regalzonen: Anlass-Schild oben, Rezeptkarten und Kochbox „für 2“ in der Sichtzone, die ungekühlten Zutaten des Rezepts in der Greifzone, Großpackung und passendes Getränk unten.",
+      "entscheidung": "Jede Spalte ist ein Feld des Dashboards (» schnell am Regalkopf · ★ besonders · € günstig an der Wand). Waagerecht die Regalzonen: Anlass-Schild oben, Rezeptkarten und ein Schild „So sieht's aus“ in der Sichtzone, die ungekühlten Zutaten des Rezepts in der Greifzone, Großpackung und passendes Getränk unten. Es gibt keine fertigen Pakete: Die Kundin sammelt die Zutaten selbst anhand ihrer Karte.",
       "begruendung": "Wer am Dashboard gewählt hat, findet sein Feld sofort wieder (gleiche Nummer, gleiches Symbol). Kühlware steht nie in der Kochwelt: Eine Karte in der Greifzone nennt ihr Fach (z. B. Sahne K1, Parmesan K2). Mehr Facings und eine höhere Platzierung erhöhen die Aufmerksamkeit für ein Produkt.",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 302–303 (Regalzonen, Kreuzblock) ✓; Chandon et al. 2009, J. of Marketing 73(6), S. 1–17 (Facings & Regalhöhe → Aufmerksamkeit) ✓",
       "annahme": "Belegung der Fächer ist Fallannahme; die Wirkung im eigenen Store ist nicht gemessen.",

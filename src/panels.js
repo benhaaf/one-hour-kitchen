@@ -1,5 +1,6 @@
 // Infokarte (Entscheidung · Begründung · Quelle · Annahme · Änderung ggü. Skizze), Folien und Rahmen-Overlay.
 import { footprints } from './scene/furniture.js';
+import { CATALOG } from './scene/products.js';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 // ✓ und ◐ farbig hervorheben
@@ -81,30 +82,31 @@ export class Panels {
     this.cardStation = s;
   }
 
-  // Schematisches Regalbild (Planogramm) einer Kochwelt-Gondel: Spalten = Anlässe, Zeilen = Regalzonen
+  // Regalbild einer Kochwelt-Gondel: Produktblöcke (Spalten) × Regalzonen (Zeilen)
   planogram(id) {
     const L = this.layout;
     const m = L.moebel.find((x) => x.id === id);
-    if (!m || !m.rezepte) return '';
-    const R = m.rezepte.map((nr) => L.rezepte.find((r) => r.nr === nr));
-    const sym = { schnell: '»', besonders: '★', günstig: '€' };
-    const col = { schnell: '#d64527', besonders: '#8a4fc7', günstig: '#2f7d32' };
+    const face = m?.regal?.hinten;
+    if (!face) return '';
+    const names = (g) => (CATALOG[g] || []).map((k) => (k.n.endsWith('-') ? k.n.slice(0, -1) + k.s : `${k.n}${k.s && /\d/.test(k.s) ? ` ${k.s}` : ''}`));
+    const uniq = (a) => [...new Set(a)];
     const zonen = L.regalzonen.zonen;
-    const code = m.welt.startsWith('Pasta') ? 'W1' : m.welt.startsWith('Asian') ? 'W2' : 'W3';
-    const cell = (zone, r) => {
-      const warm = r.zutaten.filter(([, c]) => !/^[KDO]/.test(c)).map(([n]) => n);
-      const cold = [...r.zutaten, ...r.ergaenzung].filter(([, c]) => /^[KDO]/.test(c)).map(([n, c]) => `${n} ${c}`);
-      if (zone.name === 'Reckzone') return `<b style="color:${col[r.anlass]}">${sym[r.anlass]} ${esc(r.anlass)}</b> · ${esc(r.nr)}`;
-      if (zone.name === 'Sichtzone') return `Rezeptkarten ${esc(r.nr)} + Schild „So sieht's aus“`;
-      if (zone.name === 'Greifzone') return `${esc(warm.join(', '))}<br><small>Karte: ${esc(cold.join(' · '))}</small>`;
-      const drink = r.ergaenzung.find(([, c]) => c === 'G3' || c === 'G2');
-      return `Großpackung · ${esc(drink ? drink[0] : 'Wasser')}`;
+    const B = face.bloecke.slice().reverse(); // aus Kundensicht von links nach rechts
+    const cell = (zone, bl) => {
+      if (zone.name === 'Reckzone') {
+        const rez = L.rezepte.filter((r) => r.zutaten.some(([nm, c]) => c === bl.code && (bl.artikel || []).includes(nm))).map((r) => r.nr);
+        return `<b>${esc(bl.code)} · ${esc(bl.name)}</b>${rez.length ? `<br><small>für ${esc(rez.join(' '))}</small>` : ''}`;
+      }
+      if (zone.name === 'Bückzone') return esc(uniq(names(bl.gruppen[1] || bl.gruppen[0])).join(', '));
+      const list = uniq(names(bl.gruppen[0]));
+      const half = Math.ceil(list.length / 2);
+      return esc((zone.name === 'Sichtzone' ? list.slice(0, half) : list.slice(half).length ? list.slice(half) : list).join(', '));
     };
     const fmtH = (z) => (z.von === 0 ? `< ${z.bis}` : `${z.von}–${z.bis}`).replace(/\./g, ',');
-    return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · Kreuzblock (senkrecht Anlass, waagerecht Regalzone)</span>
-      <table class="planogram"><thead><tr><th></th>${R.map((r) => `<th style="border-top:3px solid ${col[r.anlass]}">${sym[r.anlass]} ${esc(r.anlass)}</th>`).join('')}</tr></thead>
-      <tbody>${zonen.map((z) => `<tr><th style="border-left:4px solid ${z.farbe}">${esc(z.name)}<small>${fmtH(z)} m</small></th>${R.map((r) => `<td>${cell(z, r)}</td>`).join('')}</tr>`).join('')}</tbody></table>
-      <p class="pg-note">Kühlware steht nie in der Kochwelt (Parmesan-Regel): Die Karte nennt ihr Fach. Aus Kundensicht liegt » schnell links am Regalkopf zum Gang, € günstig an der Wand.</p></div>`;
+    return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · Produktblöcke (senkrecht Warengruppe, waagerecht Regalzone)</span>
+      <table class="planogram"><thead><tr><th></th>${B.map((bl) => `<th>${esc(bl.name)}</th>`).join('')}</tr></thead>
+      <tbody>${zonen.map((z) => `<tr><th style="border-left:4px solid ${z.farbe}">${esc(z.name)}<small>${fmtH(z)} m</small></th>${B.map((bl) => `<td>${cell(z, bl)}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      <p class="pg-note">Keine fertigen Pakete: Die Kundin sammelt nach ihrer Rezeptkarte. Fachcode W1 → Koje Pasta → Block. Kühlware steht im Kühlregal (Parmesan-Regel).</p></div>`;
   }
 
   hideCard() {

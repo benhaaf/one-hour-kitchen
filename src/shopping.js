@@ -32,12 +32,20 @@ export function codeLocations(layout) {
         list.forEach((f, i) => (loc[f.code] = { ...front(m, seite, z1 + (i + 0.5) * L), moebel: m.id }));
       }
     }
-    if (m.typ === 'kochwelt-gondel') {
-      const code = Object.keys(WELT_CODE).find((c) => WELT_CODE[c] === m.welt);
-      const L = (x2 - x1) / 3;
-      // je Rezept die passende Spalte der Matrix (Rückseite der Gondel)
-      m.rezepte.forEach((nr, i) => (loc[`${code}${nr}`] = { ...front(m, 'hinten', x1 + (i + 0.5) * L), moebel: m.id }));
-      loc[code] = { ...front(m, 'hinten', (x1 + x2) / 2), moebel: m.id };
+    if (m.typ === 'kochwelt-gondel' && m.regal) {
+      // Produktblöcke: Zutat → Block (über Fachcode + Artikelname); Fachcode allein → erster Block der Kochwelt
+      for (const seite of ['hinten', 'vorne']) {
+        const face = m.regal[seite];
+        if (!face) continue;
+        const L = (x2 - x1) / face.bloecke.length;
+        face.bloecke.forEach((bl, i) => {
+          const spot = { ...front(m, seite, x1 + (i + 0.5) * L), moebel: m.id };
+          for (const a of bl.artikel || []) loc[`${bl.code}:${a}`] = spot;
+          if (seite === 'hinten' && !loc[bl.code]) loc[bl.code] = spot;
+        });
+      }
+      const k = m.regal.kopf;
+      if (k?.artikel) for (const a of k.artikel) loc[`${k.code}:${a}`] = { ...front(m, 'rechts', (z1 + z2) / 2, 0.6), moebel: m.id };
     }
     if (m.typ === 'obst-stand') {
       const n = [m.richtung[1], -m.richtung[0]];
@@ -130,12 +138,7 @@ export class Shopping {
     this.items = [...r.zutaten.map(([n, c]) => ({ name: n, code: c })), ...r.ergaenzung.map(([n, c]) => ({ name: n, code: c, optional: true }))];
     this.items.forEach((it) => {
       it.done = false;
-      const key = it.code.startsWith('W') ? `${it.code}${r.nr}` : it.code;
-      it.loc = this.loc[key] || this.loc[it.code];
-      if (it.code.startsWith('W') && !this.loc[key]) {
-        // Zutat einer anderen Kochwelt → Mitte der Gondel
-        it.loc = this.loc[it.code];
-      }
+      it.loc = this.loc[`${it.code}:${it.name}`] || this.loc[it.code];
     });
     this.pickEl.hidden = true;
     this.state = 'einkauf';

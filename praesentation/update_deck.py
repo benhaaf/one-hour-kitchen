@@ -277,3 +277,42 @@ sub(S(10), {
 sub(N(10), {'Das Regal der Pasta Night zeigt, wie der Präsenter im Laden weiterlebt. Jede Koje ist eine Spalte der Matrix, geteilt in günstig, besonders und schnell. Der Abschnitt schnell liegt am Regalkopf direkt am Hauptgang. Waagerecht bleiben die Regalzonen: oben die Anlass-Schilder, in der Sichtzone Rezeptkarten und Bundles, darunter die Zutaten. Kühlpflichtige Zutaten stehen nicht hier, dazu die nächste Folie.':
     'Das Regal der Pasta Night zeigt, wie das Dashboard im Laden weiterlebt. Jede Koje ist eine Spalte der Matrix, geteilt in günstig, besonders und schnell. Der Abschnitt schnell liegt am Regalkopf direkt am Gang. Waagerecht bleiben die Regalzonen: oben die Anlass-Schilder, in der Sichtzone Rezeptkarten und ein Bild des Gerichts, darunter die Zutaten. Es gibt keine fertigen Pakete: Die Kundin sammelt die Zutaten selbst anhand ihrer Karte. Kühlpflichtige Zutaten stehen nicht hier, dazu die nächste Folie.'})
 print('ohne Bundles fertig')
+
+# ---------- Regale klassisch nach Warengruppen (Produktblöcke) ----------
+sub(S(10), {
+    'Regalbild Pasta Night: das Dashboard, im Regal gespiegelt.': 'Regalbild Pasta Night: klassisch nach Warengruppen.',
+    '€  Für den kleinen Geldbeutel': 'W1 · Nudeln',
+    '★  Für besondere Abende': 'W1 · Tomaten & Saucen',
+    '»  Wenn’s schnell gehen muss': 'W1 · Bohnen, Brühe & Gewürze',
+    'Karte #03 Pasta e Fagioli, 3,20 € je Portion': 'Spaghetti, Penne, Ditalini 500 g',
+    'Karte #02 Tagliatelle al Limone': 'Sugo, Tomatensauce, Passata',
+    'Karte #01 Creamy Tomato Pasta': 'Borlotti, Cannellini, Brühe',
+    'Pasta, Bohnen, Passata': 'Tagliatelle, Fusilli',
+    'Tagliatelle, Zitronen, Tiramisu-Set': 'Pomodori gehackt, Pesto',
+    'Pasta, Tomatensauce, Gewürze': 'Pasta-Gewürz, Zitronenpfeffer',
+    'Großpackungen Pasta und Bohnen': 'Spaghetti 1 kg, Ditalini 1 kg',
+    'Aperitivo alkoholfrei, Limonade': 'Sugo 680 g, Passata 1 kg',
+    'Wasser, Getränke im 6er-Pack': 'Borlotti 800 g',
+    '€ günstig': 'Nudeln',
+    '★ besonders': 'Saucen',
+    '» schnell': 'Bohnen & Brühe',
+    'Hauptgang →': '← Karten am Regalkopf',
+    'vertikal: Anlass · horizontal: Funktion der Zone': 'vertikal: Warengruppe (Produktblock) · horizontal: Regalzone',
+    'Gespiegelte Matrix': 'Klassische Ordnung',
+    'Jede Koje ist eine Spalte des Dashboards: dieselben drei Anlässe, Symbole und Rezeptnummern. Wer am Eingang gewählt hat, findet sein Feld sofort wieder.':
+    'Pasta bei Pasta, Sauce bei Sauce: Die Kundin findet die Zutaten ihrer Rezeptkarte wie in jedem Supermarkt. Das Blockschild nennt, für welche Rezepte der Block gebraucht wird.',
+    'Kreuzblock-Prinzip, S. 303': 'Produktblock, S. 303',
+    '» schnell am Regalkopf': 'Rezeptkarten am Regalkopf',
+    'Der Abschnitt für Eilige liegt direkt am Hauptgang. Wer schnell einkauft, muss nicht in die Koje hinein.': 'Am Gang stecken die Karten aller drei Rezepte der Kochwelt; der Fachcode W1 führt in diese Koje.',
+    'Sichtzone für die Karte': 'Zonen nach Gewicht',
+    'Rezeptkarten und ein Bild des Gerichts stehen dort, wo am leichtesten gesehen wird; schwere Gebinde in der Bückzone.': 'Standardgrößen in Sicht- und Greifzone, Großpackungen in der Bückzone.',
+})
+x = open(os.path.join(UN, S(10)), encoding='utf-8').read()
+open(os.path.join(UN, S(10)), 'w', encoding='utf-8').write(x)
+sub(N(10), {'Das Regal der Pasta Night zeigt, wie das Dashboard im Laden weiterlebt. Jede Koje ist eine Spalte der Matrix, geteilt in günstig, besonders und schnell. Der Abschnitt schnell liegt am Regalkopf direkt am Gang. Waagerecht bleiben die Regalzonen: oben die Anlass-Schilder, in der Sichtzone Rezeptkarten und ein Bild des Gerichts, darunter die Zutaten. Es gibt keine fertigen Pakete: Die Kundin sammelt die Zutaten selbst anhand ihrer Karte. Kühlpflichtige Zutaten stehen nicht hier, dazu die nächste Folie.':
+    'Das Regal der Pasta Night ist aufgebaut wie im klassischen Supermarkt: Nudeln bei Nudeln, Saucen bei Saucen, Bohnen und Brühe daneben, jeweils als senkrechter Produktblock. Die Kundin sammelt die Zutaten selbst anhand ihrer Rezeptkarte: Fachcode W1 führt in die Koje, das Blockschild zeigt, für welche Rezepte der Block gebraucht wird. Standardgrößen in Sicht- und Greifzone, Großpackungen unten. Kühlpflichtige Zutaten stehen nicht hier, dazu die nächste Folie.'})
+sub(S(9), {'Drei querstehende Gondeln bilden Kojen; jede ist eine Spalte des Dashboards.': 'Drei querstehende Gondeln bilden Kojen, je eine Kochwelt; innen nach Warengruppen sortiert.'})
+x = open(os.path.join(UN, S(13)), encoding='utf-8').read()
+x = x.replace('<a:t>Koje, Spalte »</a:t>', '<a:t>Koje per Fachcode</a:t>')
+open(os.path.join(UN, S(13)), 'w', encoding='utf-8').write(x)
+print('Produktblöcke fertig')

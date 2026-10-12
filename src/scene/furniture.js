@@ -468,37 +468,37 @@ const BUILDERS = {
         ctx.priceRail(f, x1 + 0.03, x2 - 0.03, y - 0.065, y - 0.025);
       }
       ctx.priceRail(f, x1 + 0.03, x2 - 0.03, 0.06, 0.1);
-      const content = m[seite];
-      if (content === 'matrix') this.matrixFace(b, m, ctx, f, levels);
-      else this.otherFace(b, m, ctx, f, levels, content);
+      if (m.regal?.[seite]) this.blockFace(b, m, ctx, f, levels, m.regal[seite]);
     }
     // Regalkopf zum Gang (+x): Kochwelt-Stele mit Rezeptkarten „» schnell“
     const ex = x2 + 0.005;
     b.box(wm, [x2 - 0.03, ex + 0.02, z1, z2], 0, 0.1);
     for (const y of [0.45, 0.85, 1.25]) b.box('holzHell', [x2, x2 + 0.16, z1 + 0.04, z2 - 0.04], y - 0.025, y);
     const P = ctx.products;
-    const code = m.welt.startsWith('Pasta') ? 'W1' : m.welt.startsWith('Asian') ? 'W2' : 'W3';
-    const rS = ctx.layout.rezepte.find((r) => r.welt === m.welt && r.anlass === 'schnell');
-    const rk = rS ? `R${rS.nr.slice(1)}` : 'R01';
-    // Regalkopf = Zeile » schnell: Zutaten des schnellen Rezepts, unten Getränk bzw. (Mexican) Ergänzungen
-    P.shelf(m.welt.startsWith('Mexican') ? 'ERG_MEX' : `${rk}D`, { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.45, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 2 });
-    P.shelf(rk, { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.85, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 1 });
-    const rSchnell = ctx.layout.rezepte.find((r) => r.welt === m.welt && r.anlass === 'schnell');
-    if (rSchnell) {
-      if (!ctx.cardMats[rSchnell.nr]) ctx.cardMats[rSchnell.nr] = lit(recipeCardTexture(rSchnell));
-      for (const dz of [-0.13, 0, 0.13]) {
-        b.geo('glas', G.box(0.03, 0.13, 0.11), x2 + 0.08, 1.31, zc + dz, Math.PI / 2, -0.2);
-        plane(ctx.extra, ctx.cardMats[rSchnell.nr], 0.095, 0.13, x2 + 0.09, 1.33, zc + dz, [1, 0], -0.2);
-      }
-    }
+    const kopf = m.regal?.kopf || { gruppen: [] };
+    // Regalkopf: Rezeptkarten aller drei Rezepte dieser Kochwelt (oben), darunter Waren aus dem Kopf-Sortiment
+    if (kopf.gruppen[0]) P.shelf(kopf.gruppen[0], { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.85, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 2 });
+    if (kopf.gruppen[1]) P.shelf(kopf.gruppen[1], { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.45, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 2 });
+    const rez = ctx.layout.rezepte.filter((r) => r.welt === m.welt);
+    rez.forEach((r, k) => {
+      if (!ctx.cardMats[r.nr]) ctx.cardMats[r.nr] = lit(recipeCardTexture(r));
+      const dz = (k - 1) * 0.15;
+      b.geo('glas', G.box(0.03, 0.13, 0.11), x2 + 0.08, 1.31, zc + dz, Math.PI / 2, -0.2);
+      plane(ctx.extra, ctx.cardMats[r.nr], 0.095, 0.13, x2 + 0.09, 1.33, zc + dz, [1, 0], -0.2);
+    });
+    if (kopf.titel) sign(ctx.extra, kopf.titel, { w: 0.52, h: 0.12, bg: '#2b2c30', fg: '#f4f1ec', font: '700' }, x2 + 0.165, 1.08, zc, [1, 0]);
     // Stele mit Kochwelt-Namen (Reckzone)
     b.box(wm, [x2 - 0.02, x2 + 0.03, zc - 0.03, zc + 0.03], H, H + 0.45);
     sign(ctx.extra, m.welt.toUpperCase(), { w: 0.5, h: 0.3, bg: col, fg: '#fff', font: '800' }, x2 + 0.035, H + 0.22, zc, [1, 0]);
     // Kopfschild über die ganze Gondel (beidseitig)
     b.box('anthrazit', [(x1 + x2) / 2 - 0.01, (x1 + x2) / 2 + 0.01, zc - 0.01, zc + 0.01], H, H + 0.18);
-    // Kopfschild nur auf der Matrix-Seite (die andere Seite gehört zur Nachbar-Koje)
-    const md = m.hinten === 'matrix' ? [0, 1] : [0, -1];
-    sign(ctx.extra, `${m.welt.toUpperCase()}  ·  ${code}  ·  Rezepte ${m.rezepte.slice().reverse().join(' ')}`, { w: 2.6, h: 0.26, bg: col, fg: '#fff', font: '800' }, (x1 + x2) / 2, H + 0.3, zc + md[1] * 0.012, md);
+    // Kopfschild je Seite: jede Seite gehört zu „ihrer“ Koje
+    for (const [seite, d] of [['vorne', [0, -1]], ['hinten', [0, 1]]]) {
+      const face = m.regal?.[seite];
+      if (!face) continue;
+      const wc = face.titel.startsWith('PASTA') ? '#d64527' : face.titel.startsWith('ASIAN') ? '#c9a227' : '#2f9e6e';
+      sign(ctx.extra, face.titel, { w: 2.8, h: 0.26, bg: wc, fg: '#fff', font: '800' }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
+    }
   },
 
   kuehlregal(b, m, ctx) {
@@ -822,163 +822,29 @@ const BUILDERS = {
   },
 };
 
-// Inhalte der Kochwelt-Gondeln (Folien 9–11): jede Spalte = ein Feld des Dashboards.
-// Reckzone: Anlass-Schild · Sichtzone: Rezeptkarten + Gericht-Bild · Greifzone: UNGEKÜHLTE Zutaten des Rezepts
-// (Zweitplatzierung) + Hinweis auf Kühlware · Bückzone: Großpackungen und das Getränk zum Rezept.
-const KUEHL = /^[KDO]/; // Kühlung, Dessert/TK, Obst & Gemüse stehen nie in der Kochwelt (Parmesan-Regel)
-
-// Schild „So sieht's aus“: Teller mit dem Gericht (gezeichnet), Name, Zeit
-function dishTexture(r) {
-  const pal = { 'Pasta Night': ['#f2d27a', '#d8352a', '#7fb04a'], 'Asian Night': ['#e9d8b0', '#7fb04a', '#c9a227'], 'Mexican Night': ['#e8862e', '#3b4f22', '#c0392b'] }[r.welt] || ['#f2d27a', '#d8352a', '#7fb04a'];
-  return canvasTex(470, 330, (g, w, h) => {
-    g.fillStyle = '#2b2c30';
-    g.fillRect(0, 0, w, h);
-    g.fillStyle = '#f4f1ec';
-    g.beginPath();
-    g.arc(118, 165, 98, 0, Math.PI * 2);
-    g.fill();
-    g.fillStyle = '#e2ddd3';
-    g.beginPath();
-    g.arc(118, 165, 72, 0, Math.PI * 2);
-    g.fill();
-    let seed = r.nr.charCodeAt(2) * 7;
-    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
-    for (let i = 0; i < 26; i++) {
-      g.fillStyle = pal[i % 3];
-      const a = rnd() * Math.PI * 2;
-      const d = rnd() * 52;
-      g.beginPath();
-      g.ellipse(118 + Math.cos(a) * d, 165 + Math.sin(a) * d, 10 + rnd() * 12, 6 + rnd() * 8, rnd() * 3, 0, Math.PI * 2);
-      g.fill();
-    }
-    g.fillStyle = '#f2c230';
-    g.textBaseline = 'middle';
-    g.font = `700 18px ${SANS}`;
-    g.fillText("SO SIEHT'S AUS", 236, 48);
-    g.fillStyle = '#fff';
-    g.font = `800 34px ${SANS}`;
-    g.fillText(r.nr, 236, 92);
-    const words = r.titel.split(' ');
-    let line = '';
-    let y = 136;
-    g.font = `700 22px ${SANS}`;
-    for (const wd of words) {
-      const t = line ? `${line} ${wd}` : wd;
-      if (g.measureText(t).width > w - 250) {
-        g.fillText(line, 236, y);
-        y += 28;
-        line = wd;
-      } else line = t;
-    }
-    g.fillText(line, 236, y);
-    g.fillStyle = '#c9c4bc';
-    g.font = `500 18px ${SANS}`;
-    g.fillText(`${r.zeit} · ${r.preis}`, 236, h - 64);
-    g.fillText('Karte ziehen, Zutaten', 236, h - 38);
-    g.fillText('nach Fachcode holen', 236, h - 16);
-  });
-}
-
-function talkerTexture(r) {
-  const cold = [...r.zutaten, ...r.ergaenzung].filter(([, c]) => KUEHL.test(c));
-  return canvasTex(320, 200, (g, w, h) => {
-    g.fillStyle = '#eaf3fb';
-    g.fillRect(0, 0, w, h);
-    g.fillStyle = '#3f8fd0';
-    g.fillRect(0, 0, w, 44);
-    g.fillStyle = '#fff';
-    g.textBaseline = 'middle';
-    g.font = `800 20px ${SANS}`;
-    g.fillText(`${r.nr} · auch dazu:`, 12, 23);
-    g.fillStyle = '#1c1c1f';
-    g.font = `600 19px ${SANS}`;
-    cold.slice(0, 5).forEach(([n, c], i) => {
-      g.fillText(n, 12, 66 + i * 28);
-      g.fillStyle = '#3f8fd0';
-      g.textAlign = 'right';
-      g.font = `800 19px ${SANS}`;
-      g.fillText(c, w - 12, 66 + i * 28);
-      g.textAlign = 'left';
-      g.fillStyle = '#1c1c1f';
-      g.font = `600 19px ${SANS}`;
-    });
-  });
-}
-
-BUILDERS['kochwelt-gondel'].matrixFace = function (b, m, ctx, f, levels) {
+// Inhalte der Kochwelt-Gondeln: klassisch nach Warengruppen (Produktblöcke, Ahlert et al. 2020, S. 303).
+// Senkrechte Blöcke je Warengruppe; Sicht- und Greifzone Standardgrößen, Bückzone Großpackungen.
+// Die Rezeptkarte führt per Fachcode (W1–W3) in die Koje, das Blockschild nennt die Rezepte, die daraus kochen.
+BUILDERS['kochwelt-gondel'].blockFace = function (b, m, ctx, f, levels, face) {
   const [x1, x2] = m.rechteck;
-  const L = (x2 - x1 - 0.06) / 3;
   const P = ctx.products;
-  m.rezepte.forEach((nr, i) => {
-    const r = ctx.layout.rezepte.find((x) => x.nr === nr);
-    const rk = `R${nr.slice(1)}`;
+  const n = face.bloecke.length;
+  const L = (x2 - x1 - 0.06) / n;
+  face.bloecke.forEach((bl, i) => {
     const a1 = x1 + 0.03 + i * L;
     const a2 = a1 + L;
-    const an = ANLASS[r.anlass];
-    const key = `anlass-${r.anlass}`;
-    if (!b.materials[key]) b.materials[key] = std(new THREE.Color(an.farbe), 0.6);
-    if (i > 0) b.box(key, faceRect(f, a1 - 0.012, a1 + 0.012, 0.005, -0.25), 0.1, m.hoehe);
-    // Sichtzone: Kartenspender und ein Schild „So sieht's aus“ – keine fertigen Pakete, eingekauft wird nach Karte
-    if (!ctx.cardMats[r.nr]) ctx.cardMats[r.nr] = lit(recipeCardTexture(r));
-    for (const k of [0.12, 0.27, 0.42]) {
-      const [cx, cz] = f.at(a1 + k * L, -0.08);
-      b.geo('glas', G.box(0.13, 0.17, 0.05), cx, levels[3] + 0.09, cz, yawFacing(...f.dir), -0.2);
-      const [px, pz] = f.at(a1 + k * L, -0.05);
-      plane(ctx.extra, ctx.cardMats[r.nr], 0.1, 0.14, px, levels[3] + 0.1, pz, f.dir, -0.2);
-    }
-    const dk = `gericht-${nr}`;
-    if (!b.materials[dk]) b.materials[dk] = lit(dishTexture(r));
-    const [dx, dz] = f.at(a1 + 0.75 * L, -0.12);
-    b.geo('holzDunkel', G.box(0.5, 0.36, 0.02), dx, levels[3] + 0.19, dz, yawFacing(...f.dir), -0.12);
-    const [ex, ez] = f.at(a1 + 0.75 * L, -0.105);
-    plane(ctx.extra, b.materials[dk], 0.47, 0.33, ex, levels[3] + 0.19, ez, f.dir, -0.12);
-    // Greifzone: ungekühlte Zutaten + Hinweiskarte auf die Kühlware (Fachcodes)
-    P.shelf(rk, { along: 'x', from: a1, to: a2 - 0.33, front: f.front, y: levels[2], depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, facings: 2 });
-    const tk = `talker-${nr}`;
-    if (!b.materials[tk]) b.materials[tk] = lit(talkerTexture(r));
-    const [tx, tz] = f.at(a2 - 0.17, -0.06);
-    plane(ctx.extra, b.materials[tk], 0.29, 0.18, tx, levels[2] + 0.12, tz, f.dir, -0.12);
-    // Bückzone: Großpackungen (oben) und Getränk zum Rezept (unten)
-    P.shelf(`${rk}B`, { along: 'x', from: a1, to: a2, front: f.front, y: levels[1], depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, facings: 3 });
-    P.shelf(`${rk}D`, { along: 'x', from: a1, to: a2, front: f.front, y: levels[0], depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2, facings: 4, gap: 0.006 });
-    // Reckzone: Anlass-Schild
+    if (i > 0) b.box('anthrazit', faceRect(f, a1 - 0.008, a1 + 0.008, 0.004, -0.25), 0.1, m.hoehe - 0.03);
+    const [g0, g1] = [bl.gruppen[0], bl.gruppen[1] || bl.gruppen[0]];
+    const span = { along: 'x', from: a1, to: a2, front: f.front, depth: 0.24, dir: f.dir, rows: 2 };
+    P.shelf(g0, { ...span, y: levels[3], maxH: 0.33, facings: 3, start: 0 });
+    P.shelf(g0, { ...span, y: levels[2], maxH: 0.36, facings: 3, start: 2 });
+    P.shelf(g1, { ...span, y: levels[1], maxH: 0.34, facings: 3, start: 0 });
+    P.shelf(g1, { ...span, y: levels[0], maxH: 0.34, facings: 3, start: 1 });
+    // Blockschild (Reckzone): Fachcode, Warengruppe und die Rezepte, die daraus kochen
+    const rez = ctx.layout.rezepte.filter((r) => r.zutaten.some(([nm, c]) => c === bl.code && (bl.artikel || []).includes(nm))).map((r) => r.nr);
     const [sx, sz] = f.at((a1 + a2) / 2, 0.01);
-    sign(ctx.extra, `${an.sym} ${an.text} · ${r.nr} ${r.titel.split(' + ')[0]}`, { w: Math.min(1.55, L - 0.1), h: 0.2, bg: an.farbe, fg: '#fff', font: '800' }, sx, m.hoehe - 0.13, sz, f.dir);
+    sign(ctx.extra, `${bl.code} · ${bl.name}${rez.length ? `   für ${rez.join(' ')}` : ''}`, { w: Math.min(2.1, L - 0.12), h: 0.2, bg: '#f4f1ec', fg: '#1c1c1f', font: '800', border: '#2b2c30' }, sx, m.hoehe - 0.13, sz, f.dir);
   });
-};
-
-BUILDERS['kochwelt-gondel'].otherFace = function (b, m, ctx, f, levels, content) {
-  const [x1, x2] = m.rechteck;
-  const P = ctx.products;
-  const span = { along: 'x', from: x1 + 0.03, to: x2 - 0.03, front: f.front, depth: 0.24, dir: f.dir, maxH: 0.34, rows: 2 };
-  let title;
-  let farbe;
-  if (content === 'aktion') {
-    // Zur Obst-&-Gemüse-Zone: weitere Pasta-Sorten, Saucen und Pasta-Getränke (Auswahl zur Pasta Night)
-    title = 'PASTA NIGHT · MEHR AUSWAHL: Sorten, Saucen, Antipasti';
-    farbe = '#d64527';
-    P.shelf(['R03', 'ERG_PASTA'], { ...span, y: levels[3], facings: 3 });
-    P.shelf(['R01', 'R03'], { ...span, y: levels[2], facings: 3, start: 1 });
-    P.shelf(['R01B', 'R03B'], { ...span, y: levels[1], facings: 3 });
-    P.shelf(['R01D', 'R02B'], { ...span, y: levels[0], facings: 4 });
-  } else {
-    // Gegenüber der Matrix: Schritt 04 „Ergänzen“ – Drink + Dessert derselben Kochwelt
-    const welt = content === 'ergaenzung-pasta' ? 'Pasta Night' : 'Asian Night';
-    const code = content === 'ergaenzung-pasta' ? 'ERG_PASTA' : 'ERG_ASIAN';
-    farbe = content === 'ergaenzung-pasta' ? '#d64527' : '#c9a227';
-    title = `${welt.toUpperCase()} · 04 ERGÄNZEN: DRINK + DESSERT`;
-    const list = ctx.products.byCode[code];
-    const drinks = list.map((_, i) => i).filter((i) => ['flasche', 'dose', 'tetra'].includes(list[i].p.form));
-    const sweets = list.map((_, i) => i).filter((i) => !drinks.includes(i));
-    // Dessert & Snacks in Sicht- und Greifzone, Getränke in der Bückzone
-    for (const [lv, set] of [[3, sweets], [2, sweets], [1, drinks], [0, drinks]]) {
-      const tmp = `${code}-${lv}`;
-      if (!ctx.products.byCode[tmp]) ctx.products.byCode[tmp] = set.map((i) => list[i]);
-      P.shelf(tmp, { ...span, y: levels[lv], facings: lv < 2 ? 4 : 3, start: lv });
-    }
-  }
-  const [sx, sz] = f.at((x1 + x2) / 2, 0.01);
-  sign(ctx.extra, title, { w: 2.9, h: 0.2, bg: farbe, fg: '#fff', font: '800' }, sx, m.hoehe - 0.13, sz, f.dir);
 };
 
 // ---------- Obst/Gemüse: Kugeln, Ovale, Stangen in einer Kiste ----------

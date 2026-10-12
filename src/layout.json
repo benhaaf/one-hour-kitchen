@@ -451,13 +451,75 @@
       "hoehe": 1.8,
       "welt": "Pasta Night",
       "farbe": "#d64527",
-      "vorne": "aktion",
-      "hinten": "matrix",
-      "rezepte": [
-        "#03",
-        "#02",
-        "#01"
-      ]
+      "regal": {
+        "hinten": {
+          "titel": "PASTA NIGHT · W1 · Rezepte #01 #02 #03",
+          "bloecke": [
+            {
+              "code": "W1",
+              "name": "Bohnen, Brühe & Gewürze",
+              "gruppen": [
+                "PA_BOHNEN",
+                "PA_BOHNEN_B"
+              ],
+              "artikel": [
+                "Bohnen"
+              ]
+            },
+            {
+              "code": "W1",
+              "name": "Tomaten & Saucen",
+              "gruppen": [
+                "PA_SAUCE",
+                "PA_SAUCE_B"
+              ],
+              "artikel": [
+                "Tomatensauce",
+                "Passata"
+              ]
+            },
+            {
+              "code": "W1",
+              "name": "Nudeln",
+              "gruppen": [
+                "PA_NUDELN",
+                "PA_NUDELN_B"
+              ],
+              "artikel": [
+                "Pasta"
+              ]
+            }
+          ]
+        },
+        "vorne": {
+          "titel": "PASTA NIGHT · Feinkost",
+          "bloecke": [
+            {
+              "code": "W1",
+              "name": "Antipasti, Öl & Essig",
+              "gruppen": [
+                "PA_FEIN",
+                "PA_FEIN_B"
+              ],
+              "artikel": []
+            },
+            {
+              "code": "W1",
+              "name": "Brot & Grissini",
+              "gruppen": [
+                "PA_BROT"
+              ],
+              "artikel": []
+            }
+          ]
+        },
+        "kopf": {
+          "gruppen": [
+            "PA_NUDELN",
+            "PA_DRINK"
+          ]
+        }
+      }
     },
     {
       "id": "M5",
@@ -472,13 +534,74 @@
       "hoehe": 1.8,
       "welt": "Asian Night",
       "farbe": "#c9a227",
-      "vorne": "ergaenzung-pasta",
-      "hinten": "matrix",
-      "rezepte": [
-        "#06",
-        "#05",
-        "#04"
-      ]
+      "regal": {
+        "vorne": {
+          "titel": "PASTA NIGHT · Ergänzen: Drink + Dessert",
+          "bloecke": [
+            {
+              "code": "W1",
+              "name": "Gebäck & Dessert",
+              "gruppen": [
+                "PA_SUESS"
+              ],
+              "artikel": []
+            },
+            {
+              "code": "W1",
+              "name": "Getränke Italia",
+              "gruppen": [
+                "PA_DRINK"
+              ],
+              "artikel": []
+            }
+          ]
+        },
+        "hinten": {
+          "titel": "ASIAN NIGHT · W2 · Rezepte #04 #05 #06",
+          "bloecke": [
+            {
+              "code": "W2",
+              "name": "Saucen & Würze",
+              "gruppen": [
+                "AS_SAUCE",
+                "AS_SAUCE_B"
+              ],
+              "artikel": [
+                "Sojasauce",
+                "Sesam",
+                "Miso-Paste"
+              ]
+            },
+            {
+              "code": "W2",
+              "name": "Reis & Kokos",
+              "gruppen": [
+                "AS_REIS",
+                "AS_REIS_B"
+              ],
+              "artikel": []
+            },
+            {
+              "code": "W2",
+              "name": "Nudeln",
+              "gruppen": [
+                "AS_NUDELN",
+                "AS_NUDELN_B"
+              ],
+              "artikel": [
+                "Udon-Nudeln",
+                "Ramen-Nudeln"
+              ]
+            }
+          ]
+        },
+        "kopf": {
+          "gruppen": [
+            "AS_NUDELN",
+            "AS_DRINK"
+          ]
+        }
+      }
     },
     {
       "id": "M6",
@@ -493,13 +616,79 @@
       "hoehe": 1.8,
       "welt": "Mexican Night",
       "farbe": "#2f9e6e",
-      "vorne": "ergaenzung-asian",
-      "hinten": "matrix",
-      "rezepte": [
-        "#09",
-        "#08",
-        "#07"
-      ]
+      "regal": {
+        "vorne": {
+          "titel": "ASIAN NIGHT · Ergänzen: Drink + Dessert",
+          "bloecke": [
+            {
+              "code": "W2",
+              "name": "Snacks & Süßes",
+              "gruppen": [
+                "AS_SNACK"
+              ],
+              "artikel": []
+            },
+            {
+              "code": "W2",
+              "name": "Tee & Getränke",
+              "gruppen": [
+                "AS_DRINK"
+              ],
+              "artikel": []
+            }
+          ]
+        },
+        "hinten": {
+          "titel": "MEXICAN NIGHT · W3 · Rezepte #07 #08 #09",
+          "bloecke": [
+            {
+              "code": "W3",
+              "name": "Salsas & Gewürze",
+              "gruppen": [
+                "MX_SALSA"
+              ],
+              "artikel": []
+            },
+            {
+              "code": "W3",
+              "name": "Bohnen, Mais & Tomaten",
+              "gruppen": [
+                "MX_DOSE",
+                "MX_DOSE_B"
+              ],
+              "artikel": [
+                "Bohnen",
+                "Kidneybohnen",
+                "Mais",
+                "Tomaten (Dose)"
+              ]
+            },
+            {
+              "code": "W3",
+              "name": "Tortillas & Taco Shells",
+              "gruppen": [
+                "MX_TORT",
+                "MX_TORT_B"
+              ],
+              "artikel": [
+                "Tortillas",
+                "Taco-Shells"
+              ]
+            }
+          ]
+        },
+        "kopf": {
+          "titel": "Ergänzen: Nachos, Dips, Drinks",
+          "gruppen": [
+            "MX_ERG",
+            "MX_DRINK"
+          ],
+          "code": "W3",
+          "artikel": [
+            "Nachos & Salsa"
+          ]
+        }
+      }
     },
     {
       "id": "M7",
@@ -848,28 +1037,28 @@
         "name": "Reckzone",
         "von": 1.7,
         "bis": 2.2,
-        "inhalt": "Kochwelt- & Anlass-Schilder",
+        "inhalt": "Schild Produktblock + Fachcode",
         "farbe": "#9aa0a6"
       },
       {
         "name": "Sichtzone",
         "von": 1.2,
         "bis": 1.7,
-        "inhalt": "Rezeptkarten & Gericht-Schild",
+        "inhalt": "Standardgrößen, Bestseller",
         "farbe": "#3fbf7f"
       },
       {
         "name": "Greifzone",
         "von": 0.8,
         "bis": 1.2,
-        "inhalt": "Zutaten des Rezepts",
+        "inhalt": "Standardgrößen des Produktblocks",
         "farbe": "#f2c230"
       },
       {
         "name": "Bückzone",
         "von": 0,
         "bis": 0.8,
-        "inhalt": "Großpackungen & Getränke",
+        "inhalt": "Großpackungen, Getränke",
         "farbe": "#e06c4f"
       }
     ],
@@ -1691,8 +1880,8 @@
           8.2
         ]
       },
-      "entscheidung": "Drei querstehende Gondeln bilden die Kojen Pasta, Asian und Mexican mit je 1,5 m Gang. In jeder Koje steht auf einer Seite die Rezept-Matrix (3 Rezepte), gegenüber „04 Ergänzen“: Drink und Dessert derselben Kochwelt. Mexican liegt gegenüber der Kühlung mit Käse, Schmand und Veggie-Hack; seine Ergänzungen stehen am Regalkopf.",
-      "begruendung": "Querplatzierung bremst und schafft neue Kaufrelevanz: Wer nur das Rezept holen wollte, entdeckt Getränk und Dessert daneben. Die Kojen sind von beiden Seiten erreichbar (Rundlauf links, Gang zur Küche rechts).",
+      "entscheidung": "Drei querstehende Gondeln bilden die Kojen Pasta, Asian und Mexican mit je 1,5 m Gang. Innerhalb jeder Koje ist das Regal klassisch nach Warengruppen sortiert (Nudeln bei Nudeln, Saucen bei Saucen), gegenüber „Ergänzen“: Drink und Dessert derselben Kochwelt. Am Regalkopf zum Gang: Rezeptkarten der drei Rezepte.",
+      "begruendung": "Querplatzierung bremst und schafft neue Kaufrelevanz: Wer nur seine Zutaten holen wollte, entdeckt Getränk und Dessert daneben. Die Kochwelt bündelt, was zusammen gekocht wird; die Rezeptkarte führt über den Fachcode (W1–W3) in die richtige Koje, dort hilft die gewohnte Ordnung nach Warengruppen.",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3 ✓; Seminarskript: Querplatzierung → „neue Kaufrelevanz“ ✓; Larson/Bradlow/Fader 2005, IJRM 22(4), S. 395–414 (Laufwege, Gänge) ◐",
       "annahme": "Zusätzliche Käufe sind beabsichtigt, nicht belegt.",
       "skizze": "Skizze: drei Themenwelten mit ca. 0,7 m Abstand. Neu: 1,4–1,5 m Gänge (Einkaufswagen + Gegenverkehr) und ein Gang an der linken Wand.",
@@ -1720,10 +1909,10 @@
           5.55
         ]
       },
-      "entscheidung": "Jede Spalte ist ein Feld des Dashboards (» schnell am Regalkopf · ★ besonders · € günstig an der Wand). Waagerecht die Regalzonen: Anlass-Schild oben, Rezeptkarten und ein Schild „So sieht's aus“ in der Sichtzone, die ungekühlten Zutaten des Rezepts in der Greifzone, Großpackung und passendes Getränk unten. Es gibt keine fertigen Pakete: Die Kundin sammelt die Zutaten selbst anhand ihrer Karte.",
-      "begruendung": "Wer am Dashboard gewählt hat, findet sein Feld sofort wieder (gleiche Nummer, gleiches Symbol). Kühlware steht nie in der Kochwelt: Eine Karte in der Greifzone nennt ihr Fach (z. B. Sahne K1, Parmesan K2). Mehr Facings und eine höhere Platzierung erhöhen die Aufmerksamkeit für ein Produkt.",
-      "quelle": "Ahlert/Kenning/Brock 2020, S. 302–303 (Regalzonen, Kreuzblock) ✓; Chandon et al. 2009, J. of Marketing 73(6), S. 1–17 (Facings & Regalhöhe → Aufmerksamkeit) ✓",
-      "annahme": "Belegung der Fächer ist Fallannahme; die Wirkung im eigenen Store ist nicht gemessen.",
+      "entscheidung": "Das Regal ist aufgebaut wie im klassischen Supermarkt: senkrechte Produktblöcke (Nudeln · Tomaten & Saucen · Bohnen, Brühe & Gewürze), waagerecht die Regalzonen: Schild mit Fachcode oben, Standardgrößen in Sicht- und Greifzone, Großpackungen unten. Fertige Pakete gibt es nicht.",
+      "begruendung": "Die Kundin kennt diese Ordnung aus jedem Supermarkt und findet die Zutaten von ihrer Rezeptkarte schnell: Fachcode W1 → Koje Pasta → Block „Nudeln“. Das Blockschild nennt zusätzlich die Rezepte, die daraus kochen. Die Kühlware des Rezepts steht nach der Parmesan-Regel im Kühlregal.",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 302–303 (Regalzonen, Produktblock) ✓; Chandon et al. 2009, J. of Marketing 73(6), S. 1–17 (Facings & Regalhöhe → Aufmerksamkeit) ✓",
+      "annahme": "Blockreihenfolge und Belegung sind Fallannahme; die Wirkung im eigenen Store ist nicht gemessen.",
       "skizze": "Neu ausgearbeitet (in der Skizze nicht enthalten).",
       "ebenen": {
         "zonen": false,

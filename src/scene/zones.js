@@ -65,53 +65,91 @@ export function buildZones(layout) {
   return group;
 }
 
-// Höhenmarken der Regalzonen an allen Regalen aus layout.regalzonen.moebel (Seite: vorne/hinten/links/rechts)
+// Kundenseitige Regalfronten je Möbeltyp (vorne = Richtung Straße, hinten = Richtung Rückwand)
+export function shelfFaces(m) {
+  switch (m.typ) {
+    case 'kochwelt-gondel':
+      return Object.keys(m.regal || { hinten: 1, vorne: 1 }).filter((k) => k !== 'kopf');
+    case 'kuehlregal':
+    case 'glastuer-kuehlung':
+    case 'weinregal':
+      return ['vorne'];
+    case 'basis-regal':
+      return Object.keys(m.seiten || {});
+    case 'impulsregal':
+      return ['rechts'];
+    default:
+      return [];
+  }
+}
+
+// Inhalt je Regalzone für eine Regalfront (layout.regalzonen.belegung["M7:vorne"]), sonst allgemeine Beschreibung
+export function zoneContent(layout, id, seite) {
+  const RZ = layout.regalzonen;
+  const b = RZ.belegung?.[`${id}:${seite}`];
+  return RZ.zonen.map((z, i) => b?.[i] || z.inhalt);
+}
+
+// Höhenmarken der Regalzonen an ALLEN Regalfronten (Ahlert/Kenning/Brock 2020, S. 302–303)
 export function buildShelfZones(layout) {
   const group = new THREE.Group();
   group.name = 'Regalzonen';
   const fmt = (n) => n.toLocaleString('de-DE', { minimumFractionDigits: 1 });
-  const top = Math.max(...layout.regalzonen.zonen.map((z) => z.bis));
-  for (const ref of layout.regalzonen.moebel || []) {
-    const m = layout.moebel.find((x) => x.id === ref.id);
-    if (!m) continue;
+  const zonen = layout.regalzonen.zonen;
+  const top = Math.max(...zonen.map((z) => z.bis));
+  const mats = new Map();
+  const mat = (c) => {
+    if (!mats.has(c)) mats.set(c, new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.3, depthWrite: false, side: THREE.DoubleSide }));
+    return mats.get(c);
+  };
+  for (const m of layout.moebel) {
+    const faces = shelfFaces(m);
+    if (!faces.length || !m.rechteck) continue;
     const [x1, x2, z1, z2] = m.rechteck;
-    const alongX = ref.seite === 'vorne' || ref.seite === 'hinten';
-    const len = alongX ? x2 - x1 : z2 - z1;
-    const off = 0.035;
-    // Mittelpunkt der Front und Richtung zum Kunden
-    const face = {
-      vorne: { c: [(x1 + x2) / 2, z1 - off], dir: [0, -1], yaw: Math.PI },
-      hinten: { c: [(x1 + x2) / 2, z2 + off], dir: [0, 1], yaw: 0 },
-      links: { c: [x1 - off, (z1 + z2) / 2], dir: [-1, 0], yaw: -Math.PI / 2 },
-      rechts: { c: [x2 + off, (z1 + z2) / 2], dir: [1, 0], yaw: Math.PI / 2 },
-    }[ref.seite];
-    // Three-Plane zeigt nach +z (= Store -z); yaw so drehen, dass sie zum Kunden zeigt
-    const yaw = Math.atan2(face.dir[0], -face.dir[1]);
-    for (const rz of layout.regalzonen.zonen) {
-      const h = rz.bis - rz.von;
-      const band = new THREE.Mesh(
-        new THREE.PlaneGeometry(len, h),
-        new THREE.MeshBasicMaterial({ color: rz.farbe, transparent: true, opacity: 0.32, depthWrite: false, side: THREE.DoubleSide }),
-      );
-      band.rotation.y = yaw;
-      toThree(face.c[0], rz.von + h / 2, face.c[1], band.position);
-      band.renderOrder = 3;
-      group.add(band);
-      if (rz.bis < top) {
-        const line = new THREE.Mesh(new THREE.BoxGeometry(len, 0.012, 0.012), new THREE.MeshBasicMaterial({ color: rz.farbe }));
-        line.rotation.y = yaw;
-        toThree(face.c[0] + face.dir[0] * 0.005, rz.bis, face.c[1] + face.dir[1] * 0.005, line.position);
-        group.add(line);
-      }
-      const range = rz.von === 0 ? `unter ${fmt(rz.bis)} m` : rz.bis >= top ? `über ${fmt(rz.von)} m` : `${fmt(rz.von)}–${fmt(rz.bis)} m`;
-      // Beschriftung an beiden Enden, leicht vor der Front
-      for (const endA of alongX ? [x2 - 0.45] : [z2 - 0.45]) {
-        const label = textSprite([`${rz.name} · ${range}`, rz.inhalt], { height: 0.15, accent: rz.farbe });
-        const px = alongX ? endA : face.c[0] + face.dir[0] * 0.3;
-        const pz = alongX ? face.c[1] + face.dir[1] * 0.3 : endA;
-        toThree(px, rz.von + h / 2, pz, label.position);
-        group.add(label);
-      }
+    // Bänder nur bis knapp über das Regal (Reckzone = Schilder über der Ware)
+    const maxY = Math.min(top, m.hoehe + 0.3);
+    for (const seite of faces) {
+      const alongX = seite === 'vorne' || seite === 'hinten';
+      const len = (alongX ? x2 - x1 : z2 - z1) - 0.06;
+      const off = m.typ === 'glastuer-kuehlung' ? 0.0 : 0.035;
+      const face = {
+        vorne: { c: [(x1 + x2) / 2, z1 - off], dir: [0, -1] },
+        hinten: { c: [(x1 + x2) / 2, z2 + off], dir: [0, 1] },
+        links: { c: [x1 - off, (z1 + z2) / 2], dir: [-1, 0] },
+        rechts: { c: [x2 + off, (z1 + z2) / 2], dir: [1, 0] },
+      }[seite];
+      const yaw = Math.atan2(face.dir[0], -face.dir[1]);
+      const inhalt = zoneContent(layout, m.id, seite);
+      // Beschriftung an einem Ende der Front; gegenüberliegende Fronten an verschiedenen Enden, damit sich nichts überdeckt
+      const endA = alongX ? (seite === 'vorne' ? x1 + 0.5 : x2 - 0.5) : seite === 'links' ? z1 + 0.5 : z2 - 0.5;
+      // lange Fronten (Kühlregal, Basis) an beiden Enden beschriften
+      const ends = len > 4 ? [endA, alongX ? x1 + x2 - endA : z1 + z2 - endA] : [endA];
+      zonen.forEach((rz, i) => {
+        const von = rz.von;
+        const bis = Math.min(rz.bis, maxY);
+        if (bis - von < 0.05) return;
+        const h = bis - von;
+        const band = new THREE.Mesh(new THREE.PlaneGeometry(len, h), mat(rz.farbe));
+        band.rotation.y = yaw;
+        toThree(face.c[0], von + h / 2, face.c[1], band.position);
+        band.renderOrder = 3;
+        group.add(band);
+        if (rz.bis < top && rz.bis <= maxY) {
+          const line = new THREE.Mesh(new THREE.BoxGeometry(len, 0.012, 0.012), new THREE.MeshBasicMaterial({ color: rz.farbe }));
+          line.rotation.y = yaw;
+          toThree(face.c[0] + face.dir[0] * 0.005, rz.bis, face.c[1] + face.dir[1] * 0.005, line.position);
+          group.add(line);
+        }
+        const range = rz.von === 0 ? `unter ${fmt(rz.bis)} m` : rz.bis >= top ? `über ${fmt(rz.von)} m` : `${fmt(rz.von)}–${fmt(rz.bis)} m`;
+        const text = inhalt[i] && inhalt[i] !== '–' ? [`${rz.name} · ${range}`, inhalt[i]] : [`${rz.name} · ${range}`];
+        for (const e of ends) {
+          const label = textSprite(text, { height: 0.13, accent: rz.farbe });
+          const px = alongX ? e : face.c[0] + face.dir[0] * 0.28;
+          const pz = alongX ? face.c[1] + face.dir[1] * 0.28 : e;
+          toThree(px, von + h / 2, pz, label.position);
+          group.add(label);
+        }
+      });
     }
   }
   return group;

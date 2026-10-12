@@ -79,8 +79,9 @@ export class TopView {
     let legend;
     if (landscape) {
       const L = Math.min(Math.max(w * 0.27, 250 * u), 400 * u);
+      const left = reserve.left || 0;
       legend = { x: w - reserve.right - m - L, y: titleH, w: L, h: h - reserve.bottom - titleH - m };
-      area = { x: m, y: titleH, w: legend.x - 2 * m, h: h - titleH - scaleH - m };
+      area = { x: m + left, y: titleH, w: legend.x - 2 * m - left, h: h - reserve.bottom - titleH - scaleH - m };
     } else {
       const LH = h * 0.36;
       legend = { x: m, y: h - reserve.bottom - m - LH, w: w - reserve.right - 2 * m, h: LH };

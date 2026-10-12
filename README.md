@@ -13,17 +13,27 @@ Technik-Basis: die Engine aus „Rille 33“ (Three.js), angepasst. Eine einzige
 | Ego ↔ Draufsicht | Dreieck | T | „Ansicht“ |
 | Wege (Rezeptweg, Schnellweg, Blickachse) | Kreis | H | „Weg“ |
 | Zonen & Beschriftungen | Quadrat | Z | „Zonen“ |
-| Regalzonen (Reck/Sicht/Greif/Bück) | L3 | R | „Regal“ |
+| Regalzonen (Reck/Sicht/Greif/Bück) an allen Regalen | L3 | R | „Regal“ |
 | Infokarte / Tür / Einkauf-Aktion | X | E | „Info“ oder Hinweis antippen |
 | Präsentationsmodus | Options | P | „Präs.“ |
-| Nächste / vorige Folie | R1 / L1 | → / ← | „Weiter“ / „Zurück“ |
+| Nächste / vorige Folie | R1 / L1 | → / ←, Leertaste, Bild ↓ / ↑ (Presenter), Klick ins Bild | „Weiter“ / „Zurück“, Leiste unten |
+| Sprechernotizen · Folienübersicht | – | N · O | Leiste unten |
+| Referentenansicht (2. Fenster) · Vollbild | – | V · F | Leiste unten |
+| Erste / letzte Folie · beenden | – | Pos1 / Ende · Esc | ✕ in der Leiste |
 | Einkaufs-Spiel | Steuerkreuz rechts | G | „Einkauf“ |
 | Kundensimulation | Steuerkreuz oben | K | „Sim.“ |
 | Rahmen-Overlay | Create | I | „Rahmen“ |
 | Draufsicht als PNG | R3 | B | „PNG“ |
 
-## Präsentation (20 Minuten)
-23 Schritte: Titel → Kundenproblem → Wettbewerb → Rahmen → Wirtschaftlichkeit → Grundriss (Draufsicht) → 8 Optimierungen gegenüber der Skizze → Stationen 1–12 → Flächenbilanz (automatisch aus dem Grundriss berechnet) → Zielkonflikte → Fazit → Quellen. Info/X blendet die Folie aus, damit man frei auf den Laden schaut. Jede Folie schaltet die passenden Ebenen (Zonen, Wege, Regalzonen) selbst.
+## Präsentation (20 Minuten) – ersetzt die PowerPoint
+Alle 19 Folien der PowerPoint stecken als Folien im Modell (Tabellen, Diagramm, Matrix, Rezeptkarte, Parmesan-Regel, Begründungskette …), dazwischen die 12 Stationen des Rundgangs – 32 Schritte plus eine Backup-Folie für die Fragerunde. Jede Folie fliegt zum passenden Ort im Laden und schaltet die Ebenen (Zonen, Wege, Regalzonen) selbst.
+
+- **Leiste unten:** Kapitel mit Fortschritt (Punkte anklickbar), Folienzähler, Timer mit Ziel 20:00 (wird 2 Min. vorher orange, danach rot; Klick setzt zurück).
+- **Notizen (N):** Sprechernotizen aus der PowerPoint, für Stationen eigene Notizen.
+- **Übersicht (O):** alle Folien nach Kapiteln, Klick springt hin – praktisch in der Fragerunde.
+- **Referentenansicht (V):** öffnet ein zweites Fenster mit aktueller Folie, Notizen, nächster Folie und Timer. Dieses Fenster auf den Laptop, das Hauptfenster (F = Vollbild) auf den Beamer; Weiter/Zurück im Referentenfenster steuert den Beamer. Wird das Fenster blockiert, erscheinen die Notizen im Hauptfenster.
+- **Clicker:** Presenter mit Bild ↑/↓ funktionieren direkt.
+- Info/X blendet die Folie aus, damit man frei auf den Laden schaut. Folien passen sich der Bildschirmgröße an (Beamer 1080p wie Laptop).
 
 Kennzeichnung der Quellen: ✓ = Inhalt an Seminarskript bzw. Abstract geprüft, ◐ = Fundstelle vor der Prüfung im Volltext prüfen. „Annahme“ = gekennzeichnete Fallannahme (Schema Modul 7).
 
@@ -31,7 +41,7 @@ Kennzeichnung der Quellen: ✓ = Inhalt an Seminarskript bzw. Abstract geprüft,
 Am Matrix-Dashboard X/E drücken (oder „Einkauf“) → Küche × Anlass wählen → leuchtende Marker zeigen die Fachcodes der Rezeptkarte (O, W, K, B, D, G) → an jedem Marker X/E → an der Kasse bezahlen → Bon mit One-Hour-Check.
 
 ## Inhalte ändern
-Alles steht in `src/layout.json`: Raum, Zonen, Möbel, Wege, Rezepte, Stationen, Folien (`praesentation.folien`, Reihenfolge in `praesentation.ablauf`), Simulation. Koordinaten in Metern, Ursprung vorne links von der Straße aus, Rechtecke `[x1, x2, z1, z2]`.
+Alles steht in `src/layout.json`: Raum, Zonen, Möbel, Wege, Rezepte, Stationen, Folien (`praesentation.folien`, Reihenfolge und Kapitel in `praesentation.ablauf`, Sprechernotizen in `notizen`), Regalzonen (`regalzonen.belegung` = Inhalt je Zone und Regalfront), Simulation. Koordinaten in Metern, Ursprung vorne links von der Straße aus, Rechtecke `[x1, x2, z1, z2]`.
 
 ## Bauen
 ```

@@ -1031,7 +1031,7 @@
     }
   ],
   "regalzonen": {
-    "_hinweis": "Höhenbereiche (m) nach Ahlert/Kenning/Brock 2020, S. 302–303. 'moebel' = Regalflächen, an denen die Bänder erscheinen (seite: vorne = Richtung Straße, hinten = Richtung Rückwand, links/rechts).",
+    "_hinweis": "Höhenbereiche (m) nach Ahlert/Kenning/Brock 2020, S. 302–303. Die Bänder erscheinen automatisch an allen Regalfronten (Kochwelt-Gondeln, Kühlung, Dessert, Wein, Basis, Impuls). 'belegung' = Inhalt je Zone und Regalfront (Reihenfolge wie 'zonen').",
     "zonen": [
       {
         "name": "Reckzone",
@@ -1062,24 +1062,86 @@
         "farbe": "#e06c4f"
       }
     ],
-    "moebel": [
-      {
-        "id": "M4",
-        "seite": "hinten"
-      },
-      {
-        "id": "M5",
-        "seite": "hinten"
-      },
-      {
-        "id": "M6",
-        "seite": "hinten"
-      },
-      {
-        "id": "M10",
-        "seite": "links"
-      }
-    ]
+    "belegung": {
+      "M4:hinten": [
+        "Blockschilder W1 · für #01–#03",
+        "Spaghetti, Penne · Sugo, Tomatensauce · Borlotti",
+        "Tagliatelle, Fusilli · Pomodori, Pesto · Brühe, Gewürz",
+        "Großpackungen: Spaghetti 1 kg, Passata 1 kg, Borlotti 800 g"
+      ],
+      "M4:vorne": [
+        "Schild Pasta Feinkost",
+        "Oliven, Antipasti, getr. Tomaten",
+        "Olivenöl 250 ml, Balsamico · Grissini, Taralli",
+        "Olivenöl 1 l · Ciabatta"
+      ],
+      "M5:vorne": [
+        "Schild Ergänzen: Drink + Dessert",
+        "Cantuccini, Amaretti",
+        "Löffelbiskuits, Kakao",
+        "Limone, Aranciata, Wasser 1 l"
+      ],
+      "M5:hinten": [
+        "Blockschilder W2 · für #04–#06",
+        "Udon, Ramen · Jasminreis · Shoyu, Miso",
+        "Reisnudeln, Soba · Kokosmilch · Sesam, Nori",
+        "Udon 6er · Jasminreis 5 kg · Shoyu 1 l"
+      ],
+      "M6:vorne": [
+        "Schild Ergänzen: Drink + Snack",
+        "Reiscracker, Glückskekse",
+        "Matcha-Kekse, Grüntee",
+        "Eistee, Lychee, Sake alkoholfrei"
+      ],
+      "M6:hinten": [
+        "Blockschilder W3 · für #07–#09",
+        "Tortillas · Kidney, schwarze Bohnen · Salsa",
+        "Taco Shells · Mais, Tomaten · Gewürze",
+        "Tortillas 16 St. · Kidney 800 g"
+      ],
+      "M7:vorne": [
+        "Fachschilder K1–K6",
+        "Rezept-Zutaten: Sahne, Parmesan, Tofu, Basilikum",
+        "Butter, Eier, Mozzarella, frische Tagliatelle",
+        "schwere Gebinde: Milch, Joghurt, Salat-Mix"
+      ],
+      "M8:vorne": [
+        "Fachschilder D1–D3",
+        "Desserts zum Menü: Tiramisu, Mochi",
+        "Panna Cotta, Eis",
+        "TK-Gemüse, TK-Pizza"
+      ],
+      "M9:vorne": [
+        "Fachschilder G1–G3",
+        "Weine zum Rezept des Monats",
+        "Riesling, Rosé · Limo 0,5 l",
+        "Mehrstück, Kisten"
+      ],
+      "M10:links": [
+        "Fachschilder B1–B3",
+        "Spaghetti, Reis · Olivenöl · Gewürze",
+        "Fusilli · Balsamico · Brühe",
+        "Großgebinde: Spaghetti 1 kg, Rapsöl 1 l"
+      ],
+      "M11:rechts": [
+        "Fachschilder B4/B5 über der Gondel",
+        "Tomaten, Tomatensauce · Mehl",
+        "Mais · Zucker",
+        "Konserven-Vorrat, Mehl 1 kg"
+      ],
+      "M11:links": [
+        "Fachschilder B6/B7 über der Gondel",
+        "Müsli, Konfitüre · Schokolade",
+        "Brot · Nüsse",
+        "Chips-Großpackungen"
+      ],
+      "M18:rechts": [
+        "–",
+        "Schokolade, Chili-Schoko (Blickhöhe an der Schlange)",
+        "Kräuter im Topf · Schoko",
+        "Nachschub"
+      ]
+    }
   },
   "rezepte": [
     {
@@ -1797,7 +1859,8 @@
       "ebenen": {
         "zonen": false,
         "wege": true
-      }
+      },
+      "notizen": "Wir stehen auf der Straße vor dem Laden. Das Fantasiefenster zeigt die Rezepte des Monats und spricht die Laufkundschaft vom Campus an. Neu gegenüber der Skizze: Eingang links, Ausgang rechts an der Kasse – so entsteht eine klare Laufrichtung."
     },
     {
       "nr": 2,
@@ -1826,7 +1889,8 @@
       "ebenen": {
         "zonen": false,
         "wege": false
-      }
+      },
+      "notizen": "Drei Meter hinter dem Eingang: das Matrix-Dashboard. Küche mal Anlass ergibt genau ein Rezept, darunter liegen die Kartenspender. Es steht leicht links, damit die Blickachse zur Showküche frei bleibt."
     },
     {
       "nr": 3,
@@ -1856,7 +1920,8 @@
       "ebenen": {
         "zonen": false,
         "wege": true
-      }
+      },
+      "notizen": "Direkt danach der schräge Obst-und-Gemüse-Stand. Frische steht auf fast jeder Rezeptkarte (Fachcode O1). Die Schrägstellung bremst und lenkt in den Rundlauf links."
     },
     {
       "nr": 4,
@@ -1887,8 +1952,10 @@
       "skizze": "Skizze: drei Themenwelten mit ca. 0,7 m Abstand. Neu: 1,4–1,5 m Gänge (Einkaufswagen + Gegenverkehr) und ein Gang an der linken Wand.",
       "ebenen": {
         "zonen": true,
-        "wege": false
-      }
+        "wege": false,
+        "regalzonen": false
+      },
+      "notizen": "Die drei Kochwelten stehen quer als Kojen: Pasta, Asian, Mexican. Innen sind sie klassisch nach Warengruppen sortiert, gegenüber stehen die Ergänzungen – Drinks und Dessert. Gänge 1,4 bis 1,5 Meter."
     },
     {
       "nr": 5,
@@ -1919,7 +1986,8 @@
         "wege": false,
         "regalzonen": true
       },
-      "regalbild": "M4"
+      "regalbild": "M4",
+      "notizen": "Das Regal der Pasta Night: Nudeln bei Nudeln, Saucen bei Saucen, Bohnen und Brühe daneben, jeweils als senkrechter Produktblock. Die Regalzonen sind eingeblendet: Standardgrößen in Sicht- und Greifzone, Großpackungen unten. Die Kundin sammelt nach ihrer Karte, das Blockschild nennt die Rezepte."
     },
     {
       "nr": 6,
@@ -1949,7 +2017,8 @@
       "ebenen": {
         "zonen": false,
         "wege": true
-      }
+      },
+      "notizen": "Kühlung an der Rückwand, von hinten aus der Kühlzelle befüllt. Hier liegen alle kühlpflichtigen Zutaten mit Fachcodes K1 bis K6 – das ist die Parmesan-Regel."
     },
     {
       "nr": 7,
@@ -1983,7 +2052,8 @@
         "zonen": false,
         "wege": false,
         "blickachse": true
-      }
+      },
+      "notizen": "Die Showküche ist der visuelle Anker am Ende der Blickachse. Zuschauer stehen vorn in der Übergangszone, nicht im Gang. Mittags Live-Cooking, abends Kurse mit acht Plätzen."
     },
     {
       "nr": 8,
@@ -2014,7 +2084,8 @@
       "ebenen": {
         "zonen": false,
         "wege": true
-      }
+      },
+      "notizen": "Nach der Frische folgen Dessert und Wein: erst die vernünftigen Zutaten, dann der Genuss – der Licensing-Effekt aus Hui et al. 2009."
     },
     {
       "nr": 9,
@@ -2045,7 +2116,8 @@
       "ebenen": {
         "zonen": false,
         "wege": true
-      }
+      },
+      "notizen": "Das Basissortiment steht längs zum Schnellweg: Wandregal plus Gondel mit 1,75 Meter Gang. Wer gezielt Olivenöl sucht, findet es im Vorbeigehen."
     },
     {
       "nr": 10,
@@ -2077,7 +2149,8 @@
       "ebenen": {
         "zonen": true,
         "wege": true
-      }
+      },
+      "notizen": "Kasse mit Band und SB-Kasse direkt vor dem Ausgang, dazu das Impulsregal zum Ergänzen. Die Kassenschlange endet vor der Querung des Schnellwegs."
     },
     {
       "nr": 11,
@@ -2109,7 +2182,8 @@
       "ebenen": {
         "zonen": true,
         "wege": false
-      }
+      },
+      "notizen": "Das L-Lager hinten und rechts: Anlieferung über das Rolltor, Warenweg und Kundenweg kreuzen sich nicht. Die Kühlung wird von hinten befüllt."
     },
     {
       "nr": 12,
@@ -2139,47 +2213,77 @@
       "ebenen": {
         "zonen": false,
         "wege": false
-      }
+      },
+      "notizen": "Atmosphäre: warmes Licht über Kochwelten und Küche, hell-neutrales Licht in der Basis, Holz und Edelstahl, leise Musik. Dosierter Kochgeruch zu festen Zeiten."
     }
   ],
   "praesentation": {
     "_hinweis": "Ablauf im Präsentationsmodus. Einträge: {\"folie\": \"id\"} oder {\"station\": nr}. Folien stehen unter 'folien'. ✓ = an Skript/Abstract geprüft, ◐ = Fundstelle im Volltext prüfen.",
     "ablauf": [
       {
-        "folie": "titel"
+        "folie": "titel",
+        "kapitel": "Einstieg"
       },
       {
-        "folie": "problem"
+        "folie": "problem",
+        "kapitel": "1 Idee"
       },
       {
         "folie": "wettbewerb"
       },
       {
-        "folie": "rahmen"
+        "folie": "abgrenzung"
+      },
+      {
+        "folie": "rahmen",
+        "kapitel": "2 Rahmen"
       },
       {
         "folie": "wirtschaft"
       },
       {
-        "folie": "grundriss"
+        "folie": "grundriss",
+        "kapitel": "3–5 Grundriss & Raum"
       },
       {
         "folie": "optimierung"
       },
       {
-        "station": 1
+        "folie": "layoutentscheidungen"
+      },
+      {
+        "folie": "flaechen"
+      },
+      {
+        "folie": "querlaengs"
+      },
+      {
+        "station": 1,
+        "kapitel": "Rundgang"
       },
       {
         "station": 2
       },
       {
+        "folie": "matrix"
+      },
+      {
+        "folie": "rezeptkarte"
+      },
+      {
         "station": 3
+      },
+      {
+        "folie": "warenpraesentation"
       },
       {
         "station": 4
       },
       {
         "station": 5
+      },
+      {
+        "folie": "parmesan"
       },
       {
         "station": 6
@@ -2203,16 +2307,26 @@
         "station": 12
       },
       {
-        "folie": "flaechen"
+        "folie": "atmosphaere"
       },
       {
-        "folie": "konflikte"
+        "folie": "konflikte",
+        "kapitel": "8–10 Bewertung"
       },
       {
-        "folie": "fazit"
+        "folie": "begruendung"
       },
       {
         "folie": "quellen"
+      },
+      {
+        "folie": "fazit",
+        "kapitel": "Fazit"
+      },
+      {
+        "folie": "anhang",
+        "kapitel": "Anhang",
+        "anhang": true
       }
     ],
     "folien": {
@@ -2230,9 +2344,10 @@
           "Flächenbilanz, Zielkonflikte, Fazit, Quellen"
         ],
         "legende": [
-          "✓ Quelle an Skript/Abstract geprüft",
-          "◐ Fundstelle im Volltext prüfen",
-          "Annahme = gekennzeichnete Fallannahme"
+          "Q = Quellenwissen mit Fundstelle",
+          "A = gekennzeichnete Fallannahme",
+          "✓ an Skript/Abstract geprüft",
+          "◐ Fundstelle im Volltext prüfen"
         ],
         "kamera": {
           "position": [
@@ -2245,18 +2360,32 @@
             1.4,
             3.0
           ]
-        }
+        },
+        "notizen": "Einstieg: Wir stellen ein Store-Konzept vor, das Einkauf und Kochen über Kochanlässe verbindet. Hinweis auf die Kennzeichnung: Q steht für Quellenwissen mit Fundstelle, A für unsere eigenen Fallannahmen. So ist jederzeit prüfbar, was belegt ist und was wir setzen. Die Präsentation läuft komplett im 3D-Modell – jede Folie zeigt den passenden Ort im Laden."
       },
       "problem": {
         "typ": "folie",
         "kicker": "1 · Kundenproblem und Idee",
         "titel": "Zwei Entscheidungen am Eingang, ein Rezept für heute Abend.",
-        "lead": "„Was kochen wir heute Abend?“ – Die Kundin weiß, dass sie kocht, und will schnell entscheiden. Offen ist nur das Gericht.",
-        "punkte": [
-          "Matrix-Dashboard am Eingang: Küche (Pasta · Asian · Mexican) × Anlass (» schnell · ★ besonders · € günstig) = genau ein Rezept",
-          "Die Rezeptkarte ist der Wegweiser: Fachcodes zeigen, wo jede Zutat liegt (O = Obst/Gemüse, W = Kochwelt, K = Kühlung, B = Basis, D = Dessert, G = Getränke)",
-          "Showküche als Zusatz: Live-Cooking mittags, Kurse abends"
+        "lead": "„Was kochen wir heute Abend?“ – Die Kundin weiß, dass sie heute kocht, und will schnell entscheiden. Offen ist nur, was es gibt.",
+        "karten": [
+          {
+            "nr": "1",
+            "titel": "Matrix-Dashboard am Eingang",
+            "text": "Spalten: Küche (Pasta · Asian · Mexican). Zeilen: Anlass (» schnell · ★ besonders · € günstig). Am Schnittpunkt steht genau ein Rezept."
+          },
+          {
+            "nr": "2",
+            "titel": "Rezeptkarte als Wegweiser",
+            "text": "Fachcodes zeigen, wo jede Zutat liegt: O Obst/Gemüse · W Kochwelt · K Kühlung · B Basis · D Dessert · G Getränke."
+          },
+          {
+            "nr": "3",
+            "titel": "Showküche als Zusatz",
+            "text": "Live-Cooking mittags und Kurse abends für alle, die den Abend zum Erlebnis machen wollen."
+          }
         ],
+        "kpisTitel": "Das „One Hour“-Versprechen",
         "kpis": [
           [
             "≤ 15 Min.",
@@ -2264,7 +2393,7 @@
           ],
           [
             "≤ 45 Min.",
-            "Kochzeit laut Karte"
+            "Kochzeit laut Rezeptkarte"
           ],
           [
             "9",
@@ -2274,7 +2403,11 @@
         "tags": [
           [
             "A",
-            "Kundenproblem aus eigener Zielgruppenannahme; Zeiten sind Zielwerte, nicht gemessen"
+            "Kundenproblem aus eigener Zielgruppenannahme"
+          ],
+          [
+            "A",
+            "Eigene Definition des Markenversprechens; Zeiten sind Zielwerte, nicht gemessen"
           ]
         ],
         "kamera": {
@@ -2288,7 +2421,8 @@
             1.4,
             3.2
           ]
-        }
+        },
+        "notizen": "Unsere Kundin kommt mit einem klaren Vorhaben: Heute Abend wird gekocht, und es soll schnell gehen. Offen ist nur das Gericht. Deshalb steht am Eingang das Matrix-Dashboard: Sie entscheidet erst die Küche, dann den Anlass, und hat damit ihr Rezept. One Hour heißt: maximal 15 Minuten Einkauf und maximal 45 Minuten Kochzeit."
       },
       "wettbewerb": {
         "typ": "folie",
@@ -2297,7 +2431,7 @@
         "tabelle": {
           "kopf": [
             "",
-            "heute spontan",
+            "heute spontan entscheiden",
             "Rezept + Zutaten an einem Ort",
             "live probieren",
             "gemeinsam kochen"
@@ -2340,19 +2474,30 @@
             ]
           ]
         },
-        "punkte": [
-          "Referenz Kochhaus: bis zu 12 Läden und über 8 Mio. € Umsatz, „offenkundig nicht profitabel“, unter Druck durch Online-Kochboxen wie HelloFresh; 2019 Insolvenz",
-          "Unsere Lehre daraus: Basissortiment für Grundfrequenz, 9 Rezepte statt 18–20, Küche sichtbar im Laden"
-        ],
-        "tags": [
-          [
-            "Q",
-            "Meyer, L.: Kochhaus meldet Insolvenz an, Tagesspiegel, 28.03.2019 ✓"
-          ],
-          [
-            "A",
-            "Einordnung der Wettbewerber und Größe der spontanen Zielgruppe sind eigene Einschätzung"
-          ]
+        "karten": [
+          {
+            "titel": "Referenz: Kochhaus",
+            "punkte": [
+              "Berlin 2010: 150 m², 600 Artikel, 250 Kunden/Tag, Ø-Bon 20 €, 18–20 Rezepte nebeneinander",
+              "Bis zu 12 Läden, zuletzt über 8 Mio. € Umsatz, „offenkundig nicht profitabel“; 2019 Insolvenz, unter Druck durch Online-Kochboxen wie HelloFresh"
+            ],
+            "tag": [
+              "Q",
+              "Lebensmittelpraxis 16.12.2010 ◐; Meyer, Tagesspiegel 28.03.2019 ✓"
+            ]
+          },
+          {
+            "titel": "Unsere Lehre daraus",
+            "punkte": [
+              "Basissortiment für die Grundfrequenz",
+              "9 Rezepte statt 18–20",
+              "Küche sichtbar im Laden"
+            ],
+            "tag": [
+              "A",
+              "Einordnung der Wettbewerber ist eigene Einschätzung"
+            ]
+          }
         ],
         "kamera": {
           "position": [
@@ -2365,12 +2510,13 @@
             1.4,
             3.0
           ]
-        }
+        },
+        "notizen": "Erste naheliegende Frage: Gab es das nicht schon? Ja, das Kochhaus hat ab 2010 nach Rezepten sortiert und ist 2019 insolvent gegangen; laut Tagesspiegel war es zuletzt nicht profitabel und stand unter Druck durch Online-Kochboxen. Daraus lernen wir: Grundfrequenz durch das Basissortiment, neun Rezepte statt achtzehn bis zwanzig, sichtbare Küche."
       },
       "rahmen": {
         "typ": "folie",
         "kicker": "2 · Rahmen",
-        "titel": "Wer, wo, was – und auf welcher Fläche.",
+        "titel": "Rahmendaten: wer, wo, was und auf welcher Fläche.",
         "felder": [
           [
             "Store",
@@ -2414,12 +2560,14 @@
             0,
             6.9
           ]
-        }
+        },
+        "fuss": "Alle Rahmendaten sind gekennzeichnete Fallannahmen der Gruppe. Vergleichswert Kochhaus Berlin: 150 m², 600 Artikel (Lebensmittelpraxis, 16.12.2010 ◐).",
+        "notizen": "Der Standort begründet Zielgruppe und Öffnungszeiten: Studierende und Berufstätige kommen mittags und nach Feierabend vorbei. Daraus folgen Live-Cooking in der Mittagspause und Kurse am Abend. Der Verkaufsraum hat rund 190 m²; dazu kommt ein L-förmiges Lager hinten und rechts, aus dem die Kühlung von hinten befüllt wird."
       },
       "wirtschaft": {
         "typ": "folie",
-        "kicker": "2 · Wirtschaftliche Größe: Kapazität der Showküche",
-        "titel": "Ab rund 3 Kursbelegungen pro Woche trägt sich die Showküche.",
+        "kicker": "2 · Rahmen · Wirtschaftliche Größe",
+        "titel": "Showküche: ab rund 3 Belegungen pro Woche trägt sie sich.",
         "rechnung": [
           [
             "Zielumsatz Verkauf",
@@ -2442,30 +2590,45 @@
             "≈ 31.600 €/Jahr"
           ],
           [
-            "DB je Kurs-Belegung",
-            "7 Pers. × 59 € × 60 % DB-Quote",
-            "≈ 248 €"
+            "Kursumsatz",
+            "6 Belegungen/Woche × 7 Pers. × 59 € × 48 Wochen",
+            "≈ 118.900 €"
           ],
           [
-            "Mindestauslastung",
-            "31.600 € ÷ (248 € × 48 Wochen)",
-            "≈ 2,7 Belegungen/Woche"
+            "Deckungsbeitrag (60 %)",
+            "118.900 € × 60 %",
+            "≈ 71.400 €/Jahr"
           ]
         ],
-        "punkte": [
-          "Wir planen mit mindestens 4 Belegungen pro Woche (Kurse abends + Firmen-Events), dazu Live-Cooking mittags als Frequenzbringer.",
-          "Vergleich: Kochhaus Berlin 2010 nennt 250 Kunden/Tag und 20 € Ø-Bon – unsere Werte sind bewusst vorsichtiger."
-        ],
+        "rechts": {
+          "balken": {
+            "titel": "Vergleich pro Jahr",
+            "einheit": "Tsd. €",
+            "werte": [
+              [
+                "Rohertrag, wenn die 18 m² Regalfläche wären",
+                31.6,
+                "#9a958e"
+              ],
+              [
+                "Deckungsbeitrag Showküche (6 Belegungen)",
+                71.4,
+                "#d64527"
+              ]
+            ]
+          },
+          "merke": [
+            "Mindestauslastung ≈ 2,7 Belegungen/Woche",
+            "31.600 € ÷ (7 × 59 € × 60 % × 48 Wochen). Wir planen daher mit mindestens 4 Belegungen pro Woche (Kurse abends + Firmen-Events), dazu Live-Cooking mittags als Frequenzbringer."
+          ]
+        },
         "tags": [
           [
             "A",
-            "Kundenfrequenz, Warenkorb, Kurspreis, Auslastung (7 von 8 Plätzen), Rohertrags- und DB-Quote sind angenommen"
-          ],
-          [
-            "A",
-            "Nicht enthalten: Investition Küche, Personal, Energie"
+            "Kundenfrequenz, Warenkorb, Kurspreis, Auslastung (7 von 8 Plätzen), Rohertrags- und DB-Quote angenommen"
           ]
         ],
+        "fuss": "Vergleich Kochhaus Berlin 2010: 250 Kunden/Tag, Ø-Bon 20 € (Lebensmittelpraxis, 16.12.2010 ◐) – unsere Frequenz ist bewusst vorsichtiger. Nicht enthalten: Investition Küche, Personal, Energie.",
         "kamera": {
           "position": [
             9.6,
@@ -2477,28 +2640,31 @@
             0.7,
             7.2
           ]
-        }
+        },
+        "notizen": "Als wirtschaftliche Größe wählen wir die Kapazität der Showküche, weil sie unseren größten Zielkonflikt beantwortet: Fläche für Erlebnis statt für Ware. Wir vergleichen nicht Umsatz mit Umsatz, sondern Rohertrag der Ware mit dem Deckungsbeitrag der Kurse. Die Showküche belegt rund 18 von 190 m², also knapp ein Zehntel. Aussagegrenze: Investition und weitere Kosten sind nicht enthalten, alle Werte sind Annahmen."
       },
       "grundriss": {
         "typ": "folie",
         "kicker": "3 · Grundriss",
-        "titel": "Zwei Wege durch einen Laden: Rezeptweg und Schnellweg.",
-        "punkte": [
-          "Rezeptweg (rot): Eingang → Dashboard → Obst & Gemüse → Rundlauf links an den Kojen vorbei → Kühlung → Dessert & Wein → Basis → Kasse",
-          "Schnellweg (grün): Eingang → Basissortiment (längs) → Kasse",
-          "Blickachse (gelb): vom Eingang auf den Show-Kochtresen",
-          "Rundlauf am Rand: Frische und Ergänzungen liegen an den Wänden, die Kojen sind kurze Abstecher"
-        ],
-        "tags": [
+        "titel": "Erst entscheiden, dann im Rundlauf einkaufen.",
+        "farbpunkte": [
           [
-            "Q",
-            "Ahlert/Kenning/Brock 2020, S. 297–302 (Ladenlayout, Kundenlauf) ✓; Larson et al. 2005 (Laufwege) ◐"
+            "#e8473a",
+            "Rezeptweg",
+            "Eingang → Dashboard → Obst & Gemüse → Rundlauf links → Kühlung → Dessert & Wein → Basis → Kasse"
           ],
           [
-            "A",
-            "Positionen und Maße sind Fallannahmen"
+            "#46c06a",
+            "Schnellweg",
+            "Eingang → Basissortiment längs → Kasse (Ziel ≤ 15 Min.)"
+          ],
+          [
+            "#f2c230",
+            "Blickachse",
+            "Eingang → Show-Kochtresen"
           ]
         ],
+        "fuss": "Maßstäblicher Grundriss aus dem 3D-Modell: Verkaufsraum 15,8 × 12 m ≈ 190 m² + L-Lager. Positionen und Maße sind Fallannahmen. Layoutlogik vgl. Ahlert/Kenning/Brock 2020, S. 297–302 ✓; Laufwege vgl. Larson et al. 2005 ◐.",
         "ebenen": {
           "zonen": true,
           "wege": true
@@ -2516,11 +2682,12 @@
           ]
         },
         "ansicht": "draufsicht",
-        "panel": false
+        "panel": "seite",
+        "notizen": "Den Plan von unten nach oben lesen. Wir betreten den Laden links durch den Eingang; nach etwa drei Metern steht das Matrix-Dashboard, leicht links, damit die Blickachse zur Showküche frei bleibt. Der Rezeptweg (rot) führt am schrägen Obst-und-Gemüse-Stand vorbei in den Rundlauf links, entlang der Kojen zur Kühlung an der Rückwand, weiter zu Dessert und Wein, durch das Basissortiment und zur Kasse direkt vor dem Ausgang. Der Schnellweg (grün gestrichelt) geht direkt ins Basissortiment. Das L-Lager liegt hinten und rechts: Anlieferung per Rolltor, die Kühlung wird von hinten befüllt. Der Notausgang liegt links und bleibt frei von Waren."
       },
       "optimierung": {
         "typ": "folie",
-        "kicker": "3 · Von der Skizze zum Layout",
+        "kicker": "3 · Grundriss · Von der Skizze zum Layout",
         "titel": "Acht Optimierungen gegenüber unserer Basisidee.",
         "tabelle": {
           "kopf": [
@@ -2592,28 +2759,15 @@
             0,
             6.6
           ]
-        }
+        },
+        "notizen": "Die Skizze aus unserer Basisidee gilt – wir haben sie an acht Stellen optimiert. Jede Änderung hat einen Grund aus Kundenlauf, Warenfluss oder Sicherheit. Im Rundgang zeigen wir die Änderungen jeweils vor Ort.",
+        "ansicht": "draufsicht"
       },
       "flaechen": {
         "typ": "folie",
         "kicker": "4 · Raumzuteilung",
-        "titel": "Flächenbilanz des Verkaufsraums (≈ 190 m²).",
+        "titel": "Flächenbilanz und Raumzuteilung nach Warenbereichen.",
         "flaechen": "auto",
-        "punkte": [
-          "Die Flächenarten folgen dem Seminar: Warenfläche, Kundenfläche, Beratungs-/Erlebniszone, sonstige Fläche",
-          "Die Kundenfläche ist bewusst groß: Übergangszone mit Dashboard, Zuschauerbereich vor der Showküche und 1,4–1,75 m breite Gänge",
-          "Alle Werte sind aus dem maßstäblichen Grundriss berechnet (Stellflächen der Warenträger)"
-        ],
-        "tags": [
-          [
-            "Q",
-            "Ahlert/Kenning/Brock 2020, S. 297–302 (Flächenarten) ✓"
-          ],
-          [
-            "A",
-            "Zuordnung der Flächen ist Fallannahme; Werte gerundet"
-          ]
-        ],
         "ebenen": {
           "zonen": true,
           "wege": false
@@ -2629,50 +2783,76 @@
             0,
             6.6
           ]
-        }
+        },
+        "merke": [
+          "Warum fast gleich viel Fläche für Kochwelten und Basis?",
+          "Das Basissortiment sichert die Frequenz, die Kochwelten das Profil. Die große Kundenfläche (ca. 70 %) folgt aus Übergangszone mit Dashboard, Zuschauerbereich und 1,4–1,75 m breiten Gängen."
+        ],
+        "fuss": "Stellflächen live aus dem maßstäblichen Grundriss (3D-Modell) berechnet und gerundet; Kassen inkl. ca. 3 m² Arbeitsplatz. Flächenarten vgl. Ahlert/Kenning/Brock 2020, S. 297–302 ✓. Aufteilung ist Fallannahme.",
+        "notizen": "Links die Flächenbilanz des Verkaufsraums nach den Flächenarten aus dem Seminar: Kundenfläche rund 133 m², Stellfläche der Warenträger rund 32 m², Showküche rund 18 m², Kassen und Dashboard rund 7 m². Rechts die Raumzuteilung innerhalb der Warenfläche. Die Werte rechnet das Modell direkt aus dem Grundriss. Vorbereitete Antwort: Die Kundenfläche ist bewusst groß, weil Übergangszone, Zuschauerbereich und breite Gänge zum Konzept gehören.",
+        "ansicht": "draufsicht"
       },
       "konflikte": {
         "typ": "folie",
-        "kicker": "5 · Zielkonflikte",
+        "kicker": "8 · Zielkonflikte",
         "titel": "Sechs Zielkonflikte und unsere Antworten.",
-        "tabelle": {
-          "kopf": [
-            "Konflikt",
-            "Unsere Antwort"
-          ],
-          "zeilen": [
-            [
-              "Showküche braucht Fläche",
-              "Kompakt (ca. 18 m²), wirtschaftlich ab ca. 2,7 Belegungen/Woche; geplant ≥ 4"
-            ],
-            [
-              "Erlebnis vs. schneller Einkauf",
-              "Zwei Wege: Rezeptweg als Rundlauf, Schnellweg längs durch die Basis; die Küche ist kein Pflichtweg"
-            ],
-            [
-              "Zuschauer vs. Warenfluss",
-              "Zuschauer vorn in der Übergangszone, nicht in den Gängen (Hui et al. 2009)"
-            ],
-            [
-              "Wechselnde Rezepte",
-              "Monatlich wechseln nur die Rezepte in den Feldern; Spalten, Zeilen und Kojen bleiben fest"
-            ],
-            [
-              "Geruch & Lärm",
-              "Dunstabzug, Kurse vorwiegend abends, Live-Cooking zu festen Zeiten"
-            ],
-            [
-              "Schnellweg kreuzt den Kassenbereich",
-              "Querung oberhalb der Kassen (z ≈ 3,9 m), Kassenschlange endet vorher"
+        "karten": [
+          {
+            "nr": "!",
+            "titel": "Showküche braucht Fläche",
+            "text": "Kompakte Showküche mit ca. 18 m²; wirtschaftlich ab ca. 2,7 Belegungen pro Woche, geplant ≥ 4.",
+            "tag": [
+              "A",
+              ""
             ]
-          ]
-        },
-        "tags": [
-          [
-            "A",
-            "Alle Lösungen sind eigene Entscheidungen"
-          ]
+          },
+          {
+            "nr": "!",
+            "titel": "Leerlauf am Vormittag",
+            "text": "Mittags Live-Cooking mit Probierportionen für die Pausenkundschaft; vormittags Kursvorbereitung.",
+            "tag": [
+              "A",
+              ""
+            ]
+          },
+          {
+            "nr": "!",
+            "titel": "Erlebnis vs. schneller Einkauf",
+            "text": "Rezeptweg als Rundlauf über Dashboard und Kojen, Schnellweg längs durch die Basis; die Showküche ist kein Pflichtweg.",
+            "tag": [
+              "A",
+              ""
+            ]
+          },
+          {
+            "nr": "!",
+            "titel": "Wechselnde Rezepte",
+            "text": "Monatlich wechseln nur die Rezepte in den Feldern und das Fenster; Matrix, Kojen und Basis bleiben fest.",
+            "tag": [
+              "A",
+              ""
+            ]
+          },
+          {
+            "nr": "!",
+            "titel": "Zuschauer vs. Warenfluss",
+            "text": "Zuschauer stehen vorn in der Übergangszone, nicht in den Gängen (Hui et al. 2009 ✓).",
+            "tag": [
+              "A",
+              ""
+            ]
+          },
+          {
+            "nr": "!",
+            "titel": "Hygiene",
+            "text": "Küche als eigene Zone mit Spüle und Vorrat; Dunstabzug gegen Geruch, getrennt von der Frischware.",
+            "tag": [
+              "A",
+              ""
+            ]
+          }
         ],
+        "fuss": "Alle Lösungen sind eigene Entscheidungen der Gruppe (A); Mindestauslastung siehe Wirtschaftlichkeit.",
         "kamera": {
           "position": [
             12.3,
@@ -2684,18 +2864,30 @@
             0.6,
             2.5
           ]
-        }
+        },
+        "notizen": "Hier nehmen wir die typischen Rückfragen vorweg. Wer nur Milch kauft: Eingang, rechts ins Basissortiment, Kühlung hinten, Kasse – rund 25 Meter Weg. Was passiert am Dienstagvormittag: Kursvorbereitung und ab 12 Uhr Live-Cooking für die Mittagspause."
       },
       "fazit": {
-        "typ": "schluss",
+        "typ": "folie",
+        "kicker": "Fazit",
+        "gross": true,
         "titel": "Orientieren und irritieren in einem Store.",
-        "punkte": [
-          "Orientieren: Matrix-Dashboard, gespiegelte Matrix im Regal, Basissortiment längs, Schnellweg",
-          "Irritieren: Kochwelten quer als Kojen, Ergänzungen gegenüber der Matrix",
-          "Verführen: Showküche als Anker, Dessert & Wein nach der Frische, Impulsregal an der Kasse",
-          "Funktionieren: L-Lager mit Hinterbefüllung, getrennter Ein-/Ausgang, freier Notausgang"
+        "karten": [
+          {
+            "titel": "Orientieren",
+            "text": "Matrix-Dashboard, Basissortiment längs, Schnellweg"
+          },
+          {
+            "titel": "Irritieren",
+            "text": "Kochwelten quer, Ergänzungen in den Kojen"
+          },
+          {
+            "titel": "Verführen",
+            "text": "Showküche als Anker, Rezeptkarte, Dessert & Wein nach der Frische"
+          }
         ],
-        "ausblick": "Der Händler erzeugt keinen Kauf, er macht die Entscheidung leichter. Offene Annahmen (Frequenz, Warenkorb, Auslastung) prüfen wir nach der Eröffnung mit einer Kundenlaufstudie.",
+        "zitat": "Zwei Entscheidungen am Eingang, ein Rezept für heute Abend. Der Händler erzeugt keinen Kauf, aber er macht die Entscheidung leichter.",
+        "abschluss": "Vielen Dank. Wir freuen uns auf eure Fragen.",
         "kamera": {
           "position": [
             7.1,
@@ -2707,7 +2899,8 @@
             0.8,
             9.0
           ]
-        }
+        },
+        "notizen": "Rückgriff auf das Seminarfazit: Ein Store muss orientieren, ohne zu langweilen, und irritieren, ohne zu verwirren. Bei uns orientiert zuerst das Dashboard, dann irritieren die Kojen mit Ergänzungen, und die Showküche verführt. Offene Annahmen (Frequenz, Warenkorb, Auslastung) prüfen wir nach der Eröffnung mit einer Kundenlaufstudie."
       },
       "quellen": {
         "typ": "quellen",
@@ -2744,9 +2937,623 @@
             0.8,
             9.0
           ]
-        }
+        },
+        "kicker": "10 · Quellen und Kennzeichnung",
+        "fundstellen": [
+          [
+            "Kap. 10.1",
+            "Bereiche der Präsentationspolitik"
+          ],
+          [
+            "S. 297–302",
+            "Layout, Flächenarten, Kundenlauf"
+          ],
+          [
+            "S. 300–301",
+            "Längs- und Querplatzierung, Abb. 10.3"
+          ],
+          [
+            "S. 302–303",
+            "Regalzonen, Hersteller-, Produkt-, Kreuzblock"
+          ],
+          [
+            "S. 303–306",
+            "Warenpräsentation und Atmosphäre"
+          ]
+        ],
+        "notizen": "Alle Fundstellen stammen aus dem verbindlichen Kapitel 10, ergänzt um Studien aus der Literaturliste. Larson et al. stützt den Gedanken, Kundenwege zu beobachten; wir haben keine eigene Messung durchgeführt, das ist eine Aussagegrenze. Fallannahmen: Zielgruppe, Standort, Sortimentsumfang, alle Flächen- und Wirtschaftswerte, Artikelbelegung der Regale, Öffnungszeiten."
+      },
+      "abgrenzung": {
+        "typ": "folie",
+        "kicker": "1 · Wettbewerb und USP · Abgrenzung zur Kochbox",
+        "titel": "Die Box plant die Woche, wir retten den Abend.",
+        "tabelle": {
+          "kopf": [
+            "",
+            "Kochbox",
+            "One Hour Kitchen"
+          ],
+          "hervorhebenSpalte": 2,
+          "zeilen": [
+            [
+              "Entscheidung",
+              "Tage vorher",
+              "heute, auf dem Heimweg"
+            ],
+            [
+              "Bindung",
+              "Abo-Modell",
+              "jeder Einkauf einzeln"
+            ],
+            [
+              "Auswahl",
+              "Wochenmenü am Bildschirm",
+              "Küche × Anlass, Ware sehen und probieren"
+            ],
+            [
+              "Wo die Box besser ist",
+              "kein Weg in den Laden",
+              "Wer seine Woche plant, ist nicht unsere Zielgruppe"
+            ]
+          ]
+        },
+        "zitat": "HelloFresh löst die Frage, was ich nächste Woche koche. Wir lösen die Frage, was ich heute Abend koche.",
+        "tags": [
+          [
+            "A",
+            "Größe der spontanen Zielgruppe ist Annahme"
+          ]
+        ],
+        "kamera": {
+          "position": [
+            5.2,
+            -3.2
+          ],
+          "hoehe": 1.7,
+          "ziel": [
+            6.3,
+            1.3,
+            3.2
+          ]
+        },
+        "notizen": "Zweite Frage: Warum nicht HelloFresh? Die Box verlangt eine Entscheidung Tage im Voraus. Unsere Kundin entscheidet heute auf dem Heimweg. Wo die Box besser ist, sagen wir offen: Man muss nicht in den Laden. Planer sind deshalb nicht unsere Zielgruppe. Wie groß die spontane Zielgruppe ist, bleibt eine Annahme."
+      },
+      "layoutentscheidungen": {
+        "typ": "folie",
+        "kicker": "3 · Grundriss · Begründung",
+        "titel": "Sechs Layoutentscheidungen, jede einzeln begründet.",
+        "karten": [
+          {
+            "nr": "1",
+            "titel": "Matrix-Dashboard am Eingang",
+            "text": "Ca. 3 m nach dem Eingang: erst entscheiden, dann einkaufen. Je länger Kunden im Laden sind, desto zielgerichteter werden sie.",
+            "tag": [
+              "Q",
+              "Hui et al. 2009 ✓; Ahlert et al. 2020, S. 297–302 ✓"
+            ]
+          },
+          {
+            "nr": "2",
+            "titel": "Kochwelten quer als Kojen",
+            "text": "Drei Gondeln mit 1,5 m Gängen; innen klassisch nach Warengruppen, gegenüber die Ergänzungen.",
+            "tag": [
+              "Q",
+              "Querplatzierung, S. 300–301, Abb. 10.3 ✓"
+            ]
+          },
+          {
+            "nr": "3",
+            "titel": "Obst & Gemüse schräg am Eingang",
+            "text": "Frische Zutaten (O1) stehen auf fast jeder Karte. Der schräge Stand bremst und lenkt in den Rundlauf links.",
+            "tag": [
+              "A",
+              "Frische-Image ist Fallannahme"
+            ]
+          },
+          {
+            "nr": "4",
+            "titel": "Showküche, Zuschauer vorn",
+            "text": "Kochtresen als visueller Anker am Ende der Blickachse. Zuschauer stehen in der Übergangszone, nicht in den Gängen.",
+            "tag": [
+              "Q",
+              "Arena-Prinzip, S. 297–302 ✓; Hui et al. 2009 ✓"
+            ]
+          },
+          {
+            "nr": "5",
+            "titel": "Basissortiment längs",
+            "text": "Wandregal plus Gondel, 1,75 m Gang: Wer gezielt Olivenöl sucht, findet es im Vorbeigehen.",
+            "tag": [
+              "Q",
+              "Längsplatzierung, S. 300–301, Abb. 10.3 ✓"
+            ]
+          },
+          {
+            "nr": "6",
+            "titel": "Dessert & Wein nach der Frische",
+            "text": "Erst „vernünftige“ Zutaten, dann Genuss: Studien zeigen diesen Licensing-Effekt. Dazu Impulsregal an der Kasse.",
+            "tag": [
+              "Q",
+              "Hui et al. 2009 ✓ (Licensing)"
+            ]
+          }
+        ],
+        "fuss": "Aussagegrenze: Kapitel 10 belegt die Gestaltungslogik, nicht die Wirkung in unserem Store.",
+        "ebenen": {
+          "zonen": true,
+          "wege": true
+        },
+        "kamera": {
+          "position": [
+            3.0,
+            -7.0
+          ],
+          "hoehe": 2.2,
+          "ziel": [
+            7.5,
+            1.4,
+            3.0
+          ]
+        },
+        "notizen": "Jede Entscheidung aus dem Grundriss hat einen Grund. Q-Marken zeigen, wo Kapitel 10 oder eine Studie die Gestaltungslogik liefert, A-Marken, wo wir eine eigene Annahme treffen. Aussagegrenze: Kapitel 10 belegt die Logik, nicht die Wirkung in unserem Store."
+      },
+      "querlaengs": {
+        "typ": "folie",
+        "kicker": "5 · Regalzuteilung",
+        "titel": "Zwei Wege, zwei Anordnungen: quer irritieren, längs orientieren.",
+        "karten": [
+          {
+            "titel": "Kochwelten: Querplatzierung",
+            "zeilen": [
+              [
+                "Kunde",
+                "Neue Kaufrelevanz entsteht: Wer nur das Rezept holen wollte, entdeckt Limonade und Dessert daneben."
+              ],
+              [
+                "Händler",
+                "Zusätzliche Käufe werden wahrscheinlicher, weil Regalköpfe und Kojen den Lauf unterbrechen."
+              ],
+              [
+                "Bei uns",
+                "Drei querstehende Gondeln bilden Kojen, je eine Kochwelt; innen nach Warengruppen sortiert."
+              ]
+            ],
+            "tag": [
+              "Q",
+              "Abb. 10.3, S. 300–301 ✓"
+            ]
+          },
+          {
+            "titel": "Basissortiment: Längsplatzierung",
+            "zeilen": [
+              [
+                "Kunde",
+                "Bestehende Kaufrelevanz wird leicht verarbeitet: Warengruppe erkennen, vergleichen, greifen."
+              ],
+              [
+                "Händler",
+                "Geplante Käufe werden wahrscheinlicher, weil die Warengruppe im Vorbeigehen ganz sichtbar ist."
+              ],
+              [
+                "Bei uns",
+                "Eine Gondel und ein Wandregal parallel zum Schnellweg."
+              ]
+            ],
+            "tag": [
+              "Q",
+              "Abb. 10.3, S. 300–301 ✓"
+            ]
+          }
+        ],
+        "fuss": "Quelle: Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3. Leitdifferenzen nach Seminarskript HD25A23, in Anlehnung an Luhmann 1984, S. 63.",
+        "ebenen": {
+          "zonen": true,
+          "wege": false
+        },
+        "kamera": {
+          "position": [
+            7.35,
+            4.4
+          ],
+          "hoehe": 2.6,
+          "ziel": [
+            3.6,
+            0.6,
+            8.2
+          ]
+        },
+        "notizen": "Hier verbinden wir die Seminarunterscheidung mit unserem Konzept. Kundenperspektive: kaufrelevant oder nicht; Händlerperspektive: kaufwahrscheinlich oder nicht. Die Kochwelten sollen neue Kaufrelevanz schaffen, das Basissortiment bestehende bedienen. Genau deshalb gibt es zwei Wege."
+      },
+      "matrix": {
+        "typ": "folie",
+        "kicker": "6 · Warenpräsentation · Kernelement",
+        "titel": "Das Matrix-Dashboard: Küche × Anlass = ein Rezept.",
+        "matrix": true,
+        "karten": [
+          {
+            "titel": "Aufbau",
+            "text": "Dashboard 2,4 m breit, ca. 3 m hinter dem Eingang, leicht links der Blickachse. Matrix zwischen 100 und 210 cm, darunter 9 Kartenspender. Rückseite: Kursprogramm.",
+            "tag": [
+              "A",
+              "Maße und Position sind eigene Entscheidung"
+            ]
+          },
+          {
+            "titel": "Orientierung zuerst",
+            "text": "Die Kundin hat schon eine Kaufabsicht. Das Dashboard bedient diese bestehende Kaufrelevanz und macht aus neun Rezepten zwei einfache Fragen.",
+            "tag": [
+              "Q",
+              "Leitdifferenz kaufrelevant, Seminarskript ✓"
+            ]
+          },
+          {
+            "titel": "Wechsel ohne Umbau",
+            "text": "Monatlich tauschen nur die Rezepte in den Feldern. Spalten, Zeilen und Kojen bleiben fest, die Kundschaft lernt das System.",
+            "tag": [
+              "A",
+              "eigene Entscheidung"
+            ]
+          }
+        ],
+        "fuss": "Rezepte, Zeiten, Preise und Kriterien sind Fallannahmen. Ordnungsprinzip in Anlehnung an den Kreuzblock, Ahlert/Kenning/Brock 2020, S. 303 ✓.",
+        "kamera": {
+          "position": [
+            7.2,
+            0.5
+          ],
+          "hoehe": 1.62,
+          "ziel": [
+            6.5,
+            1.35,
+            3.2
+          ]
+        },
+        "notizen": "Das ist das Herzstück unseres Konzepts. Die Kundin trifft zwei Entscheidungen: Welche Küche, welcher Anlass. Am Schnittpunkt steht genau ein Rezept mit Kartenspender. Die Kriterien der Zeilen sind prüfbar festgelegt: schnell heißt höchstens 20 Minuten Kochzeit, günstig höchstens 4 Euro pro Portion, besonders heißt Menü mit Dessert. Das Ordnungsprinzip lehnt sich an den Kreuzblock aus Kapitel 10 an: zwei Ordnungen, waagerecht und senkrecht, miteinander verbunden. Aussagegrenze: Dass die Wahl dadurch schneller fällt, ist unsere Annahme."
+      },
+      "rezeptkarte": {
+        "typ": "folie",
+        "kicker": "6 · Warenpräsentation",
+        "titel": "Die Rezeptkarte führt durch den Einkauf.",
+        "rezeptkarte": "#01",
+        "schritte": [
+          [
+            "01",
+            "Entscheiden",
+            "Küche × Anlass"
+          ],
+          [
+            "02",
+            "Rezept",
+            "Karte ziehen"
+          ],
+          [
+            "03",
+            "Einkauf",
+            "Fundort per Fachcode"
+          ],
+          [
+            "04",
+            "Ergänzen",
+            "Drink + Dessert"
+          ],
+          [
+            "05",
+            "Abschluss",
+            "Kasse / Kurs buchen"
+          ]
+        ],
+        "karten": [
+          {
+            "titel": "Präsentation, nicht Deko",
+            "text": "Die Karte macht Ware verständlich: Sie zeigt, wozu die Zutaten zusammengehören und wo sie liegen."
+          },
+          {
+            "titel": "Gleiche Zeichen überall",
+            "text": "Nummer und Anlass-Symbol stehen gleich auf Dashboard, Karte und Blockschild im Regal."
+          },
+          {
+            "titel": "Brücke zur Showküche",
+            "text": "QR-Code auf der Rückseite: Kurs zu diesem Rezept buchen."
+          }
+        ],
+        "fuss": "Rezeptkarte und Fachcodes sind eigene Gestaltung (A); Platzierung in der Sichtzone vgl. Ahlert/Kenning/Brock 2020, S. 302–303 ✓. Im Modell ausprobieren: Einkaufs-Spiel (G).",
+        "kamera": {
+          "position": [
+            7.2,
+            0.5
+          ],
+          "hoehe": 1.62,
+          "ziel": [
+            6.5,
+            1.35,
+            3.2
+          ]
+        },
+        "notizen": "Die Rezeptkarte nimmt die Entscheidung vom Dashboard mit in den Laden. Es gibt keine fertigen Pakete: Die Kundin sammelt die Zutaten selbst. Fachcodes zeigen den Fundort jeder Zutat, auch in der Kühlung. Damit setzen wir die Parmesan-Regel um und machen den Kundenweg planbar. Die Karte verbindet außerdem Einkauf und Showküche über den QR-Code."
+      },
+      "warenpraesentation": {
+        "typ": "folie",
+        "kicker": "6 · Warenpräsentation",
+        "titel": "Warenpräsentation: drei Elemente, jeweils begründet.",
+        "tabelle": {
+          "kopf": [
+            "Sichtbares Merkmal",
+            "Beabsichtigte Funktion für unsere Zielgruppe",
+            "Aussagegrenze"
+          ],
+          "zeilen": [
+            [
+              "Matrix-Dashboard – Bildschirm mit 9 Rezepten, Kartenspender je Feld",
+              "Macht aus der offenen Frage „Was koche ich?“ zwei einfache Entscheidungen.",
+              "Belegt nicht, dass die Wahl schneller fällt."
+            ],
+            [
+              "Obst & Gemüse schräg – Marktstand mit Kisten, Preisstecker O1",
+              "Frische Zutaten sofort im Blick; die schräge Stellung bremst und lenkt in den Rundlauf.",
+              "Belegt nicht, dass das Frische-Image steigt."
+            ],
+            [
+              "Fantasiefenster – zu den Rezepten des Monats",
+              "Macht das Angebot schon von der Straße sichtbar und spricht Laufkundschaft vom Campus an.",
+              "Belegt nicht, dass mehr Personen den Laden betreten."
+            ]
+          ]
+        },
+        "fuss": "Fensterarten und Präsentationsmittel: Ahlert/Kenning/Brock 2020, S. 303–306 ✓. Querplatzierung: S. 300–301, Abb. 10.3 ✓. Funktionen sind beabsichtigt, Wirkungen nicht belegt.",
+        "kamera": {
+          "position": [
+            5.6,
+            0.9
+          ],
+          "hoehe": 1.85,
+          "ziel": [
+            2.6,
+            0.6,
+            3.3
+          ]
+        },
+        "notizen": "Jedes Element folgt der Kette aus Modul 5: sichtbares Merkmal, beabsichtigte Funktion, Aussagegrenze. Das Fantasiefenster ist eine der Fensterarten aus Kapitel 10. Wir behaupten keine Wirkung, die wir nicht belegen können."
+      },
+      "parmesan": {
+        "typ": "folie",
+        "kicker": "5 · Regalzuteilung · Platzierungsregel",
+        "titel": "Ein Artikel, mehrere Rezepte: die Parmesan-Regel.",
+        "zuordnung": {
+          "von": [
+            "Rezept #01 · Creamy Tomato Pasta",
+            "Rezept #02 · Tagliatelle al Limone"
+          ],
+          "nach": "Hauptplatzierung: Parmesan im Kühlregal Frische, Fach K2, Produktblock Käse",
+          "hinweis": "Beide Karten verweisen auf „K2“"
+        },
+        "karten": [
+          {
+            "nr": "1",
+            "text": "Jeder Artikel hat genau eine Hauptplatzierung im Basissortiment oder in der Kühlung."
+          },
+          {
+            "nr": "2",
+            "text": "Ungekühlte Artikel dürfen zusätzlich als Zweitplatzierung in einer Kochwelt stehen."
+          },
+          {
+            "nr": "3",
+            "text": "Kühlpflichtige Artikel stehen nie in der Kochwelt. Die Rezeptkarte nennt ihren Fundort mit Fachcode."
+          }
+        ],
+        "tags": [
+          [
+            "Q",
+            "Produktblock: ähnliche Produktarten stehen zusammen, Ahlert/Kenning/Brock 2020, S. 303 ✓"
+          ],
+          [
+            "A",
+            "Regel und Fachcodes sind eigene Entscheidung, Wirkung nicht belegt"
+          ]
+        ],
+        "kamera": {
+          "position": [
+            5.4,
+            9.9
+          ],
+          "hoehe": 1.75,
+          "ziel": [
+            2.4,
+            1.0,
+            11.8
+          ]
+        },
+        "notizen": "Diese Frage wird oft gestellt: Wo steht ein Produkt, das in mehreren Rezepten vorkommt? Unsere Antwort ist eine feste Regel. Hauptplatzierung im Produktblock, Zweitplatzierung nur für ungekühlte Ware. Parmesan steht deshalb im Kühlregal im Fach K2 bei Käse, beide Rezeptkarten verweisen dorthin. So bleibt die Kühlkette gesichert, und die Bestände sind an einem Ort gebündelt."
+      },
+      "atmosphaere": {
+        "typ": "folie",
+        "kicker": "7 · Atmosphäre",
+        "titel": "Stimmung in Kochwelten, Klarheit in der Basis.",
+        "tabelle": {
+          "kopf": [
+            "Sichtbares Merkmal",
+            "Beabsichtigte Funktion für unsere Zielgruppe",
+            "Aussagegrenze"
+          ],
+          "zeilen": [
+            [
+              "Zweiteiliges Licht – warm über Kochwelten und Küche, hell-neutral im Basissortiment",
+              "Kochwelten laden zum Verweilen ein; im Basissortiment unterstützt helles Licht schnelles Finden.",
+              "Belegt keine längere Verweildauer."
+            ],
+            [
+              "Kochgeruch, dosiert – Live-Cooking zu festen Zeiten, Dunstabzug über dem Kochtresen",
+              "Sichtbares und riechbares Kochen macht den Anlass erlebbar, ohne die Frische zu überlagern.",
+              "Belegt nicht, wie Geruch auf Kaufabsicht wirkt."
+            ],
+            [
+              "Holz und Edelstahl – Regale in Holz, Küche in Edelstahl",
+              "Holz wirkt wohnlich wie eine Küche zu Hause; Edelstahl signalisiert Hygiene.",
+              "Belegt nicht, dass Hygiene so wahrgenommen wird."
+            ],
+            [
+              "Musik, zurückhaltend – leise im Verkauf, Kurse vorwiegend abends",
+              "Kurse und Einkauf stören sich nicht gegenseitig.",
+              "Lautstärke ist Zielwert, nicht gemessen."
+            ]
+          ]
+        },
+        "fuss": "Gestaltungsmittel: Ahlert/Kenning/Brock 2020, S. 303–306 ✓. Licht: Summers/Hebert 2001 ◐; Duft: Chebat/Michon 2003 ◐, Spence et al. 2014 ◐; Umfeld: Baker et al. 2002 ◐. Technik ist Fallannahme.",
+        "kamera": {
+          "position": [
+            7.1,
+            1.3
+          ],
+          "hoehe": 1.7,
+          "ziel": [
+            5.5,
+            1.3,
+            9.0
+          ]
+        },
+        "notizen": "Die Atmosphäre unterstützt die Zweiteilung des Konzepts: Stimmung dort, wo irritiert und inspiriert werden soll; Klarheit dort, wo schnell eingekauft wird. Der Kochgeruch ist unser stärkstes Element, deshalb steuern wir ihn über Zeiten und Dunstabzug. Im Modell: Musik mit M einschalten."
+      },
+      "begruendung": {
+        "typ": "folie",
+        "kicker": "9 · Begründung",
+        "titel": "Die Begründungskette: vom Kundenproblem zur Gestaltung.",
+        "kette": [
+          {
+            "titel": "Kundenproblem",
+            "text": "„Was koche ich heute Abend?“",
+            "tag": [
+              "A",
+              "Zielgruppenannahme"
+            ]
+          },
+          {
+            "titel": "Dashboard",
+            "text": "Küche × Anlass = ein Rezept",
+            "tag": [
+              "Q",
+              "S. 303; Hui 2009"
+            ]
+          },
+          {
+            "titel": "Grundriss",
+            "text": "Rezeptweg und Schnellweg",
+            "tag": [
+              "Q",
+              "S. 297–302; Larson 2005"
+            ]
+          },
+          {
+            "titel": "Regal",
+            "text": "Produktblöcke, quer vs. längs, Regalzonen",
+            "tag": [
+              "Q",
+              "S. 300–303; Chandon 2009"
+            ]
+          },
+          {
+            "titel": "Präsentation",
+            "text": "Karte, Obst-Stand, Fenster",
+            "tag": [
+              "Q",
+              "S. 303–306"
+            ]
+          },
+          {
+            "titel": "Atmosphäre",
+            "text": "Licht, Geruch, Material",
+            "tag": [
+              "Q",
+              "S. 303–306; Summers 2001"
+            ]
+          }
+        ],
+        "merke": [
+          "Aussagegrenze",
+          "Kapitel 10 liefert die Gestaltungslogik. Dass unsere Anordnung im konkreten Store Umsatz oder Warenkorb erhöht, belegt die Quelle nicht."
+        ],
+        "fuss": "Q: Ahlert/Kenning/Brock 2020, Kap. 10, ergänzt um Hui et al. 2009, Larson et al. 2005, Chandon et al. 2009, Summers/Hebert 2001. A: Fallannahmen der Gruppe.",
+        "kamera": {
+          "position": [
+            3.0,
+            -7.0
+          ],
+          "hoehe": 2.2,
+          "ziel": [
+            7.5,
+            1.4,
+            3.0
+          ]
+        },
+        "notizen": "Die Kette zeigt, wie jede Gestaltung aus dem Kundenproblem folgt. Das erste Glied ist unsere Setzung, die folgenden stützen sich auf Kapitel 10 und die ergänzenden Studien. Wir benennen ausdrücklich die Aussagegrenze, wie in Modul 7 geübt: Quellenwissen, Fallannahme, Entscheidung, Aussagegrenze."
+      },
+      "anhang": {
+        "typ": "folie",
+        "kicker": "Anhang · Fragerunde",
+        "titel": "Vorbereitete Antworten.",
+        "tabelle": {
+          "kopf": [
+            "Frage",
+            "Antwort",
+            "Folie"
+          ],
+          "zeilen": [
+            [
+              "Gab es das nicht schon?",
+              "Ja, das Kochhaus. Wir haben 9 Rezepte statt 20, Basissortiment und sichtbare Küche.",
+              "Wettbewerb"
+            ],
+            [
+              "Warum nicht HelloFresh?",
+              "Die Box löst nächste Woche, wir lösen heute Abend.",
+              "Abgrenzung"
+            ],
+            [
+              "Was heißt schnell, günstig, besonders?",
+              "Höchstens 20 Minuten, höchstens 4 € pro Portion, Menü mit Dessert.",
+              "Matrix"
+            ],
+            [
+              "Parmesan in zwei Rezepten?",
+              "Hauptplatzierung K2 (Käse) im Kühlregal, beide Karten verweisen darauf.",
+              "Parmesan-Regel"
+            ],
+            [
+              "Was passiert am Dienstagvormittag?",
+              "Kursvorbereitung, ab 12 Uhr Live-Cooking.",
+              "Zielkonflikte"
+            ],
+            [
+              "Ich will nur Milch.",
+              "Schnellweg rechts durch die Basis, Kühlung hinten, ca. 25 m.",
+              "Grundriss"
+            ],
+            [
+              "Warum 190 m²?",
+              "Kleiner würde die Showküche (18 m²) die Verkaufsfläche zu stark belasten.",
+              "Wirtschaftlichkeit"
+            ],
+            [
+              "Was ist belegt, was Annahme?",
+              "Q- und A-Marken auf jeder Folie, ✓/◐ je Quelle.",
+              "Quellen"
+            ]
+          ]
+        },
+        "kamera": {
+          "position": [
+            7.1,
+            0.35
+          ],
+          "hoehe": 2.4,
+          "ziel": [
+            8.2,
+            0.8,
+            9.0
+          ]
+        },
+        "notizen": "Backup-Folie, nur bei Bedarf zeigen. Mit O (Übersicht) direkt zur genannten Folie springen."
       }
-    }
+    },
+    "dauer_min": 20
   },
   "simulation": {
     "_hinweis": "Simulierte Kunden. Punkte [x, z]; mit „text“ bleibt der Kunde stehen (dauer in s) und schaut zum Punkt „blick“ [x, z].",

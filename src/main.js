@@ -25,6 +25,14 @@ import { KeyboardMouseInput } from './input/keyboard.js';
 import { TouchInput } from './input/touch.js';
 import { HUD } from './ui.js';
 import { setupPWA } from './pwa.js';
+import { Deck } from './deck.js';
+import { runReferent } from './referent.js';
+
+// Zweites Fenster „Referentenansicht“: nur Notizen/Folien, kein 3D
+if (new URLSearchParams(location.search).has('referent')) {
+  runReferent(layout);
+  await new Promise(() => {});
+}
 
 const app = document.getElementById('app');
 
@@ -103,7 +111,14 @@ let shelfZonesOn = false;
 
 function updateReserve() {
   // Platz für die Touch-Buttons am rechten Rand und unten freihalten
-  topView.reserve = touch.ui.hidden ? { right: 0, bottom: 0 } : { right: 96, bottom: 96 };
+  const r = touch.ui.hidden ? { right: 0, bottom: 0, left: 0 } : { right: 96, bottom: 96, left: 0 };
+  // Präsentation: Platz für die Fortschrittsleiste unten und die schmale Folie links
+  if (document.body.classList.contains('presenting')) {
+    r.bottom += 56;
+    const side = document.querySelector('#slide.sl-side:not([hidden])');
+    if (side) r.left = side.getBoundingClientRect().right + 40;
+  }
+  topView.reserve = r;
 }
 
 function setView(v) {
@@ -146,7 +161,9 @@ toggle('zonen', 'Zonen & Beschriftungen', () => zones.visible, (v) => {
 toggle('regalzonen', 'Regalzonen', () => shelfZonesOn, (v) => {
   shelfZonesOn = v;
   shelfZones.visible = v && view === 'ego';
-  if (v && view === 'top') hud.toast('Regalzonen sind in der Ego-Perspektive an der Genre-Wand zu sehen', 2500);
+  if (v && view === 'top') hud.toast('Regalzonen sind in der Ego-Perspektive an allen Regalen zu sehen', 2500);
+  // Offene Infokarte um die Regalzonen-Tabelle ergänzen bzw. kürzen
+  if (panels.cardVisible && panels.cardStation) panels.showCard(panels.cardStation, stationCount, { regalzonen: v });
 });
 toggle('hauptweg', 'Hauptweg', () => paths.group.visible, (v) => {
   paths.group.visible = v;
@@ -170,6 +187,9 @@ bus.on('png', () => {
 // ---------- Etappe 5: Infokarten, Präsentationsmodus, Rahmen ----------
 const panels = new Panels(app, layout);
 const presentation = new Presentation(layout, camera);
+const deck = new Deck(app, presentation, { toast: (t, ms) => hud.toast(t, ms) });
+deck.onEnd = () => stopPresentation();
+deck.onStart = (i) => startPresentation(i);
 let cardOpenedAt = null; // Position, an der die Infokarte im freien Laufen geöffnet wurde
 
 const stationCount = layout.stationen.length;
@@ -187,12 +207,9 @@ function setLayers(e = {}) {
 }
 presentation.onStation = (slide, i) => {
   setLayers(slide.ebenen);
-  const wantTop = slide.ansicht === 'draufsicht';
-  if (wantTop !== (view === 'top')) setView(wantTop ? 'top' : 'ego');
-  else if (view === 'top') topView.resize(window.innerWidth, window.innerHeight);
   if (slide.typ === 'station') {
     panels.hideSlide();
-    panels.showCard(slide, stationCount);
+    panels.showCard(slide, stationCount, { regalzonen: shelfZonesOn });
     panels.setIndicator(`Station ${slide.nr}/${stationCount} · ${i + 1}/${presentation.total}`);
   } else {
     panels.hideCard();
@@ -200,6 +217,13 @@ presentation.onStation = (slide, i) => {
     else panels.showSlide(slide, stationCount);
     panels.setIndicator(`${slide.panel === false ? slide.titel : SLIDE_LABEL[slide.typ] || 'Folie'} · ${i + 1}/${presentation.total}`);
   }
+  const wantTop = slide.ansicht === 'draufsicht';
+  if (wantTop !== (view === 'top')) setView(wantTop ? 'top' : 'ego');
+  else if (view === 'top') {
+    updateReserve();
+    topView.resize(window.innerWidth, window.innerHeight);
+  }
+  deck.update(i);
 };
 
 function startPresentation(i) {
@@ -210,11 +234,15 @@ function startPresentation(i) {
   if (exportDialog.visible) exportDialog.hide();
   document.body.classList.add('presenting');
   touch.setActive('praesentation', true);
+  if (document.pointerLockElement) document.exitPointerLock?.();
+  deck.show();
   presentation.start(i);
 }
 
 function stopPresentation() {
   presentation.stop();
+  deck.hide();
+  if (view === 'top') setView('ego');
   if (savedLayers) setLayers(savedLayers);
   savedLayers = null;
   room.ceiling.visible = true;
@@ -252,6 +280,33 @@ bus.on('praesentation', () => {
     startPresentation(0);
   }
 });
+// Präsentation wie in PowerPoint steuern: Notizen, Übersicht, Vollbild, Referentenfenster, Anfang/Ende
+bus.on('notizen', () => presentation.active && deck.toggleNotes());
+bus.on('uebersicht', () => {
+  if (!presentation.active) startPresentation(0);
+  deck.toggleOverview();
+});
+bus.on('vollbild', () => deck.toggleFullscreen());
+bus.on('referent', () => {
+  if (!presentation.active) startPresentation(0);
+  deck.openReferent();
+});
+bus.on('leertaste', () => presentation.active && !deck.overviewOpen && presentation.next());
+bus.on('anfang', () => presentation.active && presentation.go(0));
+bus.on('ende', () => presentation.active && presentation.go(presentation.total - 1));
+bus.on('beenden', () => {
+  if (deck.overviewOpen) return deck.toggleOverview(false);
+  if (panels.rahmenVisible) return panels.toggleRahmen(false);
+  if (presentation.active) {
+    stopPresentation();
+    hud.toast('Präsentationsmodus beendet', 1400);
+  }
+});
+// Klick ins Bild = weiter (wie in PowerPoint)
+renderer.domElement.addEventListener('click', () => {
+  if (presentation.active && !deck.overviewOpen) presentation.next();
+});
+
 // ---------- Kundensimulation ----------
 const sim = new Simulation(layout, scene, camera);
 app.insertAdjacentHTML('beforeend', '<div id="sim-caption" hidden><span class="sim-who"></span><p></p><small>Weiter/Zurück: nächster Halt · Sim.: beenden</small></div>');
@@ -317,11 +372,13 @@ let shopTarget = null;
 bus.on('weiter', () => {
   if (shop.state === 'wahl') return shop.move(1);
   if (sim.active) return sim.skip(1);
+  if (deck.overviewOpen) return;
   return presentation.active ? presentation.next() : startPresentation(0);
 });
 bus.on('zurueck', () => {
   if (shop.state === 'wahl') return shop.move(-1);
   if (sim.active) return sim.skip(-1);
+  if (deck.overviewOpen) return;
   return presentation.active ? presentation.prev() : startPresentation(presentation.total - 1);
 });
 
@@ -392,7 +449,7 @@ bus.on('rahmen', () => {
 setupPWA((t) => hud.toast(t, 4000));
 
 // Diagnose in der Browser-Konsole: ?debug → window.rille
-if (new URLSearchParams(location.search).has('debug')) window.rille = { shop, layout, renderer, scene, camera, player, topView, bus, presentation, audio, interactions, sim };
+if (new URLSearchParams(location.search).has('debug')) window.rille = { deck, panels, shop, layout, renderer, scene, camera, player, topView, bus, presentation, audio, interactions, sim };
 
 // Größe
 function resize() {
@@ -401,7 +458,11 @@ function resize() {
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
-  if (view === 'top') topView.resize(w, h);
+  panels.refit();
+  if (view === 'top') {
+    updateReserve();
+    topView.resize(w, h);
+  }
 }
 window.addEventListener('resize', resize);
 window.addEventListener('orientationchange', () => setTimeout(resize, 200));

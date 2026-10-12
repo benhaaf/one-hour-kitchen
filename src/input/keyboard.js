@@ -16,6 +16,17 @@ const KEYS = {
   m: 'musik', // Lo-Fi-Musik an/aus
   k: 'simulation', // Kundensimulation starten/beenden
   g: 'einkauf', // Einkaufs-Spiel starten/beenden
+  // Präsentation (auch für Presenter/Clicker, die Bild ↑/↓ senden)
+  PageDown: 'weiter',
+  PageUp: 'zurueck',
+  ' ': 'leertaste',
+  Home: 'anfang',
+  End: 'ende',
+  Escape: 'beenden',
+  n: 'notizen',
+  o: 'uebersicht',
+  f: 'vollbild',
+  v: 'referent',
 };
 
 export class KeyboardMouseInput {
@@ -42,6 +53,7 @@ export class KeyboardMouseInput {
     // Maus: Klick = Pointer Lock; ohne Lock funktioniert Ziehen mit gedrückter Taste.
     element.addEventListener('pointerdown', (e) => {
       if (e.pointerType !== 'mouse') return;
+      if (document.body.classList.contains('presenting')) return; // in der Präsentation: Klick = weiter, kein Pointer Lock
       this.dragging = true;
       if (element.requestPointerLock && document.pointerLockElement !== element) {
         try {

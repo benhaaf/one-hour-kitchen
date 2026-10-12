@@ -19,17 +19,30 @@ export class Presentation {
     this.stations = layout.stationen;
     // Folienfolge: Einleitung → Stationen → Fazit → Quellen (Einleitung/Fazit/Quellen optional)
     const P = layout.praesentation || {};
-    // Ablauf aus layout.json: Folien und Stationen in beliebiger Reihenfolge
+    // Ablauf aus layout.json: Folien und Stationen in beliebiger Reihenfolge, gegliedert in Kapitel
+    let kapitel = '';
     this.slides = (P.ablauf || this.stations.map((st) => ({ station: st.nr })))
       .map((e) => {
+        if (e.kapitel) kapitel = e.kapitel;
+        let sl = null;
         if (e.station) {
           const st = this.stations.find((x) => x.nr === e.station);
-          return st && { ...st, typ: 'station' };
+          sl = st && { ...st, typ: 'station' };
+        } else {
+          const f = P.folien?.[e.folie];
+          sl = f && { ...f, id: e.folie };
         }
-        const f = P.folien?.[e.folie];
-        return f && { ...f, id: e.folie };
+        return sl && Object.assign(sl, { kapitel, anhang: !!e.anhang });
       })
       .filter(Boolean);
+    this.kapitel = [];
+    this.slides.forEach((sl, i) => {
+      const last = this.kapitel[this.kapitel.length - 1];
+      if (!last || last.titel !== sl.kapitel) this.kapitel.push({ titel: sl.kapitel, von: i, bis: i, anhang: sl.anhang });
+      else last.bis = i;
+    });
+    this.dauer = (P.dauer_min || 20) * 60;
+    this.startedAt = null;
     this.camera = camera;
     this.active = false;
     this.index = -1;
@@ -45,8 +58,25 @@ export class Presentation {
     return this.slides[this.index];
   }
 
+  // Kurztitel für Fortschrittsleiste, Übersicht und Referentenansicht
+  static title(sl) {
+    if (!sl) return '';
+    if (sl.typ === 'station') return `Station ${sl.nr} · ${sl.titel}`;
+    return sl.titel;
+  }
+
+  static notes(sl) {
+    if (!sl) return '';
+    return sl.notizen || (sl.typ === 'station' ? sl.entscheidung : '') || '';
+  }
+
+  get elapsed() {
+    return this.startedAt ? (Date.now() - this.startedAt) / 1000 : 0;
+  }
+
   start(i = 0) {
     this.active = true;
+    if (!this.startedAt) this.startedAt = Date.now();
     this.go(i);
   }
 

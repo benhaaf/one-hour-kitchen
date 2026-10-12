@@ -80,9 +80,9 @@ export function buildStreet(layout) {
     fassade2: std(0xc9c2b6, 0.9),
     beton: std(0xa8a39b, 0.95),
     dunkel: std(0x2b2c30, 0.7),
-    rot: std(0xd64527, 0.6),
-    gruen: std(0x2f7d32, 0.6),
-    gelb: std(0xf2c230, 0.6),
+    rot: std(0xb84a32, 0.6),
+    gruen: std(0x4a7340, 0.6),
+    gelb: std(0xd9b24a, 0.6),
     blau: std(0x2f5d8a, 0.6),
     reifen: std(0x161617, 0.8),
   });
@@ -136,11 +136,11 @@ export function buildStreet(layout) {
   b.box('holz', [hx - 1.5, hx + 1.5, -13.05, -12.8], 0.45, 0.5);
   b.box('metall', [hx + 2.4, hx + 2.48, -12.28, -12.2], 0, 2.8);
   const hsTex = canvasTex(256, 256, (g, w, h) => {
-    g.fillStyle = '#f2c230';
+    g.fillStyle = '#d9b24a';
     g.beginPath();
     g.arc(w / 2, h / 2, w / 2 - 4, 0, Math.PI * 2);
     g.fill();
-    g.fillStyle = '#2f7d32';
+    g.fillStyle = '#4a7340';
     g.font = `800 120px ${SANS}`;
     g.textAlign = 'center';
     g.textBaseline = 'middle';
@@ -199,7 +199,7 @@ export function buildStreet(layout) {
   const aTex = canvasTex(256, 384, (g, w, h) => {
     g.fillStyle = '#1f2421';
     g.fillRect(0, 0, w, h);
-    g.fillStyle = '#d64527';
+    g.fillStyle = '#b84a32';
     g.fillRect(0, 0, w, 64);
     g.fillStyle = '#fff';
     g.textBaseline = 'middle';

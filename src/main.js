@@ -42,6 +42,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, config.grafik.maxPixelR
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.92;
 app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
@@ -50,6 +51,29 @@ const PLAN_BG = new THREE.Color(0x1c1c1f);
 scene.background = SKY;
 
 const camera = new THREE.PerspectiveCamera(config.grafik.fov, window.innerWidth / window.innerHeight, 0.05, 120);
+
+// Umgebungslicht (IBL) aus einem schlichten Ladenraum: weiche Reflexe auf Glas, Metall und Flaschen
+{
+  const env = new THREE.Scene();
+  const box = new THREE.Mesh(new THREE.BoxGeometry(16, 3.2, 12), new THREE.MeshBasicMaterial({ color: 0x8c857b, side: THREE.BackSide }));
+  box.position.y = 1.6;
+  env.add(box);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(16, 12), new THREE.MeshBasicMaterial({ color: 0x6f6a63 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = 0.01;
+  env.add(floor);
+  for (let x = -6; x <= 6; x += 3)
+    for (let z = -4; z <= 4; z += 4) {
+      const panel = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 1.2), new THREE.MeshBasicMaterial({ color: 0xfff3e0 }));
+      panel.rotation.x = Math.PI / 2;
+      panel.position.set(x, 3.15, z);
+      env.add(panel);
+    }
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(env, 0.04).texture;
+  scene.environmentIntensity = 0.45;
+  pmrem.dispose();
+}
 
 // Raum
 const room = buildRoom(layout);
@@ -67,6 +91,7 @@ const shelfZones = buildShelfZones(layout);
 shelfZones.visible = false;
 scene.add(shelfZones);
 const paths = buildPaths(layout);
+paths.group.visible = false; // Konzept-Wege sind keine echten Bodenmarkierungen: per H / „Weg“ einblenden
 scene.add(paths.group);
 const fixtures = scene.getObjectByName('Leuchten');
 const duct = scene.getObjectByName('Lueftung');
@@ -94,6 +119,7 @@ const touch = new TouchInput(bus, app);
 // Draufsicht
 const topView = new TopView(layout, app);
 topView.showZones = false;
+topView.showPaths = false;
 const exportDialog = new ExportDialog(app, (t) => hud.toast(t, 3000));
 let view = 'ego';
 

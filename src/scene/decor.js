@@ -81,7 +81,7 @@ const TEX = {
       g.fillRect(0, 0, w, h);
       g.fillStyle = 'rgba(255,255,255,0.035)';
       for (let i = 0; i < 60; i++) g.fillRect(Math.random() * w, Math.random() * h, 40 + Math.random() * 80, 3);
-      g.fillStyle = '#f2c230';
+      g.fillStyle = '#d9b24a';
       g.textAlign = 'center';
       g.textBaseline = 'middle';
       fitText(g, t.titel, w / 2, 48, w - 40, 700, 44, CHALK);
@@ -143,7 +143,7 @@ const TEX = {
     canvasTex(256, 256, (g, w, h) => {
       g.fillStyle = '#1b2226';
       g.fillRect(0, 0, w, h);
-      const cols = ['#e8772e', '#2e5a3a', '#c9d6d2', '#8a6a2a', '#b56576', '#f2c230'];
+      const cols = ['#c0773e', '#2e5a3a', '#c9d6d2', '#8a6a2a', '#b56576', '#d9b24a'];
       for (let row = 0; row < 3; row++) {
         const y = 20 + row * 80;
         g.fillStyle = 'rgba(255,255,255,0.25)';
@@ -163,7 +163,7 @@ const TEX = {
   // Untersetzer
   untersetzer: () =>
     canvasTex(128, 128, (g, w, h) => {
-      g.fillStyle = '#e8772e';
+      g.fillStyle = '#c0773e';
       g.fillRect(0, 0, w, h);
       g.fillStyle = '#1c1c1f';
       g.textAlign = 'center';
@@ -172,7 +172,7 @@ const TEX = {
       fitText(g, '33', w / 2, 84, w - 20, 900, 30, SANS);
     }),
   // Aufsteller / Schild mit Titel und Unterzeile
-  karte: (titel, sub, bg = '#1c1c1f', fg = '#f4f1ec', akzent = '#e8772e') =>
+  karte: (titel, sub, bg = '#1c1c1f', fg = '#f4f1ec', akzent = '#c0773e') =>
     canvasTex(384, 256, (g, w, h) => {
       g.fillStyle = bg;
       g.fillRect(0, 0, w, h);
@@ -191,7 +191,7 @@ const TEX = {
     canvasTex(256, 144, (g, w, h) => {
       g.fillStyle = '#12171a';
       g.fillRect(0, 0, w, h);
-      g.fillStyle = '#e8772e';
+      g.fillStyle = '#c0773e';
       g.fillRect(0, 0, w, 8);
       g.fillStyle = '#c9c4bc';
       g.textAlign = 'center';
@@ -199,7 +199,7 @@ const TEX = {
       fitText(g, 'Summe', w / 2, 40, w - 20, 500, 22, SANS);
       g.fillStyle = '#f4f1ec';
       fitText(g, '52,79 €', w / 2, 82, w - 20, 900, 46, SANS);
-      g.fillStyle = '#3fbf7f';
+      g.fillStyle = '#4f8a6a';
       fitText(g, 'Danke & viel Spaß beim Hören!', w / 2, 124, w - 20, 600, 16, SANS);
     }),
   // Kartenterminal (Draufsicht): Display + Tastenfeld
@@ -216,7 +216,7 @@ const TEX = {
       const cols = ['#3a3c40', '#3a3c40', '#3a3c40'];
       for (let r = 0; r < 4; r++)
         for (let c = 0; c < 3; c++) {
-          g.fillStyle = r === 3 ? ['#c0504d', '#3a3c40', '#3fbf7f'][c] : cols[c];
+          g.fillStyle = r === 3 ? ['#c0504d', '#3a3c40', '#4f8a6a'][c] : cols[c];
           g.fillRect(14 + c * 35, 92 + r * 36, 30, 28);
         }
     }),
@@ -231,7 +231,7 @@ const TEX = {
       g.beginPath();
       g.arc(w / 2, 140, 62, 0, Math.PI * 2);
       g.fill();
-      g.fillStyle = '#e8772e';
+      g.fillStyle = '#c0773e';
       g.beginPath();
       g.arc(w / 2, 140, 20, 0, Math.PI * 2);
       g.fill();
@@ -243,11 +243,11 @@ const TEX = {
   // Bodenaufkleber
   boden: () =>
     canvasTex(512, 256, (g, w, h) => {
-      g.fillStyle = '#f2c230';
+      g.fillStyle = '#d9b24a';
       g.fillRect(0, 0, w, h);
       g.fillStyle = '#1c1c1f';
       g.fillRect(12, 12, w - 24, h - 24);
-      g.fillStyle = '#f2c230';
+      g.fillStyle = '#d9b24a';
       g.textAlign = 'center';
       g.textBaseline = 'middle';
       fitText(g, 'BITTE HIER ANSTELLEN', w / 2, 90, w - 60, 900, 52, SANS);
@@ -259,7 +259,7 @@ const TEX = {
     canvasTex(256, 170, (g, w, h) => {
       g.fillStyle = '#12171a';
       g.fillRect(0, 0, w, h);
-      g.fillStyle = '#e8772e';
+      g.fillStyle = '#c0773e';
       g.fillRect(0, 0, w, 20);
       g.fillStyle = '#1c1c1f';
       g.font = `700 12px ${SANS}`;
@@ -278,7 +278,7 @@ const TEX = {
       g.fillText('Summe  52,79 €', 10, 128);
       const btn = ['Bar', 'Karte', 'Gutschein', 'Storno'];
       btn.forEach((b, i) => {
-        g.fillStyle = i === 1 ? '#3fbf7f' : '#2c3438';
+        g.fillStyle = i === 1 ? '#4f8a6a' : '#2c3438';
         g.fillRect(w - 100, 28 + i * 34, 90, 28);
         g.fillStyle = '#f4f1ec';
         g.font = `700 12px ${SANS}`;
@@ -294,8 +294,8 @@ const BOTTLES = [
   { name: 'NECKAR GIN', sub: 'Dry Gin · 0,7 l', glass: '#9fc9c2', label: '#f4f1ec', band: [0.18, 0.55], profile: [[0, 0], [0.036, 0], [0.038, 0.01], [0.038, 0.18], [0.03, 0.21], [0.014, 0.24], [0.013, 0.3], [0, 0.3]] },
   { name: 'RILLE RUM', sub: 'Dark · 0,7 l', glass: '#4a2a16', label: '#e8c47a', band: [0.2, 0.55], profile: [[0, 0], [0.04, 0], [0.042, 0.01], [0.042, 0.16], [0.036, 0.19], [0.013, 0.22], [0.013, 0.28], [0, 0.28]] },
   { name: 'RIESLING', sub: 'Heilbronn · 2023', glass: '#3f5a2c', label: '#efe8d8', band: [0.12, 0.42], profile: [[0, 0], [0.034, 0], [0.036, 0.01], [0.036, 0.17], [0.022, 0.24], [0.012, 0.28], [0.012, 0.34], [0, 0.34]] },
-  { name: 'KAFFEELIKÖR', sub: 'aus der Bar', glass: '#2a1a12', label: '#e8772e', band: [0.25, 0.6], profile: [[0, 0], [0.045, 0], [0.046, 0.01], [0.046, 0.14], [0.03, 0.17], [0.014, 0.19], [0.014, 0.24], [0, 0.24]] },
-  { name: 'RILLE MATE', sub: 'Koffein · 0,5 l', glass: '#6b4a1a', label: '#f2c230', band: [0.2, 0.55], profile: [[0, 0], [0.03, 0], [0.032, 0.01], [0.032, 0.14], [0.02, 0.18], [0.012, 0.2], [0.012, 0.23], [0, 0.23]] },
+  { name: 'KAFFEELIKÖR', sub: 'aus der Bar', glass: '#2a1a12', label: '#c0773e', band: [0.25, 0.6], profile: [[0, 0], [0.045, 0], [0.046, 0.01], [0.046, 0.14], [0.03, 0.17], [0.014, 0.19], [0.014, 0.24], [0, 0.24]] },
+  { name: 'RILLE MATE', sub: 'Koffein · 0,5 l', glass: '#6b4a1a', label: '#d9b24a', band: [0.2, 0.55], profile: [[0, 0], [0.03, 0], [0.032, 0.01], [0.032, 0.14], [0.02, 0.18], [0.012, 0.2], [0.012, 0.23], [0, 0.23]] },
 ];
 
 export class Decor {
@@ -433,7 +433,7 @@ export class Decor {
     b.box('schwarz', [fx1 + 0.03, fx2 - 0.03, bz - 0.21, bz - 0.2], 0.1, 1.72);
     plane(extra, this.fridgeMat, fx2 - fx1 - 0.1, 1.5, (fx1 + fx2) / 2, 0.93, bz - 0.215, [0, -1]);
     b.box('chrom', [fx1 + 0.05, fx1 + 0.07, bz - 0.25, bz - 0.215], 0.7, 1.2); // Griff
-    this.card(extra, 'KALT', 'Rille Mate · Bier · Limo', 0.4, 0.15, (fx1 + fx2) / 2, 1.79, bz - 0.212, [0, -1], { bg: '#e8772e', fg: '#1c1c1f', akzent: '#1c1c1f' });
+    this.card(extra, 'KALT', 'Rille Mate · Bier · Limo', 0.4, 0.15, (fx1 + fx2) / 2, 1.79, bz - 0.212, [0, -1], { bg: '#c0773e', fg: '#1c1c1f', akzent: '#1c1c1f' });
     ctx.colliders.push([x1, fx1, bz - 0.02, D], [fx1, fx2, bz - 0.22, D]);
     // Espressomaschine
     const ex = x1 + 0.45;
@@ -551,14 +551,14 @@ export class Decor {
     const iz = z2 - 0.18;
     b.box('holz', [ix - 0.17, ix + 0.17, iz - 0.1, iz + 0.1], h, h + 0.012);
     for (const [a, e, c, d] of [[-0.17, 0.17, -0.1, -0.09], [-0.17, 0.17, 0.09, 0.1], [-0.17, -0.16, -0.1, 0.1], [0.16, 0.17, -0.1, 0.1]]) b.box('holz', [ix + a, ix + e, iz + c, iz + d], h, h + 0.08);
-    const cols = ['#e8772e', '#f2c230', '#2f6fd6', '#3fbf7f', '#b56576', '#f4f1ec'];
+    const cols = ['#c0773e', '#d9b24a', '#3f5f8a', '#4f8a6a', '#b56576', '#f4f1ec'];
     for (let i = 0; i < 26; i++) {
       const r = ctx.rand;
       b.instance('button', this.geo.cyl, MAT.papier, { x: ix - 0.13 + r() * 0.26, y: h + 0.02 + r() * 0.03, z: iz - 0.07 + r() * 0.14, pitch: r() * 0.6, roll: r() * 0.6, scale: [0.022, 0.006, 0.022], color: cols[i % cols.length] });
     }
     this.card(extra, 'STICKER & BUTTONS', 'ab 1 €', 0.2, 0.09, ix, h + 0.13, iz + 0.101, [0, 1], { pitch: 0.2 });
     // Gutschein-Aufsteller
-    this.card(extra, 'GUTSCHEIN', 'Das Geschenk für\nPlattenfans', 0.24, 0.16, x2 - 0.15, h + 0.1, z2 - 0.05, [0, 1], { pitch: 0.25, bg: '#e8772e', fg: '#1c1c1f', akzent: '#1c1c1f' });
+    this.card(extra, 'GUTSCHEIN', 'Das Geschenk für\nPlattenfans', 0.24, 0.16, x2 - 0.15, h + 0.1, z2 - 0.05, [0, 1], { pitch: 0.25, bg: '#c0773e', fg: '#1c1c1f', akzent: '#1c1c1f' });
 
     // --- Hängendes Schild ---
     const sx = (x1 + x2) / 2;

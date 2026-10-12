@@ -73,7 +73,11 @@ export function signMesh(text, { w, h, bg = '#1c1c1f', fg = '#f4f1ec', font = '6
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 4;
-  return new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tex }));
+  // bedruckte Schilder: vom Raumlicht beleuchtet (nicht selbstleuchtend), leicht aufgehellt, damit sie lesbar bleiben
+  return new THREE.Mesh(
+    new THREE.PlaneGeometry(w, h),
+    new THREE.MeshStandardMaterial({ map: tex, roughness: 0.75, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.3 }),
+  );
 }
 
 function roundRect(g, x, y, w, h, r) {

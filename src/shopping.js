@@ -115,7 +115,7 @@ export class Shopping {
 
   renderPicker() {
     const cells = this.grid.map(
-      (r, i) => `<button type="button" data-i="${i}" class="pick-cell ${i === this.sel ? 'sel' : ''}" style="--w:${r.welt.startsWith('Pasta') ? '#d64527' : r.welt.startsWith('Asian') ? '#c9a227' : '#2f9e6e'}"><b>${esc(r.nr)}</b><span>${esc(r.titel)}</span><small>${esc(r.zeit)} · ${esc(r.preis)}</small></button>`,
+      (r, i) => `<button type="button" data-i="${i}" class="pick-cell ${i === this.sel ? 'sel' : ''}" style="--w:${r.welt.startsWith('Pasta') ? '#a8432c' : r.welt.startsWith('Asian') ? '#b08a34' : '#3f6e4a'}"><b>${esc(r.nr)}</b><span>${esc(r.titel)}</span><small>${esc(r.zeit)} · ${esc(r.preis)}</small></button>`,
     );
     this.pickEl.querySelector('.pick-box').innerHTML = `
       <header><h1>Was kochst du heute?</h1><p>Küche × Anlass = ein Rezept. Wähle mit Tippen, ←/→ bzw. L1/R1 und bestätige mit X / E.</p></header>
@@ -159,10 +159,10 @@ export class Shopping {
         seen.get(k).names.push(it.name);
         continue;
       }
-      const ring = new THREE.Mesh(new THREE.RingGeometry(0.28, 0.4, 32), new THREE.MeshBasicMaterial({ color: it.optional ? 0xf2c230 : 0x3fbf7f, transparent: true, opacity: 0.9, depthWrite: false }));
+      const ring = new THREE.Mesh(new THREE.RingGeometry(0.28, 0.4, 32), new THREE.MeshBasicMaterial({ color: it.optional ? 0xd9b24a : 0x4f8a6a, transparent: true, opacity: 0.9, depthWrite: false }));
       ring.rotation.x = -Math.PI / 2;
       ring.position.set(it.loc.p[0], 0.03, -it.loc.p[1]);
-      const pin = textSprite([`${it.code} · ${it.name}`, it.optional ? 'optional: Ergänzen' : 'Zutat'], { height: 0.22, accent: it.optional ? '#f2c230' : '#3fbf7f' });
+      const pin = textSprite([`${it.code} · ${it.name}`, it.optional ? 'optional: Ergänzen' : 'Zutat'], { height: 0.22, accent: it.optional ? '#d9b24a' : '#4f8a6a' });
       pin.position.set(it.loc.ziel[0], 2.05, -it.loc.ziel[1]);
       const g = new THREE.Group();
       g.add(ring, pin);
@@ -173,12 +173,12 @@ export class Shopping {
     // Kasse markieren, sobald alle Pflicht-Zutaten im Korb sind
     if (this.items.filter((i) => !i.optional).every((i) => i.done)) {
       for (const [x, z] of this.kassen) {
-        const ring = new THREE.Mesh(new THREE.RingGeometry(0.3, 0.45, 32), new THREE.MeshBasicMaterial({ color: 0xd64527, transparent: true, opacity: 0.95, depthWrite: false }));
+        const ring = new THREE.Mesh(new THREE.RingGeometry(0.3, 0.45, 32), new THREE.MeshBasicMaterial({ color: 0xb84a32, transparent: true, opacity: 0.95, depthWrite: false }));
         ring.rotation.x = -Math.PI / 2;
         ring.position.set(x, 0.03, -z);
         this.markers.add(ring);
       }
-      const pin = textSprite(['KASSE', 'hier bezahlen'], { height: 0.26, accent: '#d64527' });
+      const pin = textSprite(['KASSE', 'hier bezahlen'], { height: 0.26, accent: '#b84a32' });
       pin.position.set(13, 2.3, -2.2);
       this.markers.add(pin);
     }

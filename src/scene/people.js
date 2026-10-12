@@ -32,7 +32,10 @@ const G = {
   hand: new THREE.SphereGeometry(1, 12, 10),
   shoe: new THREE.CapsuleGeometry(0.048, 0.14, 4, 10),
   sole: new THREE.BoxGeometry(0.1, 0.022, 0.24),
-  hairCap: new THREE.SphereGeometry(1, 22, 12, 0, Math.PI * 2, 0, Math.PI * 0.56),
+  hairCap: new THREE.SphereGeometry(1, 22, 12, 0, Math.PI * 2, 0, Math.PI * 0.6),
+  hairBack: new THREE.SphereGeometry(1, 18, 10, Math.PI * 1.12, Math.PI * 0.76, Math.PI * 0.3, Math.PI * 0.42),
+  basket: new THREE.BoxGeometry(0.36, 0.2, 0.25),
+  basketHandle: new THREE.TorusGeometry(0.13, 0.01, 5, 16, Math.PI),
   hairLong: new THREE.CylinderGeometry(0.11, 0.12, 0.26, 18, 1, true, Math.PI * 0.2, Math.PI * 1.6),
   bun: new THREE.SphereGeometry(0.05, 12, 10),
   beard: new THREE.SphereGeometry(1, 16, 10, 0, Math.PI * 2, Math.PI * 0.45, Math.PI * 0.4),
@@ -74,6 +77,7 @@ export function randomLook(rand, overrides = {}) {
     scale: feminine ? 0.93 + rand() * 0.08 : 0.98 + rand() * 0.09,
     width: feminine ? 0.92 : 1.04,
     bag: rand() < 0.35,
+    basket: false,
     apron: false,
     ...overrides,
   };
@@ -117,8 +121,8 @@ export function buildPerson(look) {
     const knee = joint(hip, [0, -0.42, 0]);
     mesh(knee, G.shin, look.skirt ? skin : look.bottom, [0, -0.2, 0], look.skirt ? 0.6 : 0.9, look.skirt ? [0.75, 1, 0.75] : null);
     const ankle = joint(knee, [0, -0.43, 0]);
-    mesh(ankle, G.shoe, look.shoes, [0, -0.03, 0.045], 0.5, null, [Math.PI / 2, 0, 0]);
-    mesh(ankle, G.sole, '#2a2622', [0, -0.07, 0.045], 0.9);
+    mesh(ankle, G.shoe, look.shoes, [0, 0.008, 0.045], 0.5, null, [Math.PI / 2, 0, 0]);
+    mesh(ankle, G.sole, '#2a2622', [0, -0.025, 0.045], 0.9);
     J.legs.push({ hip, knee, ankle, s });
   }
 
@@ -155,7 +159,10 @@ export function buildPerson(look) {
     mesh(head, G.bridge, '#2a2a2e', [0, 0.112, 0.11], 0.3);
   }
   // Frisur
-  if (look.hairStyle !== 'glatze') mesh(head, G.hairCap, look.hair, [0, 0.112, -0.006], 0.9, [0.098, 0.115, 0.11], [-0.25, 0, 0]);
+  if (look.hairStyle !== 'glatze') {
+    mesh(head, G.hairCap, look.hair, [0, 0.112, -0.006], 0.9, [0.098, 0.115, 0.11], [-0.3, 0, 0]);
+    mesh(head, G.hairBack, look.hair, [0, 0.1, -0.004], 0.9, [0.097, 0.118, 0.108]); // Hinterkopf bis zum Nacken
+  }
   if (look.hairStyle === 'lang') mesh(head, G.hairLong, look.hair, [0, 0.02, -0.012], 0.9, [0.9, 1, 0.92]);
   if (look.hairStyle === 'bob') mesh(head, G.hairLong, look.hair, [0, 0.07, -0.01], 0.9, [0.92, 0.5, 0.95]);
   if (look.hairStyle === 'dutt') mesh(head, G.bun, look.hair, [0, 0.21, -0.07], 0.9);
@@ -170,6 +177,13 @@ export function buildPerson(look) {
     mesh(elbow, G.forearm, look.sleeves === 'kurz' && !look.jacket ? skin : sleeve, [0, -0.12, 0], 0.7);
     mesh(elbow, G.hand, skin, [0, -0.28, 0.005], 0.6, [0.038, 0.058, 0.026]);
     J.arms.push({ shoulder, elbow, s });
+    if (look.basket && s < 0) {
+      // Einkaufskorb in der linken Hand
+      const hand = joint(elbow, [0, -0.3, 0.02]);
+      mesh(hand, G.basketHandle, '#2b2c30', [0, -0.005, 0], 0.5, null, [0, Math.PI / 2, 0]);
+      mesh(hand, G.basket, '#b8322a', [0, -0.2, 0], 0.6, null, [0, Math.PI / 2, 0]);
+      J.basket = hand;
+    }
   }
   if (look.bag) {
     mesh(spine, G.bag, '#b48a5a', [0.24 * w, 0.02, 0.0], 0.9, null, [0, Math.PI / 2, 0]);
@@ -179,24 +193,34 @@ export function buildPerson(look) {
 }
 
 // Haltungen: stehen, stoebern (greift nach vorn, Kopf leicht gesenkt), arbeiten (beide Unterarme vorn)
-function applyPose(J, pose) {
+export function applyPose(J, pose) {
   const [l, r] = J.arms;
+  for (const a of J.arms) {
+    a.shoulder.rotation.x = 0;
+    a.elbow.rotation.x = -0.12;
+  }
+  if (J.basket) l.elbow.rotation.x = -0.08; // Korb hängt am gestreckten Arm
   if (pose === 'stoebern') {
-    r.shoulder.rotation.x = -0.75;
-    r.elbow.rotation.x = -0.7;
-    l.shoulder.rotation.x = -0.1;
-    l.elbow.rotation.x = -0.25;
-    J.head.rotation.x = 0.28;
-    J.spine.rotation.x = 0.06;
+    // greift mit der rechten Hand ins Regal auf Brusthöhe, Blick zum Regal
+    r.shoulder.rotation.x = -0.6;
+    r.shoulder.rotation.z = 0.05;
+    r.elbow.rotation.x = -0.55;
+    J.head.rotation.x = 0.12;
+    J.spine.rotation.x = 0.04;
+  } else if (pose === 'lesen') {
+    // hält die Rezeptkarte vor sich
+    r.shoulder.rotation.x = -0.25;
+    r.elbow.rotation.x = -1.25;
+    J.head.rotation.x = 0.35;
   } else if (pose === 'arbeiten') {
     for (const a of J.arms) {
-      a.shoulder.rotation.x = -0.35;
-      a.elbow.rotation.x = -1.1;
+      a.shoulder.rotation.x = -0.25;
+      a.elbow.rotation.x = -0.95;
     }
-    J.head.rotation.x = 0.18;
-  } else {
-    for (const a of J.arms) a.elbow.rotation.x = -0.12;
+    J.head.rotation.x = 0.3;
+    J.spine.rotation.x = 0.06;
   }
+  if (J.basket) J.basket.rotation.x = -(l.shoulder.rotation.x + l.elbow.rotation.x); // Korb bleibt waagerecht
 }
 
 // Statische Person: Aufbau → Weltmatrizen → Geometrien in den Builder (fasst gleiche Materialien zusammen)
@@ -234,24 +258,34 @@ export class Walker {
   }
 
   // speed 0..1 (0 = steht), dt in s
+  // Gehzyklus: Standbein gestreckt, Schwungbein beugt das Knie; der Körper wird so abgesenkt,
+  // dass das tiefere Bein immer den Boden berührt (keine schwebenden Figuren).
   animate(dt, speed) {
     this.amount += (speed - this.amount) * Math.min(1, dt * 6); // weicher Übergang Stehen ↔ Gehen
     const k = this.amount;
-    this.phase += dt * 6.2 * k;
+    this.phase += dt * 5.6 * k;
     const ph = this.phase;
+    const THIGH = 0.42;
+    const SHIN = 0.43;
+    let maxDrop = 0;
     for (const leg of this.J.legs) {
-      const s = Math.sin(ph + (leg.s > 0 ? 0 : Math.PI));
-      leg.hip.rotation.x = -s * 0.45 * k;
-      leg.knee.rotation.x = Math.max(0, Math.sin(ph + (leg.s > 0 ? 0 : Math.PI) - 1.2)) * 0.9 * k;
-      leg.ankle.rotation.x = -leg.knee.rotation.x * 0.35;
+      const t = ph + (leg.s > 0 ? 0 : Math.PI);
+      const hip = -Math.sin(t) * 0.38 * k; // negativ = Bein nach vorn
+      const knee = Math.max(0, Math.cos(t)) * 0.95 * k; // beugt nur in der Schwungphase
+      leg.hip.rotation.x = hip;
+      leg.knee.rotation.x = knee;
+      leg.ankle.rotation.x = -(hip + knee) * (Math.cos(t) > 0 ? 0.6 : 1); // Fuß flach auf dem Boden
+      maxDrop = Math.max(maxDrop, THIGH * Math.cos(hip) + SHIN * Math.cos(hip + knee));
     }
     for (const arm of this.J.arms) {
-      const s = Math.sin(ph + (arm.s > 0 ? Math.PI : 0));
-      arm.shoulder.rotation.x = -s * 0.4 * k;
-      arm.elbow.rotation.x = -0.12 - (0.25 + Math.max(0, -s) * 0.3) * k;
+      if (this.J.basket && arm.s < 0) continue; // Korbarm schwingt nicht
+      const sw = Math.sin(ph + (arm.s > 0 ? Math.PI : 0));
+      arm.shoulder.rotation.x = -sw * 0.32 * k;
+      arm.elbow.rotation.x = -0.12 - (0.15 + Math.max(0, -sw) * 0.25) * k;
     }
-    this.J.body.position.y = Math.abs(Math.cos(ph)) * 0.025 * k;
-    this.J.spine.rotation.y = Math.sin(ph) * 0.06 * k;
+    // Ruhelage: Beinlänge THIGH + SHIN → Absenkung, wenn beide Beine schräg stehen
+    this.J.body.position.y = (maxDrop - (THIGH + SHIN)) * this.J.body.scale.y;
+    this.J.spine.rotation.y = Math.sin(ph) * 0.05 * k;
     this.J.head.rotation.x = 0.04 * (1 - k);
   }
 }

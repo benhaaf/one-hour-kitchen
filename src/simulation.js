@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { Walker, randomLook } from './scene/people.js';
 import { rng } from './scene/builder.js';
+import { footprints } from './scene/furniture.js';
 
 const CAM_DIST = 2.4;
 const CAM_HEIGHT = 2.25;
@@ -17,6 +18,8 @@ export class Simulation {
     this.next = 0; // welche Kundengruppe als Nächstes
     this.onCaption = () => {};
     this.onEnd = () => {};
+    // hohe Möbel, durch die die Verfolgerkamera nicht schauen soll
+    this.blockers = layout.moebel.filter((m) => m.hoehe > 1.2 && !m.id.startsWith('L')).flatMap((m) => footprints(m));
     this.camPos = new THREE.Vector3();
     this.camLook = new THREE.Vector3();
   }
@@ -29,7 +32,7 @@ export class Simulation {
     const k = this.cfg.kunden[this.next % this.cfg.kunden.length];
     this.next++;
     this.current = k;
-    const look = randomLook(rng(this.next * 13), { top: k.farbe, bag: true, jacket: null, scale: 1 });
+    const look = randomLook(rng(this.next * 13), { top: k.farbe, bag: false, basket: true, jacket: null, scale: 1 });
     this.walker = new Walker(look);
     this.scene.add(this.walker.group);
     this.pts = k.punkte;
@@ -139,7 +142,17 @@ export class Simulation {
   updateCamera(dt, snap = false) {
     const back = new THREE.Vector3(-Math.sin(this.heading), 0, -Math.cos(this.heading));
     const head = new THREE.Vector3(this.pos.x, 1.35, -this.pos.y);
-    const want = head.clone().addScaledVector(back, CAM_DIST);
+    // Kamera näher heranziehen, wenn ein Regal zwischen Figur und Kamera stünde
+    let dist = CAM_DIST;
+    for (let t = 0.35; t <= CAM_DIST; t += 0.1) {
+      const px = head.x + back.x * t;
+      const pz = -(head.z + back.z * t);
+      if (this.blockers.some(([a, b, c, d]) => px > a - 0.15 && px < b + 0.15 && pz > c - 0.15 && pz < d + 0.15)) {
+        dist = Math.max(0.7, t - 0.25);
+        break;
+      }
+    }
+    const want = head.clone().addScaledVector(back, dist);
     want.y = CAM_HEIGHT;
     // Im Laden nicht durch Wände/Decke: Kamera innerhalb des Raums halten (Passage davor ist offen)
     const [bx1, bx2, bz1, bz2] = this.bounds;

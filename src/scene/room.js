@@ -8,7 +8,7 @@ const unitBox = new THREE.BoxGeometry(1, 1, 1);
 const mat = {
   wand: new THREE.MeshStandardMaterial({ color: 0x3a3b40, roughness: 0.9 }),
   decke: new THREE.MeshStandardMaterial({ color: 0x2a2a2e, roughness: 1 }),
-  akzent: new THREE.MeshStandardMaterial({ color: 0xe8772e, roughness: 0.6 }),
+  akzent: new THREE.MeshStandardMaterial({ color: 0xc0773e, roughness: 0.6 }),
   glas: new THREE.MeshStandardMaterial({ color: 0xbfd9e6, roughness: 0.05, metalness: 0.1, transparent: true, opacity: 0.18, depthWrite: false }),
   notausgang: new THREE.MeshStandardMaterial({ color: 0x2e7d4f, roughness: 0.6 }),
   tuer: new THREE.MeshStandardMaterial({ color: 0x45464b, roughness: 0.7 }),
@@ -57,7 +57,7 @@ function buildDoor(group, w, ax, half) {
   pivot.add(leaf);
   // Schild und Griff drehen mit (beide Seiten)
   for (const side of [1, -1]) {
-    const s = sign(t.schild || 'LAGER\nNur Personal', { bg: '#e8772e', fg: '#1c1c1f', w: 0.62, h: 0.34 });
+    const s = sign(t.schild || 'LAGER\nNur Personal', { bg: '#c0773e', fg: '#1c1c1f', w: 0.62, h: 0.34 });
     s.position.set(side * (half * 0.6 + 0.004), 1.62, -L / 2);
     s.rotation.y = (side * Math.PI) / 2;
     pivot.add(s);
@@ -149,7 +149,7 @@ export function buildRoom(layout) {
         leaf.renderOrder = 2;
         group.add(leaf);
       }
-      const s = sign(o.richtung === 'raus' ? '◀ AUSGANG' : 'EINGANG ▶', { bg: o.richtung === 'raus' ? '#1c1c1f' : '#d64527', fg: '#ffffff', w: 0.9, h: 0.2 });
+      const s = sign(o.richtung === 'raus' ? '◀ AUSGANG' : 'EINGANG ▶', { bg: o.richtung === 'raus' ? '#1c1c1f' : '#b84a32', fg: '#ffffff', w: 0.9, h: 0.2 });
       // Schild außen über der Tür (zur Straße)
       const c = (o.von + o.bis) / 2;
       toThree(c, o.hoehe + 0.22, -t - 0.03, s.position);
@@ -160,7 +160,7 @@ export function buildRoom(layout) {
     } else if (o.typ === 'rolltor') {
       // Geschlossenes Rolltor mit Lamellen
       for (let y = 0.02; y < o.hoehe; y += 0.12) group.add(box(mat.rolltor, R(o.von, o.bis, mid - 0.04, mid + 0.04), 0.1, y));
-      signAt(sign('ANLIEFERUNG', { bg: '#f2c230', fg: '#1c1c1f', w: 1.1, h: 0.22 }), o.hoehe + 0.25);
+      signAt(sign('ANLIEFERUNG', { bg: '#d9b24a', fg: '#1c1c1f', w: 1.1, h: 0.22 }), o.hoehe + 0.25);
     }
   });
 

@@ -69,16 +69,15 @@ export class Panels {
     this.cardOpts = opts;
     const s = station;
     const row = (label, text, cls = '') => `<div class="ic-row ${cls}"><span class="ic-label">${label}</span><p>${marks(text)}</p></div>`;
-    const zt = opts.regalzonen ? this.zoneTable(s.objekte || []) : '';
+    const zt = opts.regalzonen && !s.regalbild ? this.zoneTable(s.objekte || []) : ''; // Regalbild zeigt die Zonen schon
+    const chip = (t, text, cls = '') => (text ? `<li class="${cls}">${t === 'S' ? '<span class="tag tag-s">Skizze</span>' : tag(t)}<span>${marks(text)}</span></li>` : '');
     this.card.innerHTML = `<div class="sl-inner">
       <header><span class="ic-nr">${s.nr}/${total}</span><h2>${esc(s.titel)} <small>${esc(s.bezug)}</small></h2></header>
-      ${row('Entscheidung', s.entscheidung)}
+      <p class="ic-lead">${marks(s.entscheidung)}</p>
       ${s.regalbild ? this.planogram(s.regalbild) : ''}
       ${zt}
-      ${row('Begründung', s.begruendung)}
-      ${row('Quelle', s.quelle, 'ic-quelle')}
-      ${s.annahme ? row('Annahme / Aussagegrenze', s.annahme, 'ic-annahme') : ''}
-      ${s.skizze ? row('Gegenüber der Skizze', s.skizze, 'ic-skizze') : ''}</div>`;
+      <p class="ic-text"><span class="ic-label">Warum</span>${marks(s.begruendung)}</p>
+      <ul class="ic-chips">${chip('Q', s.quelle)}${chip('A', s.annahme)}${chip('S', s.skizze)}</ul></div>`;
     this.card.classList.toggle('ic-wide', !!s.regalbild || !!zt);
     this.card.hidden = false;
     this.card.classList.remove('ic-in');
@@ -116,7 +115,12 @@ export class Panels {
     const m = L.moebel.find((x) => x.id === id);
     const face = m?.regal?.hinten;
     if (!face) return '';
-    const names = (g) => (CATALOG[g] || []).map((k) => (k.n.endsWith('-') ? k.n.slice(0, -1) + k.s : `${k.n}${k.s && /\d/.test(k.s) ? ` ${k.s}` : ''}`));
+    // kurze Artikelnamen: Produkt + Größe (letzter Teil der Inhaltsangabe)
+    const names = (g) => (CATALOG[g] || []).map((k) => {
+      const size = (k.s || '').split('·').pop().trim();
+      return /\d/.test(size) ? `${k.n} ${size}` : k.n;
+    });
+    const short = (list) => (list.length > 3 ? `${list.slice(0, 3).join(', ')} …` : list.join(', '));
     const uniq = (a) => [...new Set(a)];
     const zonen = L.regalzonen.zonen;
     const B = face.bloecke.slice().reverse(); // aus Kundensicht von links nach rechts
@@ -125,10 +129,10 @@ export class Panels {
         const rez = L.rezepte.filter((r) => r.zutaten.some(([nm, c]) => c === bl.code && (bl.artikel || []).includes(nm))).map((r) => r.nr);
         return `<b>${esc(bl.code)} · ${esc(bl.name)}</b>${rez.length ? `<br><small>für ${esc(rez.join(' '))}</small>` : ''}`;
       }
-      if (zone.name === 'Bückzone') return esc(uniq(names(bl.gruppen[1] || bl.gruppen[0])).join(', '));
+      if (zone.name === 'Bückzone') return esc(short(uniq(names(bl.gruppen[1] || bl.gruppen[0]))));
       const list = uniq(names(bl.gruppen[0]));
       const half = Math.ceil(list.length / 2);
-      return esc((zone.name === 'Sichtzone' ? list.slice(0, half) : list.slice(half).length ? list.slice(half) : list).join(', '));
+      return esc(short(zone.name === 'Sichtzone' ? list.slice(0, half) : list.slice(half).length ? list.slice(half) : list));
     };
     const fmtH = (z) => (z.von === 0 ? `< ${z.bis}` : `${z.von}–${z.bis}`).replace(/\./g, ',');
     return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · Produktblöcke (senkrecht Warengruppe, waagerecht Regalzone)</span>
@@ -157,6 +161,7 @@ export class Panels {
     const L = this.layout;
     let h = '';
     if (sl.lead) h += `<p class="sl-lead">${marks(sl.lead)}</p>`;
+    if (sl.zitat && sl.zitatOben) h += `<blockquote class="sl-zitat sl-zitat-gross">„${esc(sl.zitat)}“</blockquote>`;
     if (sl.matrix) h += this.matrixHTML();
     if (sl.rezeptkarte) h += this.recipeHTML(sl.rezeptkarte, sl.schritte, sl.karten ? this.blocks({ karten: sl.karten, spalten: 1 }) : '');
     if (sl.zuordnung) {
@@ -205,7 +210,7 @@ export class Panels {
     if (sl.kette)
       h += `<ol class="sl-kette">${sl.kette.map((k, i) => `<li><span class="k-nr">${i + 1}</span><h4>${esc(k.titel)}</h4><p>${marks(k.text)}</p>${k.tag ? `<p class="k-tag">${tag(k.tag[0])}${marks(k.tag[1])}</p>` : ''}</li>`).join('')}</ol>`;
     if (sl.punkte) h += `<ul class="sl-punkte">${sl.punkte.map((a) => `<li>${marks(a)}</li>`).join('')}</ul>`;
-    if (sl.zitat) h += `<blockquote class="sl-zitat">„${esc(sl.zitat)}“</blockquote>`;
+    if (sl.zitat && !sl.zitatOben) h += `<blockquote class="sl-zitat">„${esc(sl.zitat)}“</blockquote>`;
     if (sl.merke) h += `<p class="sl-frage"><span>${esc(sl.merke[0])}</span>${marks(sl.merke[1])}</p>`;
     return h;
   }

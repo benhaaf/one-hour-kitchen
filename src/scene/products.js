@@ -8,257 +8,356 @@ const PAD = 4;
 const SANS = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 const SERIF = 'Georgia, "Times New Roman", serif';
 
-// ---------- Katalog: Artikelarten je Fachcode ----------
-// form: packung | glas | dose | flasche | beutel | becher | schale | tetra | wein | tube | tafel | kiste
-// m = Maße [Breite, Höhe, Tiefe] in m; c = Grundfarbe, a = Akzent, b = Marke, n = Produktname, s = Zeile darunter
-const P = (form, m, c, a, b, n, s = '', font = SANS) => ({ form, m, c, a, b, n, s, font });
-export const CATALOG = {
-  // ---------- Kochwelten: klassische Warengruppen (Produktblöcke), Groß-/Mehrstückpackungen mit Suffix _B ----------
-  // Pasta Night
-  PA_NUDELN: [
-    P('packung', [0.1, 0.2, 0.06], '#1f4e9c', '#f2c230', 'Nonna Lia', 'Spaghetti', '500 g', SERIF),
-    P('packung', [0.1, 0.2, 0.06], '#1f4e9c', '#f4f1ec', 'Nonna Lia', 'Penne', '500 g', SERIF),
-    P('packung', [0.1, 0.18, 0.06], '#1f4e9c', '#e8862e', 'Nonna Lia', 'Ditalini', '500 g', SERIF),
-    P('packung', [0.1, 0.2, 0.06], '#f4f1ec', '#1f4e9c', 'Nonna Lia', 'Tagliatelle', 'getrocknet', SERIF),
-    P('packung', [0.1, 0.2, 0.06], '#f4f1ec', '#d64527', 'Basis+', 'Fusilli', '500 g'),
-  ],
-  PA_NUDELN_B: [P('packung', [0.13, 0.25, 0.08], '#1f4e9c', '#f2c230', 'Nonna Lia', 'Spaghetti', '1 kg', SERIF), P('packung', [0.13, 0.25, 0.08], '#1f4e9c', '#e8862e', 'Nonna Lia', 'Ditalini', '1 kg', SERIF)],
-  PA_SAUCE: [
-    P('glas', [0.08, 0.15, 0.08], '#c0392b', '#f4f1ec', 'Casa Verde', 'Sugo', 'Tomate'),
-    P('glas', [0.08, 0.15, 0.08], '#c0392b', '#f2c230', 'Casa Verde', 'Tomatensauce', 'klassisch'),
-    P('tetra', [0.07, 0.17, 0.05], '#b03a2e', '#2f7d32', 'Casa Verde', 'Passata', '500 g'),
-    P('dose', [0.075, 0.11, 0.075], '#c0392b', '#f4f1ec', 'Casa Verde', 'Pomodori', 'gehackt'),
-    P('glas', [0.07, 0.1, 0.07], '#3a7d44', '#f4f1ec', 'Casa Verde', 'Pesto', 'Genovese'),
-  ],
-  PA_SAUCE_B: [P('glas', [0.1, 0.2, 0.1], '#c0392b', '#f4f1ec', 'Casa Verde', 'Sugo', '680 g'), P('tetra', [0.09, 0.22, 0.07], '#b03a2e', '#2f7d32', 'Casa Verde', 'Passata', '1 kg')],
-  PA_BOHNEN: [
-    P('dose', [0.075, 0.11, 0.075], '#8d6e3f', '#f4f1ec', 'Nonna Lia', 'Borlotti', 'Bohnen'),
-    P('dose', [0.075, 0.11, 0.075], '#efe6d6', '#2f7d32', 'Nonna Lia', 'Cannellini', 'Bohnen'),
-    P('packung', [0.1, 0.12, 0.05], '#f2c230', '#1c1c1f', 'Kochwerk', 'Brühe', 'Gemüse'),
-    P('beutel', [0.09, 0.13, 0.03], '#efe7d6', '#d64527', 'Kochwerk', 'Gewürz', 'Pasta-Mix'),
-    P('glas', [0.05, 0.1, 0.05], '#f2d43a', '#1c1c1f', 'Kochwerk', 'Zitronen-', 'pfeffer'),
-  ],
-  PA_BOHNEN_B: [P('dose', [0.1, 0.15, 0.1], '#8d6e3f', '#f4f1ec', 'Nonna Lia', 'Borlotti', '800 g')],
-  PA_FEIN: [
-    P('glas', [0.09, 0.12, 0.09], '#556b2f', '#f4f1ec', 'Casa Verde', 'Oliven', 'Antipasti'),
-    P('glas', [0.08, 0.12, 0.08], '#8b1e1e', '#f2c230', 'Casa Verde', 'Tomaten', 'getrocknet'),
-    P('flasche', [0.05, 0.19, 0.05], '#4d6b2a', '#f2c230', 'Casa Verde', 'Olivenöl', '250 ml'),
-    P('flasche', [0.06, 0.22, 0.06], '#3a1520', '#f4f1ec', 'Casa Verde', 'Balsamico', 'Modena'),
-  ],
-  PA_FEIN_B: [P('flasche', [0.07, 0.29, 0.07], '#4d6b2a', '#f2c230', 'Casa Verde', 'Olivenöl', '1 l')],
-  PA_BROT: [
-    P('beutel', [0.12, 0.2, 0.05], '#e9d8b0', '#7a3b1e', 'Forno Lia', 'Grissini', 'Rosmarin'),
-    P('beutel', [0.15, 0.24, 0.07], '#e9d8b0', '#c0392b', 'Forno Lia', 'Ciabatta', 'zum Aufbacken'),
-    P('packung', [0.13, 0.06, 0.13], '#e9d8b0', '#7a3b1e', 'Forno Lia', 'Taralli', 'Fenchel'),
-  ],
-  PA_SUESS: [
-    P('beutel', [0.12, 0.17, 0.05], '#e9d8b0', '#7a3b1e', 'Forno Lia', 'Cantuccini', 'Mandel'),
-    P('beutel', [0.12, 0.17, 0.05], '#e9d8b0', '#d64527', 'Forno Lia', 'Amaretti', 'Mandel'),
-    P('packung', [0.13, 0.08, 0.2], '#f2e3b0', '#5d3a1a', 'Forno Lia', 'Löffelbiskuits', '200 g'),
-    P('dose', [0.08, 0.12, 0.08], '#5d3a1a', '#f2c230', 'Kakaowerk', 'Kakao', 'ungesüßt'),
-  ],
-  PA_DRINK: [
-    P('flasche', [0.065, 0.24, 0.065], '#f2c230', '#1f4e9c', 'Limonata', 'Limone', '0,5 l'),
-    P('flasche', [0.065, 0.24, 0.065], '#e8862e', '#1f4e9c', 'Limonata', 'Aranciata', '0,5 l'),
-    P('flasche', [0.07, 0.26, 0.07], '#c0392b', '#f4f1ec', 'Casa Verde', 'Aperitivo', 'alkoholfrei'),
-    P('flasche', [0.07, 0.28, 0.07], '#6fa8dc', '#f4f1ec', 'Neckarquelle', 'Wasser', 'still 1 l'),
-  ],
-  // Asian Night
-  AS_NUDELN: [
-    P('packung', [0.11, 0.18, 0.05], '#f4f1ec', '#c0392b', 'Kaizen', 'Udon', '3 × 200 g'),
-    P('packung', [0.11, 0.18, 0.05], '#f2c230', '#1c1c1f', 'Umami Lab', 'Ramen', 'Weizennudeln'),
-    P('packung', [0.11, 0.18, 0.05], '#f4f1ec', '#2f7d32', 'Kaizen', 'Reisnudeln', '250 g'),
-    P('packung', [0.11, 0.18, 0.05], '#d9b26a', '#1c1c1f', 'Kaizen', 'Soba', 'Buchweizen'),
-  ],
-  AS_NUDELN_B: [P('packung', [0.14, 0.22, 0.07], '#f4f1ec', '#c0392b', 'Kaizen', 'Udon', '6er-Pack')],
-  AS_REIS: [
-    P('beutel', [0.13, 0.2, 0.06], '#f4f1ec', '#2f7d32', 'Kaizen', 'Jasminreis', '1 kg'),
-    P('beutel', [0.13, 0.2, 0.06], '#f4f1ec', '#c0392b', 'Kaizen', 'Sushireis', '500 g'),
-    P('dose', [0.07, 0.12, 0.07], '#2f7d32', '#f4f1ec', 'Umami Lab', 'Kokosmilch', '400 ml'),
-  ],
-  AS_REIS_B: [P('beutel', [0.2, 0.3, 0.1], '#f4f1ec', '#2f7d32', 'Kaizen', 'Jasminreis', '5 kg')],
-  AS_SAUCE: [
-    P('flasche', [0.06, 0.2, 0.06], '#2b1a12', '#c0392b', 'Kaizen', 'Shoyu', 'Sojasauce'),
-    P('flasche', [0.05, 0.18, 0.05], '#7a4b1a', '#f2c230', 'Kaizen', 'Sesamöl', '250 ml'),
-    P('glas', [0.06, 0.11, 0.06], '#8b1e1e', '#f2c230', 'Umami Lab', 'Chili-Öl', 'scharf'),
-    P('glas', [0.08, 0.11, 0.08], '#d9b26a', '#3b2a1a', 'Umami Lab', 'Miso', 'hell'),
-    P('beutel', [0.1, 0.15, 0.04], '#3b3b3b', '#f2c230', 'Kaizen', 'Sesam', 'geröstet'),
-    P('packung', [0.16, 0.2, 0.02], '#1f2a1f', '#7fb04a', 'Kaizen', 'Nori', '10 Blatt'),
-  ],
-  AS_SAUCE_B: [P('flasche', [0.08, 0.28, 0.08], '#2b1a12', '#c0392b', 'Kaizen', 'Shoyu', '1 l'), P('tetra', [0.07, 0.17, 0.05], '#3b2a1a', '#f2c230', 'Umami Lab', 'Ramen-Brühe', '500 ml')],
-  AS_SNACK: [
-    P('beutel', [0.14, 0.18, 0.05], '#efe7d6', '#c0392b', 'Umami Lab', 'Reiscracker', 'Sesam'),
-    P('packung', [0.12, 0.08, 0.12], '#c0392b', '#f2c230', 'Kaizen', 'Glückskekse', '12 Stück'),
-    P('packung', [0.12, 0.06, 0.12], '#7fb04a', '#f4f1ec', 'Kaizen', 'Matcha', 'Kekse'),
-  ],
-  AS_DRINK: [
-    P('dose', [0.066, 0.125, 0.066], '#2f7d32', '#f4f1ec', 'Umami Lab', 'Eistee', 'Jasmin'),
-    P('tetra', [0.07, 0.2, 0.07], '#f4c6cf', '#7a1f3d', 'Kaizen', 'Lychee', 'Saft'),
-    P('packung', [0.1, 0.1, 0.06], '#3a7d44', '#f4f1ec', 'Kaizen', 'Grüntee', '20 Beutel'),
-    P('flasche', [0.07, 0.26, 0.07], '#f4f1ec', '#7a1f3d', 'Kaizen', 'Sake', 'alkoholfrei'),
-  ],
-  // Mexican Night
-  MX_TORT: [
-    P('beutel', [0.18, 0.22, 0.04], '#f2c230', '#2f7d32', 'La Milpa', 'Tortillas', 'Weizen 8 St.'),
-    P('beutel', [0.18, 0.22, 0.04], '#e9d8b0', '#c0392b', 'La Milpa', 'Tortillas', 'Mais 8 St.'),
-    P('packung', [0.16, 0.12, 0.08], '#e8862e', '#1c1c1f', 'La Milpa', 'Taco Shells', '12 Stück'),
-  ],
-  MX_TORT_B: [P('beutel', [0.22, 0.26, 0.05], '#f2c230', '#2f7d32', 'La Milpa', 'Tortillas', '16 Stück')],
-  MX_DOSE: [
-    P('dose', [0.075, 0.11, 0.075], '#8b1e1e', '#f4f1ec', 'Sol & Maíz', 'Kidney', 'Bohnen'),
-    P('dose', [0.075, 0.11, 0.075], '#1c1c1f', '#f2c230', 'Sol & Maíz', 'Bohnen', 'schwarz'),
-    P('dose', [0.075, 0.11, 0.075], '#f2c230', '#2f7d32', 'Sol & Maíz', 'Mais', 'süß'),
-    P('dose', [0.075, 0.11, 0.075], '#c0392b', '#f4f1ec', 'Sol & Maíz', 'Tomaten', 'gehackt'),
-  ],
-  MX_DOSE_B: [P('dose', [0.1, 0.15, 0.1], '#8b1e1e', '#f4f1ec', 'Sol & Maíz', 'Kidney', '800 g')],
-  MX_SALSA: [
-    P('glas', [0.08, 0.13, 0.08], '#c0392b', '#f2c230', 'La Milpa', 'Salsa', 'medium'),
-    P('glas', [0.08, 0.13, 0.08], '#3a7d44', '#f4f1ec', 'La Milpa', 'Salsa Verde', 'mild'),
-    P('glas', [0.07, 0.12, 0.07], '#2f7d32', '#f2c230', 'Sol & Maíz', 'Jalapeños', 'Scheiben'),
-    P('beutel', [0.09, 0.13, 0.03], '#c0392b', '#f2c230', 'La Milpa', 'Taco-', 'Gewürz'),
-    P('glas', [0.05, 0.1, 0.05], '#c0392b', '#1c1c1f', 'Kochwerk', 'Chili', 'gemahlen'),
-  ],
-  MX_ERG: [
-    P('beutel', [0.16, 0.24, 0.06], '#2f7d32', '#f2c230', 'La Milpa', 'Nachos', 'Salz'),
-    P('glas', [0.08, 0.13, 0.08], '#7fb04a', '#f4f1ec', 'La Milpa', 'Guacamole', 'Dip'),
-    P('packung', [0.12, 0.18, 0.06], '#e8862e', '#5d3a1a', 'La Milpa', 'Churros', 'Backmischung'),
-  ],
-  MX_DRINK: [
-    P('flasche', [0.065, 0.24, 0.065], '#7fb04a', '#1c1c1f', 'Sol & Maíz', 'Limo', 'Limette'),
-    P('flasche', [0.065, 0.24, 0.065], '#7a4b1a', '#f4f1ec', 'Neckarbräu', 'Alkoholfrei', 'Hell'),
-  ],
-  // Kühlung
-  K1: [
-    P('becher', [0.08, 0.1, 0.08], '#f4f1ec', '#2f6fb0', 'Hof Neckar', 'Joghurt', 'natur'),
-    P('tetra', [0.07, 0.2, 0.07], '#f4f1ec', '#2f6fb0', 'Hof Neckar', 'Milch', '1,5 %'),
-    P('tetra', [0.06, 0.12, 0.05], '#f4f1ec', '#d64527', 'Hof Neckar', 'Sahne', '200 ml'),
-    P('packung', [0.1, 0.06, 0.06], '#f2c230', '#2f6fb0', 'Hof Neckar', 'Butter', '250 g'),
-    P('schale', [0.2, 0.07, 0.11], '#d9b26a', '#f4f1ec', 'Hof Neckar', 'Eier', '10 Stück'),
-  ],
-  K2: [
-    P('packung', [0.12, 0.04, 0.09], '#f2c230', '#7a3b1e', 'Casa Verde', 'Parmesan', 'gerieben'),
-    P('schale', [0.14, 0.05, 0.1], '#f2d27a', '#2f6fb0', 'Hof Neckar', 'Gouda', 'Scheiben'),
-    P('packung', [0.11, 0.05, 0.11], '#f4f1ec', '#2f7d32', 'Casa Verde', 'Mozzarella', '125 g'),
-  ],
-  K3: [
-    P('schale', [0.18, 0.06, 0.12], '#f2e3b0', '#1f4e9c', 'Nonna Lia', 'Tagliatelle', 'frisch'),
-    P('packung', [0.12, 0.05, 0.2], '#efe7d6', '#d64527', 'Forno Lia', 'Pizzateig', 'gekühlt'),
-  ],
-  K4: [
-    P('schale', [0.2, 0.06, 0.14], '#c0392b', '#f4f1ec', 'Hof Neckar', 'Hähnchen', 'Brust'),
-    P('schale', [0.2, 0.05, 0.14], '#e8862e', '#1f4e9c', 'Nordküste', 'Lachs', 'Filet'),
-  ],
-  K5: [
-    P('packung', [0.12, 0.05, 0.09], '#f4f1ec', '#2f7d32', 'Grünwerk', 'Tofu', 'natur'),
-    P('schale', [0.16, 0.06, 0.12], '#2f7d32', '#f4f1ec', 'Grünwerk', 'Veggie-Hack', '250 g'),
-  ],
-  K6: [
-    P('becher', [0.1, 0.12, 0.1], '#3a7d44', '#f4f1ec', 'Hof Neckar', 'Basilikum', 'im Topf'),
-    P('beutel', [0.15, 0.2, 0.06], '#7fb04a', '#f4f1ec', 'Hof Neckar', 'Salat', 'Mix'),
-  ],
-  // Dessert & TK
-  D1: [
-    P('becher', [0.1, 0.09, 0.1], '#f4c6cf', '#7a1f3d', 'Gelato Lia', 'Eis', 'Pistazie'),
-    P('packung', [0.12, 0.08, 0.12], '#f4c6cf', '#7a1f3d', 'Kaizen', 'Mochi', 'Eis'),
-  ],
-  D2: [
-    P('becher', [0.08, 0.08, 0.08], '#5d3a1a', '#f2c230', 'Forno Lia', 'Tiramisu', 'Becher'),
-    P('becher', [0.08, 0.08, 0.08], '#f4f1ec', '#c0392b', 'Hof Neckar', 'Panna Cotta', 'Beere'),
-  ],
-  D3: [
-    P('beutel', [0.18, 0.24, 0.05], '#2f7d32', '#f2c230', 'Grünwerk', 'Wok-Gemüse', 'TK 750 g'),
-    P('packung', [0.2, 0.05, 0.28], '#d64527', '#f4f1ec', 'Forno Lia', 'Pizza', 'TK'),
-  ],
-  // Getränke
-  G1: [P('wein', [0.075, 0.31, 0.075], '#3a1520', '#efe8d8', 'Weingut Neckar', 'Lemberger', 'trocken')],
-  G2: [
-    P('wein', [0.075, 0.31, 0.075], '#4d6b2a', '#efe8d8', 'Weingut Neckar', 'Riesling', 'trocken'),
-    P('wein', [0.075, 0.31, 0.075], '#d98c8c', '#efe8d8', 'Weingut Neckar', 'Rosé', 'fruchtig'),
-  ],
-  G3: [
-    P('flasche', [0.065, 0.24, 0.065], '#f2c230', '#1f4e9c', 'Limonata', 'Limone', '0,5 l'),
-    P('dose', [0.066, 0.125, 0.066], '#2f7d32', '#f4f1ec', 'Umami Lab', 'Eistee', 'Jasmin'),
-    P('flasche', [0.065, 0.24, 0.065], '#7a4b1a', '#f4f1ec', 'Neckarbräu', 'Alkoholfrei', 'Hell'),
-  ],
-  // Basissortiment
-  B1: [
-    P('packung', [0.1, 0.2, 0.06], '#f4f1ec', '#d64527', 'Basis+', 'Spaghetti', '1 kg'),
-    P('beutel', [0.13, 0.2, 0.06], '#f4f1ec', '#2f6fb0', 'Basis+', 'Reis', 'Basmati'),
-    P('packung', [0.1, 0.2, 0.06], '#f4f1ec', '#e8862e', 'Basis+', 'Fusilli', '500 g'),
-  ],
-  B2: [
-    P('flasche', [0.065, 0.27, 0.065], '#4d6b2a', '#f2c230', 'Casa Verde', 'Olivenöl', 'nativ extra'),
-    P('flasche', [0.06, 0.22, 0.06], '#3a1520', '#f4f1ec', 'Basis+', 'Balsamico', 'Modena'),
-    P('flasche', [0.065, 0.27, 0.065], '#f2c230', '#2f6fb0', 'Basis+', 'Rapsöl', '1 l'),
-  ],
-  B3: [
-    P('glas', [0.05, 0.1, 0.05], '#c0392b', '#f4f1ec', 'Kochwerk', 'Paprika', 'edelsüß'),
-    P('glas', [0.05, 0.1, 0.05], '#7a3b1e', '#f4f1ec', 'Kochwerk', 'Kreuzkümmel', ''),
-    P('packung', [0.1, 0.12, 0.05], '#f2c230', '#1c1c1f', 'Kochwerk', 'Brühe', 'Gemüse'),
-  ],
-  B4: [
-    P('dose', [0.075, 0.11, 0.075], '#c0392b', '#f4f1ec', 'Basis+', 'Tomaten', 'gehackt'),
-    P('glas', [0.08, 0.15, 0.08], '#c0392b', '#f2c230', 'Basis+', 'Tomatensauce', 'klassisch'),
-    P('dose', [0.075, 0.11, 0.075], '#f2c230', '#2f7d32', 'Basis+', 'Mais', '285 g'),
-  ],
-  B5: [
-    P('packung', [0.12, 0.2, 0.08], '#f4f1ec', '#2f6fb0', 'Basis+', 'Mehl', 'Type 405'),
-    P('packung', [0.12, 0.2, 0.08], '#f4f1ec', '#d64527', 'Basis+', 'Zucker', '1 kg'),
-  ],
-  B6: [
-    P('packung', [0.16, 0.24, 0.06], '#d9b26a', '#7a3b1e', 'Basis+', 'Müsli', 'Nuss'),
-    P('beutel', [0.15, 0.3, 0.08], '#b98a5a', '#f4f1ec', 'Forno Lia', 'Brot', 'Vollkorn'),
-    P('glas', [0.07, 0.12, 0.07], '#7a1f3d', '#f4f1ec', 'Hof Neckar', 'Konfitüre', 'Kirsche'),
-  ],
-  B7: [
-    P('beutel', [0.16, 0.24, 0.06], '#f2c230', '#c0392b', 'Basis+', 'Chips', 'Paprika'),
-    P('tafel', [0.08, 0.16, 0.015], '#5d3a1a', '#f2c230', 'Kakaowerk', 'Schokolade', 'Zartbitter'),
-    P('beutel', [0.12, 0.17, 0.05], '#e8862e', '#1c1c1f', 'Basis+', 'Nüsse', 'Mix'),
-  ],
-  IMPULS: [
-    P('tafel', [0.08, 0.16, 0.015], '#5d3a1a', '#f2c230', 'Kakaowerk', 'Schokolade', 'Zartbitter'),
-    P('tafel', [0.08, 0.16, 0.015], '#d64527', '#f4f1ec', 'Kakaowerk', 'Chili-Schoko', ''),
-    P('becher', [0.1, 0.12, 0.1], '#3a7d44', '#f4f1ec', 'Hof Neckar', 'Basilikum', 'im Topf'),
-  ],
+import { CATALOG, BRANDS } from './catalog.js';
+export { CATALOG };
+
+// ---------- Etiketten zeichnen: Markenstil + Produktfenster (zeigt, was drin ist) ----------
+const VISUALS = [
+  [/spaghetti|linguine/, 'strang'],
+  [/penne|ditalini|fusilli|couscous/, 'nudelkurz'],
+  [/tagliatelle|tortellini|gnocchi/, 'frischpasta'],
+  [/udon|ramen|soba|mie|reisnudel/, 'welle'],
+  [/passata|pomodori|tomat|sugo|arrabbiata|salsa$|^salsa /, 'tomate'],
+  [/borlotti|cannellini|kidney|bohnen|kichererbsen|linsen|refried/, 'bohnen'],
+  [/reis/, 'reis'],
+  [/mais/, 'mais'],
+  [/oliven|kapern|artischock/, 'oliven'],
+  [/pesto|basilikum|koriander|salat|rucola|oregano|salsa verde|guacamole|edamame|wok/, 'blatt'],
+  [/brühe/, 'wuerfel'],
+  [/paprika|chili|kreuzkümmel|pfeffer|gewürz|zitronenpfeffer/, 'pulver'],
+  [/parmigiano|gouda|cheddar|mozzarella|feta|käse|cheese/, 'kaese'],
+  [/milch|joghurt|sahne|schmand|crème|horchata/, 'milch'],
+  [/butter/, 'butter'],
+  [/eier/, 'eier'],
+  [/hähnchen|lachs|hack|pancetta|garnelen|thunfisch/, 'fleisch'],
+  [/tofu|tempeh/, 'tofu'],
+  [/espresso|kaffee|kakao|zartbitter|schoko|mousse|tiramisu/, 'kakao'],
+  [/cantuccini|amaretti|savoiardi|kekse|grissini|taralli|ciabatta|focaccia|brot|müsli|hafer|riegel|brezeln|churros|cracker|glückskeks/, 'gebaeck'],
+  [/chips|nachos|tortilla|taco|wraps/, 'chips'],
+  [/gelato|mochi|panna|eis$/, 'eis'],
+  [/mehl|zucker|stärke|backpulver|salz/, 'pulverweiss'],
+  [/honig|konfitüre/, 'glanz'],
+  [/nori|seetang/, 'nori'],
+  [/öl/, 'tropfen'],
+  [/essig|balsamico|shoyu|hoisin|sriracha|miso/, 'tropfen'],
+  [/tee|limo|limone|aranciata|lychee|wasser|helles|sake|aperitivo|eistee/, 'frucht'],
+  [/pizza/, 'pizza'],
+  [/studentenfutter|nuss/, 'nuss'],
+  [/fruchtgummi/, 'frucht'],
+];
+const visualOf = (p) => (VISUALS.find(([re]) => re.test(p.n.toLowerCase())) || [null, 'kreis'])[1];
+
+// kleiner deterministischer Zufall je Etikett
+function rnd(seed) {
+  let t = seed;
+  return () => ((t = (t * 1664525 + 1013904223) % 4294967296) / 4294967296);
+}
+
+function drawVisual(g, kind, x, y, w, h, p) {
+  const r = rnd(p.n.length * 97 + p.b.length * 13 + Math.round(p.pr * 100));
+  const dot = (cx, cy, rx, ry, col, rot = 0) => {
+    g.fillStyle = col;
+    g.beginPath();
+    g.ellipse(cx, cy, rx, ry, rot, 0, Math.PI * 2);
+    g.fill();
+  };
+  const scatter = (n, fn) => {
+    for (let i = 0; i < n; i++) fn(x + r() * w, y + r() * h, i);
+  };
+  switch (kind) {
+    case 'strang':
+      g.strokeStyle = '#e8c87a';
+      g.lineWidth = 2;
+      for (let i = 0; i < 16; i++) {
+        g.beginPath();
+        g.moveTo(x + 3 + i * (w / 16), y + 2);
+        g.lineTo(x + 6 + i * (w / 16), y + h - 2);
+        g.stroke();
+      }
+      break;
+    case 'nudelkurz':
+      scatter(14, (cx, cy) => dot(cx, cy, 6, 3, r() < 0.5 ? '#e8c87a' : '#d9b25e', r() * 3));
+      break;
+    case 'frischpasta':
+      scatter(9, (cx, cy) => dot(cx, cy, 8, 6, '#efd58e', r() * 3));
+      break;
+    case 'welle':
+      g.strokeStyle = p.n.includes('Soba') ? '#8a6a4a' : '#efe0b0';
+      g.lineWidth = 2.5;
+      for (let j = 0; j < 6; j++) {
+        g.beginPath();
+        for (let i = 0; i <= 20; i++) g.lineTo(x + (i / 20) * w, y + 5 + j * (h / 6) + Math.sin(i * 1.3 + j) * 3);
+        g.stroke();
+      }
+      break;
+    case 'tomate':
+      scatter(5, (cx, cy) => {
+        dot(cx, cy, 10, 9, '#c0392b');
+        dot(cx - 3, cy - 3, 3, 2, 'rgba(255,255,255,0.35)');
+        dot(cx, cy - 8, 3, 2, '#4c7a32');
+      });
+      break;
+    case 'bohnen': {
+      const col = /kidney|borlotti/i.test(p.n) ? '#7a2a22' : /schwarz/i.test(p.n) ? '#2a2422' : /kicher|refried/i.test(p.n) ? '#c9a46a' : /linsen/i.test(p.n) ? '#c8642e' : '#efe6d2';
+      scatter(18, (cx, cy) => dot(cx, cy, 5, 3.5, col, r() * 3));
+      break;
+    }
+    case 'reis':
+      g.fillStyle = '#e9e3d4';
+      g.fillRect(x, y, w, h);
+      scatter(40, (cx, cy) => dot(cx, cy, 2.5, 1.2, '#ffffff', r() * 3));
+      break;
+    case 'mais':
+      scatter(30, (cx, cy) => dot(cx, cy, 3, 2.6, '#f0c53a'));
+      break;
+    case 'oliven':
+      scatter(8, (cx, cy) => dot(cx, cy, 7, 5, p.n.includes('Artischock') ? '#8a9a5a' : '#556b2f', r() * 3));
+      break;
+    case 'blatt':
+      scatter(9, (cx, cy) => dot(cx, cy, 8, 4, r() < 0.5 ? '#4f7f3a' : '#6b9a45', r() * 3));
+      break;
+    case 'wuerfel':
+      for (let i = 0; i < 3; i++) {
+        g.fillStyle = '#c99a3a';
+        g.fillRect(x + 6 + i * 16, y + h / 2 - 6, 13, 13);
+      }
+      break;
+    case 'pulver':
+      g.fillStyle = p.a;
+      g.beginPath();
+      g.moveTo(x + 4, y + h - 2);
+      g.quadraticCurveTo(x + w / 2, y - 6, x + w - 4, y + h - 2);
+      g.fill();
+      break;
+    case 'pulverweiss':
+      g.fillStyle = '#ffffff';
+      g.beginPath();
+      g.moveTo(x + 4, y + h - 2);
+      g.quadraticCurveTo(x + w / 2, y - 4, x + w - 4, y + h - 2);
+      g.fill();
+      break;
+    case 'kaese':
+      g.fillStyle = /cheddar/i.test(p.n) ? '#e8962e' : /mozzarella|feta/i.test(p.n) ? '#fbf8f0' : '#f0d27a';
+      g.beginPath();
+      g.moveTo(x + 6, y + h - 4);
+      g.lineTo(x + w - 6, y + h - 4);
+      g.lineTo(x + w - 10, y + 6);
+      g.closePath();
+      g.fill();
+      break;
+    case 'milch':
+      dot(x + w / 2, y + h / 2, w * 0.38, h * 0.34, '#ffffff');
+      dot(x + w / 2 + 8, y + h / 2 - 5, w * 0.16, h * 0.14, '#f2f2ee');
+      break;
+    case 'butter':
+      g.fillStyle = '#f2d77a';
+      g.fillRect(x + 10, y + h / 2 - 8, w - 20, 16);
+      break;
+    case 'eier':
+      for (let i = 0; i < 3; i++) dot(x + 12 + i * (w - 24) / 2, y + h / 2, 8, 10, '#e6d2b0');
+      break;
+    case 'fleisch':
+      dot(x + w / 2, y + h / 2, w * 0.38, h * 0.3, /lachs|garnelen/i.test(p.n) ? '#f08a5a' : /thunfisch/i.test(p.n) ? '#c9a37a' : '#d77a7a', 0.2);
+      break;
+    case 'tofu':
+      g.fillStyle = /räucher|tempeh/i.test(p.n) ? '#c49a62' : '#f3eedf';
+      g.fillRect(x + 8, y + 6, w - 16, h - 12);
+      break;
+    case 'kakao':
+      dot(x + w / 2, y + h / 2, w * 0.36, h * 0.3, '#4a2c1c');
+      dot(x + w / 2 - 6, y + h / 2 - 4, w * 0.1, h * 0.08, 'rgba(255,255,255,0.25)');
+      break;
+    case 'gebaeck':
+      scatter(6, (cx, cy) => dot(cx, cy, 10, 5, r() < 0.5 ? '#d9a95e' : '#c48a46', r() * 3));
+      break;
+    case 'chips':
+      scatter(7, (cx, cy) => {
+        g.fillStyle = '#e8bf4a';
+        g.beginPath();
+        g.moveTo(cx, cy - 8);
+        g.lineTo(cx + 8, cy + 6);
+        g.lineTo(cx - 8, cy + 6);
+        g.fill();
+      });
+      break;
+    case 'eis':
+      dot(x + w / 2, y + h / 2 + 2, w * 0.3, h * 0.3, /pistazie/i.test(p.s) ? '#a8c47a' : /mochi/i.test(p.n) ? '#f2c4cf' : '#f6eedc');
+      break;
+    case 'glanz':
+      dot(x + w / 2, y + h / 2, w * 0.32, h * 0.32, /honig/i.test(p.n) ? '#e0a52a' : '#8a1f2a');
+      break;
+    case 'nori':
+      g.fillStyle = '#1a2a1a';
+      g.fillRect(x + 6, y + 6, w - 12, h - 12);
+      break;
+    case 'tropfen':
+      g.fillStyle = /öl/i.test(p.n) ? '#c9b23a' : /shoyu|hoisin|balsamico/i.test(p.n) ? '#3a1e12' : /sriracha/i.test(p.n) ? '#c0392b' : /essig/i.test(p.n) ? '#e9dfb0' : '#c9a46a';
+      g.beginPath();
+      g.moveTo(x + w / 2, y + 2);
+      g.quadraticCurveTo(x + w / 2 + 16, y + h - 10, x + w / 2, y + h - 2);
+      g.quadraticCurveTo(x + w / 2 - 16, y + h - 10, x + w / 2, y + 2);
+      g.fill();
+      break;
+    case 'frucht': {
+      const col = /limo|limette/i.test(p.n + p.s) ? '#a8c43a' : /limone/i.test(p.n) ? '#f0d23a' : /aranciata/i.test(p.n) ? '#f08a2a' : /lychee/i.test(p.n) ? '#f2c4cf' : /tee/i.test(p.n) ? '#c9a24a' : /wasser/i.test(p.n) ? '#bfe0f0' : '#e9c45a';
+      dot(x + w / 2 - 8, y + h / 2, 11, 11, col);
+      dot(x + w / 2 + 9, y + h / 2 + 3, 9, 9, col);
+      break;
+    }
+    case 'pizza':
+      dot(x + w / 2, y + h / 2, w * 0.36, h * 0.38, '#e0b060');
+      dot(x + w / 2, y + h / 2, w * 0.3, h * 0.32, '#c0392b');
+      scatter(5, (cx, cy) => dot(cx, cy, 4, 4, '#fbf6e8'));
+      break;
+    case 'nuss':
+      scatter(10, (cx, cy) => dot(cx, cy, 5, 4, r() < 0.5 ? '#b07a3e' : '#8a5a2a', r() * 3));
+      break;
+    default:
+      dot(x + w / 2, y + h / 2, w * 0.3, h * 0.3, p.a);
+  }
+}
+
+function roundRect(g, x, y, w, h, rr) {
+  g.beginPath();
+  g.moveTo(x + rr, y);
+  g.arcTo(x + w, y, x + w, y + h, rr);
+  g.arcTo(x + w, y + h, x, y + h, rr);
+  g.arcTo(x, y + h, x, y, rr);
+  g.arcTo(x, y, x + w, y, rr);
+  g.closePath();
+}
+
+const isLight = (hex) => {
+  const v = parseInt(hex.slice(1), 16);
+  return ((v >> 16) & 255) * 0.299 + ((v >> 8) & 255) * 0.587 + (v & 255) * 0.114 > 150;
 };
 
-// ---------- Etiketten zeichnen ----------
 function drawLabel(g, s, p) {
+  const br = BRANDS[p.b] || { st: 'klassik' };
+  const fam = br.serif ? SERIF : SANS;
+  const fg = isLight(p.c) ? '#1f1d1b' : '#f6f2ea';
   g.fillStyle = p.c;
   g.fillRect(0, 0, s, s);
-  const dark = ['#f4f1ec', '#efe7d6', '#f2c230', '#e9d8b0', '#f2e3b0', '#f4c6cf', '#d9b26a', '#f2d27a', '#efe8d8', '#7fb04a'].includes(p.c);
-  const fg = dark ? '#1c1c1f' : '#f8f5ef';
-  // Akzentband
-  g.fillStyle = p.a;
+
   if (p.form === 'wein') {
-    g.fillRect(0, s * 0.42, s, s * 0.46);
-    g.fillStyle = '#1c1c1f';
+    // Weinetikett: cremefarbenes Rückenetikett in Flaschenmitte, Kapsel oben in Flaschenfarbe
+    g.fillStyle = p.a;
+    g.fillRect(s * 0.06, s * 0.22, s * 0.88, s * 0.7);
+    g.strokeStyle = 'rgba(0,0,0,0.35)';
+    g.lineWidth = 1.5;
+    g.strokeRect(s * 0.1, s * 0.26, s * 0.8, s * 0.62);
+    g.fillStyle = isLight(p.a) ? '#2a1a14' : '#f6f2ea';
     g.textAlign = 'center';
     g.textBaseline = 'middle';
-    fit(g, p.n, s / 2, s * 0.6, s * 0.9, 700, 22, SERIF);
-    g.font = `400 12px ${SERIF}`;
-    g.fillText(p.b, s / 2, s * 0.76);
-    g.fillText(p.s, s / 2, s * 0.84);
+    g.font = `400 11px ${SERIF}`;
+    g.fillText(p.b, s / 2, s * 0.36);
+    fit(g, p.n, s / 2, s * 0.55, s * 0.76, 700, 22, SERIF);
+    g.font = `italic 400 11px ${SERIF}`;
+    g.fillText(p.s, s / 2, s * 0.75);
     return;
   }
-  g.fillRect(0, s * 0.68, s, s * 0.08);
-  g.beginPath();
-  g.arc(s * 0.5, s * 0.5, s * 0.17, 0, Math.PI * 2);
-  g.fill();
-  g.fillStyle = fg;
+
   g.textAlign = 'center';
   g.textBaseline = 'middle';
-  fit(g, p.b.toUpperCase(), s / 2, s * 0.13, s * 0.88, 800, 15, p.font);
-  fit(g, p.n, s / 2, s * 0.3, s * 0.92, 800, 24, p.font);
-  g.fillStyle = dark ? '#3a3a3a' : 'rgba(255,255,255,0.85)';
-  fit(g, p.s, s / 2, s * 0.86, s * 0.9, 600, 14);
+  // Markenkopf je Stil
+  if (br.st === 'eigen') {
+    g.fillStyle = p.a;
+    g.fillRect(0, 0, s, s * 0.2);
+    g.fillStyle = '#ffffff';
+    fit(g, p.b.toUpperCase(), s / 2, s * 0.1, s * 0.8, 800, 14);
+  } else if (br.st === 'premium') {
+    g.strokeStyle = p.a;
+    g.lineWidth = 2;
+    g.strokeRect(5, 5, s - 10, s - 10);
+    g.fillStyle = p.a;
+    fit(g, p.b, s / 2, s * 0.12, s * 0.8, 600, 16, SERIF);
+  } else if (br.st === 'bio') {
+    g.fillStyle = p.a;
+    fit(g, p.b, s / 2, s * 0.11, s * 0.7, 800, 14);
+    dot(g, s * 0.84, s * 0.12, 11, '#3f6b3a');
+    g.fillStyle = '#ffffff';
+    g.font = `800 8px ${SANS}`;
+    g.fillText('BIO', s * 0.84, s * 0.125);
+  } else if (br.st === 'asia') {
+    dot(g, s * 0.8, s * 0.16, 12, p.a);
+    g.fillStyle = fg;
+    fit(g, p.b.toUpperCase(), s * 0.42, s * 0.12, s * 0.66, 800, 13);
+  } else if (br.st === 'gewuerz') {
+    g.fillStyle = p.a;
+    g.fillRect(0, s * 0.72, s, s * 0.28);
+    g.fillStyle = fg;
+    fit(g, p.b.toUpperCase(), s / 2, s * 0.1, s * 0.8, 700, 12);
+  } else {
+    g.fillStyle = p.a;
+    g.fillRect(0, s * 0.03, s, s * 0.17);
+    g.fillStyle = isLight(p.a) ? '#1f1d1b' : '#ffffff';
+    fit(g, p.b.toUpperCase(), s / 2, s * 0.115, s * 0.86, 800, 13, fam);
+  }
+  // Produktname
+  g.fillStyle = br.st === 'premium' ? '#f6f2ea' : fg;
+  fit(g, p.n, s / 2, s * 0.31, s * 0.9, 800, 22, fam);
+  // Produktfenster
+  const wx = s * 0.16;
+  const wy = s * 0.42;
+  const ww = s * 0.68;
+  const wh = s * 0.3;
+  g.save();
+  roundRect(g, wx, wy, ww, wh, 10);
+  g.fillStyle = br.st === 'premium' ? '#efe4c6' : 'rgba(255,255,255,0.55)';
+  g.fill();
+  g.clip();
+  drawVisual(g, visualOf(p), wx, wy, ww, wh, p);
+  g.restore();
+  // Inhalt / Gewicht
+  g.fillStyle = br.st === 'gewuerz' ? (isLight(p.a) ? '#1f1d1b' : '#ffffff') : br.st === 'premium' ? p.a : fg;
+  fit(g, p.s, s / 2, s * 0.84, s * 0.9, 600, 12);
+}
+
+function dot(g, x, y, r, col) {
+  g.fillStyle = col;
+  g.beginPath();
+  g.arc(x, y, r, 0, Math.PI * 2);
+  g.fill();
 }
 
 function fit(g, text, x, y, maxW, weight, px, fam = SANS) {
   let size = px;
   g.font = `${weight} ${size}px ${fam}`;
-  while (g.measureText(text).width > maxW && size > 8) g.font = `${weight} ${--size}px ${fam}`;
+  while (g.measureText(text).width > maxW && size > 7) g.font = `${weight} ${--size}px ${fam}`;
   g.fillText(text, x, y);
+}
+
+// ---------- Preisschild (Regaletikett): Artikel, Preis, Grundpreis ----------
+const euro = (v) => v.toFixed(2).replace('.', ',');
+export function basePrice(p) {
+  const m = /(?:(\d+)\s*×\s*)?(\d+(?:[.,]\d+)?)\s*(kg|g|ml|l)\b/.exec(p.s || '');
+  if (!m) return '';
+  const n = m[1] ? Number(m[1]) : 1;
+  const v = Number(m[2].replace(',', '.')) * n;
+  const kgOrL = m[3] === 'g' || m[3] === 'ml' ? v / 1000 : v;
+  if (!kgOrL) return '';
+  return `1 ${m[3] === 'g' || m[3] === 'kg' ? 'kg' : 'l'} = ${euro(p.pr / kgOrL)} €`;
+}
+function drawPrice(g, W, H, p) {
+  const eigen = (BRANDS[p.b] || {}).st === 'eigen';
+  g.fillStyle = '#fbfaf6';
+  g.fillRect(0, 0, W, H);
+  if (eigen) {
+    g.fillStyle = '#b9472f';
+    g.fillRect(0, 0, 8, H);
+  }
+  g.fillStyle = '#1f1d1b';
+  g.textAlign = 'left';
+  g.textBaseline = 'top';
+  fit(g, p.b, 14, 8, W * 0.55, 500, 17);
+  fit(g, p.n, 14, 30, W * 0.6, 800, 22);
+  fit(g, p.s, 14, 58, W * 0.6, 500, 16);
+  g.fillStyle = '#5a5650';
+  fit(g, basePrice(p), 14, 96, W * 0.6, 500, 15);
+  g.fillStyle = '#1f1d1b';
+  g.textAlign = 'right';
+  g.textBaseline = 'alphabetic';
+  fit(g, euro(p.pr), W - 12, H - 28, W * 0.42, 800, 54);
 }
 
 // ---------- Geometrien mit UVs, die eine ganze Kachel nutzen ----------
@@ -270,12 +369,14 @@ function boxGeo() {
   for (const face of [2, 3]) for (let k = 0; k < 4; k++) uv.setXY(face * 4 + k, 0.04, 0.04);
   return g;
 }
+// Etikett nur auf der vorderen Hälfte (u = 0,5 zeigt zum Kunden), hinten Randfarbe – sonst sieht man nur ein Stück Text
+const frontU = (u) => Math.min(0.97, Math.max(0.03, (u - 0.27) / 0.46));
 function cylGeo(rTop = 0.5, rBot = 0.5, seg = 12) {
   const g = new THREE.CylinderGeometry(rTop, rBot, 1, seg, 1);
   const uv = g.attributes.uv;
   const nSide = (seg + 1) * 2;
   for (let i = 0; i < uv.count; i++) {
-    if (i < nSide) uv.setY(i, 1 - uv.getY(i));
+    if (i < nSide) uv.setXY(i, frontU(uv.getX(i)), 1 - uv.getY(i));
     else uv.setXY(i, 0.04, 0.04); // Deckel: Grundfarbe
   }
   return g;
@@ -290,7 +391,7 @@ function latheGeo(profile) {
     // Etikett im mittleren Bereich, oben/unten Glasfarbe
     const v = y < 0.08 || y > 0.62 ? 0.04 : 1 - (y - 0.08) / 0.54;
     uv.setY(i, v);
-    if (v === 0.04) uv.setX(i, 0.04);
+    uv.setX(i, v === 0.04 ? 0.04 : frontU(uv.getX(i)));
   }
   return g;
 }
@@ -307,6 +408,13 @@ const GEOS = {
   becher: () => cylGeo(0.5, 0.38),
   flasche: () => latheGeo([[0, 0], [0.48, 0], [0.5, 0.02], [0.5, 0.6], [0.32, 0.72], [0.16, 0.82], [0.15, 1], [0, 1]]),
   wein: () => latheGeo([[0, 0], [0.48, 0], [0.5, 0.02], [0.5, 0.62], [0.3, 0.74], [0.14, 0.8], [0.13, 1], [0, 1]]),
+  oel: () => latheGeo([[0, 0], [0.47, 0], [0.5, 0.02], [0.5, 0.66], [0.42, 0.74], [0.18, 0.84], [0.16, 1], [0, 1]]),
+  tag: () => {
+    const g = new THREE.PlaneGeometry(1, 1);
+    const uv = g.attributes.uv;
+    for (let i = 0; i < uv.count; i++) uv.setY(i, 1 - uv.getY(i));
+    return g;
+  },
 };
 
 export class Products {
@@ -319,6 +427,14 @@ export class Products {
     const tmp = document.createElement('canvas');
     tmp.width = tmp.height = TILE - 2 * PAD;
     const tg = tmp.getContext('2d');
+    // zweiter Atlas mit gleicher Kachelaufteilung: Preisschilder (2:1, gestaucht gezeichnet)
+    const pc = document.createElement('canvas');
+    pc.width = pc.height = GRID * TILE;
+    const pg = pc.getContext('2d');
+    const ptmp = document.createElement('canvas');
+    ptmp.width = 256;
+    ptmp.height = 128;
+    const ptg = ptmp.getContext('2d');
     let i = 0;
     for (const [code, list] of Object.entries(CATALOG)) {
       this.byCode[code] = [];
@@ -329,6 +445,9 @@ export class Products {
         const y = Math.floor(i / GRID) * TILE;
         g.drawImage(tmp, x, y, TILE, TILE); // Rand gestreckt (gegen Bluten der Mipmaps)
         g.drawImage(tmp, x + PAD, y + PAD);
+        drawPrice(ptg, 256, 128, p);
+        pg.drawImage(ptmp, x, y, TILE, TILE);
+        pg.drawImage(ptmp, x + PAD, y + PAD, TILE - 2 * PAD, TILE - 2 * PAD);
         const kind = { p, tile: [i % GRID, Math.floor(i / GRID)] };
         this.kinds.push(kind);
         this.byCode[code].push(kind);
@@ -339,7 +458,12 @@ export class Products {
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 8;
     tex.flipY = false;
+    const ptex = new THREE.CanvasTexture(pc);
+    ptex.colorSpace = THREE.SRGBColorSpace;
+    ptex.anisotropy = 8;
+    ptex.flipY = false;
     this.mats = {
+      preis: atlasMaterial(ptex, 0.55, 0),
       matt: atlasMaterial(tex, 0.75, 0),
       glanz: atlasMaterial(tex, 0.3, 0.05),
       metall: atlasMaterial(tex, 0.35, 0.55),
@@ -358,8 +482,9 @@ export class Products {
     const p = kind.p;
     const [w, h, d] = p.m.map((v) => v * scale);
     const o = new THREE.Object3D();
-    const yaw = Math.atan2(dir[0], -dir[1]) + (p.form === 'glas' || p.form === 'dose' || p.form === 'becher' || p.form === 'flasche' || p.form === 'wein' ? Math.PI : 0);
-    const isLathe = p.form === 'flasche' || p.form === 'wein';
+    const round = p.form === 'glas' || p.form === 'dose' || p.form === 'becher' || p.form === 'flasche' || p.form === 'wein' || p.form === 'oel';
+    const yaw = Math.atan2(dir[0], -dir[1]) + (round ? Math.PI : 0);
+    const isLathe = p.form === 'flasche' || p.form === 'wein' || p.form === 'oel';
     o.position.set(x, isLathe ? y : y + h / 2, -z);
     o.rotation.set(tilt, yaw, 0, 'YXZ');
     o.scale.set(w, h, d);
@@ -370,6 +495,17 @@ export class Products {
     return h;
   }
 
+  // Preisschild an der Regalkante (x/z = Mitte, y = Mitte)
+  addTag(kind, x, y, z, dir) {
+    const o = new THREE.Object3D();
+    o.position.set(x, y, -z);
+    o.rotation.set(0, Math.atan2(dir[0], -dir[1]), 0);
+    o.scale.set(0.064, 0.032, 1);
+    o.updateMatrix();
+    if (!this.items.has('tag')) this.items.set('tag', []);
+    this.items.get('tag').push({ m: o.matrix.clone(), tile: kind.tile });
+  }
+
   pick(code, i) {
     const list = this.byCode[code] || this.byCode.B1;
     return list[((i % list.length) + list.length) % list.length];
@@ -378,33 +514,51 @@ export class Products {
   // Ein Regalboden: Artikel aus Fachcode(s) nebeneinander (je 3 Facings), in Reihen nach hinten.
   // along = Achse der Regalfront ('x' oder 'z'), from/to = Bereich darauf, front = Lage der Regalkante,
   // dir = Blickrichtung zum Kunden ([0,±1] bei along 'x', [±1,0] bei along 'z'), y = Bodenhöhe
-  shelf(codes, { along, from, to, front, y, depth = 0.3, dir, maxH = 0.3, start = 0, gap = 0.01, rows = 2, facings = 3, scale = 1 }) {
+  shelf(codes, { along, from, to, front, y, depth = 0.3, dir, maxH = 0.3, start = 0, gap = 0.006, rows = 2, facings = null, scale = 1, tags = true, tagOut = 0.012, tagDy = -0.045 }) {
     const list = Array.isArray(codes) ? codes : [codes];
-    let pos = from + 0.03;
+    let pos = from + 0.02;
     let k = start;
+    const placed = new Set();
     for (let guard = 0; guard < 300; guard++) {
       const code = list[guard % list.length];
       let kind = null;
-      for (let t = 0; t < 6 && !kind; t++) {
+      for (let t = 0; t < 8 && !kind; t++) {
         const c = this.pick(code, k + t);
-        if (c.p.m[1] * scale <= maxH) kind = c;
+        if (c.p.m[1] * scale <= maxH && !placed.has(c)) kind = c;
+      }
+      // alle passenden Artikel schon im Fach → mit der Liste von vorn weitermachen (größere Facings)
+      if (!kind) {
+        placed.clear();
+        for (let t = 0; t < 8 && !kind; t++) {
+          const c = this.pick(code, k + t);
+          if (c.p.m[1] * scale <= maxH) kind = c;
+        }
       }
       k++;
       if (!kind) continue;
+      placed.add(kind);
       const w = kind.p.m[0] * scale;
       const d = kind.p.m[2] * scale;
-      if (pos + w > to - 0.02) break;
-      for (let f = 0; f < facings && pos + w <= to - 0.02; f++) {
+      if (pos + w > to - 0.015) break;
+      const n = facings ?? kind.p.f ?? 3;
+      const blockStart = pos;
+      for (let f = 0; f < n && pos + w <= to - 0.015; f++) {
         const c = pos + w / 2;
-        for (let r = 0; r < rows; r++) {
-          const inset = 0.015 + d / 2 + r * (d + 0.008);
+        // Tiefe ganz auffüllen (echte Regale sind nach hinten voll)
+        for (let r = 0; r < rows + 1; r++) {
+          const inset = 0.012 + d / 2 + r * (d + 0.004);
           if (inset + d / 2 > depth) break;
           if (along === 'x') this.add(kind, c, y, front - dir[1] * inset, dir, { scale });
           else this.add(kind, front - dir[0] * inset, y, c, dir, { scale });
         }
         pos += w + gap;
       }
-      pos += 0.025;
+      if (tags && pos - blockStart > 0.05) {
+        const c = blockStart + 0.034; // Etikett links unter dem Artikel, wie im Handel üblich
+        if (along === 'x') this.addTag(kind, c, y + tagDy, front + dir[1] * tagOut, dir);
+        else this.addTag(kind, front + dir[0] * tagOut, y + tagDy, c, dir);
+      }
+      pos += 0.012;
     }
   }
 
@@ -413,7 +567,7 @@ export class Products {
     group.name = 'Produkte';
     for (const [form, list] of this.items) {
       const geo = this.geo(form).clone();
-      const mat = form === 'flasche' || form === 'wein' || form === 'glas' ? this.mats.glanz : form === 'dose' ? this.mats.metall : this.mats.matt;
+      const mat = form === 'tag' ? this.mats.preis : form === 'flasche' || form === 'wein' || form === 'oel' || form === 'glas' ? this.mats.glanz : form === 'dose' ? this.mats.metall : this.mats.matt;
       const im = new THREE.InstancedMesh(geo, mat, list.length);
       im.name = `produkte-${form}`;
       const tiles = new Float32Array(list.length * 2);
@@ -449,20 +603,20 @@ function atlasMaterial(map, roughness, metalness) {
 
 // ---------- Obst & Gemüse (einfache Formen, eingefärbt) ----------
 export const FRESH = {
-  tomate: { col: '#d8352a', r: 0.04, form: 'kugel' },
-  zitrone: { col: '#f2d43a', r: 0.035, form: 'oval' },
-  limette: { col: '#7cbf3a', r: 0.028, form: 'kugel' },
+  tomate: { col: '#c23a2c', r: 0.04, form: 'kugel' },
+  zitrone: { col: '#e6c83a', r: 0.035, form: 'oval' },
+  limette: { col: '#7aa83e', r: 0.028, form: 'kugel' },
   avocado: { col: '#3b4f22', r: 0.04, form: 'oval' },
   paprikaRot: { col: '#c8261d', r: 0.045, form: 'kugel' },
-  paprikaGelb: { col: '#f2b51c', r: 0.045, form: 'kugel' },
+  paprikaGelb: { col: '#e0a82a', r: 0.045, form: 'kugel' },
   zwiebel: { col: '#c99a5b', r: 0.038, form: 'kugel' },
   knoblauch: { col: '#efe6d6', r: 0.028, form: 'kugel' },
-  karotte: { col: '#ee7a1f', r: 0.018, form: 'stange' },
-  lauch: { col: '#7fbf4a', r: 0.016, form: 'stange' },
-  pakchoi: { col: '#9ccf5a', r: 0.05, form: 'oval' },
-  salat: { col: '#86c24a', r: 0.07, form: 'kugel' },
+  karotte: { col: '#d9702a', r: 0.018, form: 'stange' },
+  lauch: { col: '#7aa84a', r: 0.016, form: 'stange' },
+  pakchoi: { col: '#8fbb5a', r: 0.05, form: 'oval' },
+  salat: { col: '#7fae4a', r: 0.07, form: 'kugel' },
   apfel: { col: '#b8322a', r: 0.038, form: 'kugel' },
-  apfelGruen: { col: '#93c042', r: 0.038, form: 'kugel' },
-  banane: { col: '#f2d03a', r: 0.02, form: 'stange' },
+  apfelGruen: { col: '#8fb04a', r: 0.038, form: 'kugel' },
+  banane: { col: '#e6c64a', r: 0.02, form: 'stange' },
   aubergine: { col: '#3c1f45', r: 0.04, form: 'oval' },
 };

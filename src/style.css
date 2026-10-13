@@ -668,3 +668,56 @@ body.referent #slide.sl-wide, body.referent #slide.sl-side { width: auto; left: 
 .ic-chips .tag { flex: none; margin: 0; }
 .tag-s { background: #6fa8dc; }
 .sl-zitat-gross { font-size: 28px; margin: 14px 0 6px; }
+
+/* ---------- Folienrahmen 16:9 (Präsentation ohne PowerPoint) ---------- */
+#slide.sl-frame {
+  left: 50%;
+  top: calc(50% - 26px + var(--safe-t) / 2);
+  transform: translate(-50%, -50%);
+  width: min(1320px, calc(100vw - 40px), calc((100vh - 120px) * 16 / 9));
+  aspect-ratio: 16 / 9;
+  max-height: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-left: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: linear-gradient(160deg, rgba(30, 31, 33, 0.95), rgba(18, 18, 20, 0.97));
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+#slide.sl-frame::before { content: ''; position: absolute; left: 0; top: 0; width: 120px; height: 5px; background: var(--akzent); border-radius: 14px 0 4px 0; }
+#slide.sl-frame.ic-in { animation: sl-in-c 0.45s ease-out; }
+#slide.sl-frame .sl-inner { flex: 1 1 auto; min-height: 0; overflow: hidden; padding: 4.2% 5% 0; }
+.sl-foot { flex: none; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin: 0 5%; padding: 10px 0 14px; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: clamp(10px, 0.85vw, 13px); line-height: 1.4; color: #8d8880; }
+.sl-foot-q { flex: 1; }
+.sl-foot-k { flex: none; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: #b9b4ab; }
+#slide.sl-frame .sl-kicker { display: inline-block; margin: 0 0 12px; padding: 4px 11px; border-radius: 999px; background: rgba(214, 69, 39, 0.15); color: #ff8f72; font-size: 12px; letter-spacing: 0.1em; }
+#slide.sl-frame .sl-title { font-weight: 750; letter-spacing: -0.015em; }
+#slide.sl-frame .sl-title-m { font-size: 40px; line-height: 1.1; margin-bottom: 6px; max-width: 30ch; }
+#slide.sl-frame h3 { color: #a39e96; }
+/* Titelfolie */
+.sl-hero { padding: 2% 0 3%; }
+.sl-hero .sl-title { font-size: 92px; line-height: 0.95; letter-spacing: -0.03em; }
+.sl-hero .sl-sub { font-size: 24px; color: #d9d4cc; margin: 14px 0 0; }
+.sl-cols-hero { grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: start; }
+.sl-cols-hero .sl-frage { margin: 0; font-size: 19px; }
+.sl-agenda { list-style: none; padding: 0; counter-reset: none; }
+.sl-cols-hero .sl-agenda li { display: flex; gap: 14px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); font-size: 18px; }
+.sl-cols-hero .sl-agenda b { color: #ff8f72; font-variant-numeric: tabular-nums; }
+.sl-einleitung .sl-legende { margin-top: 22px; }
+/* ruhigere Karten, mehr Luft */
+#slide.sl-frame .sl-karte { background: rgba(255, 255, 255, 0.045); border-color: rgba(255, 255, 255, 0.07); padding: 14px 16px 12px; }
+#slide.sl-frame .sl-karte h4 { font-size: 17px; }
+#slide.sl-frame .sl-karte p { font-size: 15px; }
+#slide.sl-frame .sl-table { font-size: 15px; }
+#slide.sl-frame .sl-table th, #slide.sl-frame .sl-table td { padding: 8px 10px; }
+#slide.sl-frame .sl-kpis b { font-size: 34px; }
+/* Stationskarte im gleichen Stil */
+body.presenting #infocard { background: linear-gradient(160deg, rgba(30, 31, 33, 0.95), rgba(18, 18, 20, 0.96)); border: 1px solid rgba(255, 255, 255, 0.09); border-top: 5px solid var(--akzent); backdrop-filter: none; -webkit-backdrop-filter: none; }
+body.presenting #infocard h2 { font-size: 22px; }
+body.referent #slide.sl-frame { aspect-ratio: auto; left: 8px; top: 8px; right: 8px; bottom: 8px; width: auto; height: auto; transform: none; animation: none; }
+#slide.sl-side { background: linear-gradient(160deg, rgba(30, 31, 33, 0.95), rgba(18, 18, 20, 0.96)); border: 1px solid rgba(255, 255, 255, 0.09); border-top: 5px solid var(--akzent); border-left: 1px solid rgba(255, 255, 255, 0.09); border-radius: 14px; backdrop-filter: none; -webkit-backdrop-filter: none; }

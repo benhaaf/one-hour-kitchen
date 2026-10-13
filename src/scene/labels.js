@@ -45,38 +45,68 @@ export function textSprite(lines, { height = 0.3, bg = 'rgba(28,28,31,0.82)', fg
   return s;
 }
 
-// Flaches Schild (Plane) mit Text, z. B. Genre- oder Markenschild
-export function signMesh(text, { w, h, bg = '#1c1c1f', fg = '#f4f1ec', font = '600', border = null }) {
-  const H = 128;
+// Flaches Schild (Plane) mit Text. Stile: Standard, accent (Farbleiste unten), serif, chalk (Kreidetafel), sub (zweite Zeile)
+export function signMesh(text, { w, h, bg = '#1c1c1f', fg = '#f4f1ec', font = '600', border = null, accent = null, serif = false, chalk = false, sub = null, align = 'center' }) {
+  const H = 160;
   const W = Math.round((H * w) / h);
   const c = document.createElement('canvas');
   c.width = W;
   c.height = H;
   const g = c.getContext('2d');
-  g.fillStyle = bg;
-  g.fillRect(0, 0, W, H);
+  const fam = serif ? 'Georgia, "Times New Roman", serif' : 'system-ui, -apple-system, sans-serif';
+  if (chalk) {
+    // Kreidetafel: dunkles Grün-Schwarz mit Wischspuren, Holzrahmen
+    g.fillStyle = '#26302b';
+    g.fillRect(0, 0, W, H);
+    g.fillStyle = 'rgba(255,255,255,0.035)';
+    for (let i = 0; i < 18; i++) g.fillRect(((i * 97) % W) - 40, (i * 37) % H, 160, 14);
+    g.strokeStyle = '#7a5a3a';
+    g.lineWidth = 12;
+    g.strokeRect(6, 6, W - 12, H - 12);
+    fg = '#f1ede2';
+  } else {
+    g.fillStyle = bg;
+    g.fillRect(0, 0, W, H);
+  }
   if (border) {
     g.strokeStyle = border;
     g.lineWidth = 8;
     g.strokeRect(4, 4, W - 8, H - 8);
   }
-  g.fillStyle = fg;
-  let size = 72;
-  g.font = `${font} ${size}px system-ui, -apple-system, sans-serif`;
-  while (g.measureText(text).width > W * 0.88 && size > 20) {
-    size -= 4;
-    g.font = `${font} ${size}px system-ui, -apple-system, sans-serif`;
+  if (accent) {
+    g.fillStyle = accent;
+    g.fillRect(0, H - 14, W, 14);
   }
-  g.textAlign = 'center';
+  g.fillStyle = fg;
+  const main = sub ? 0.4 : 0.5;
+  let size = sub ? 66 : 84;
+  const weight = chalk ? '400' : font;
+  const famMain = chalk ? '"Segoe Print", "Comic Sans MS", cursive' : fam;
+  g.font = `${weight} ${size}px ${famMain}`;
+  const maxW = W * (align === 'left' ? 0.86 : 0.88);
+  while (g.measureText(text).width > maxW && size > 20) {
+    size -= 4;
+    g.font = `${weight} ${size}px ${famMain}`;
+  }
+  g.textAlign = align;
   g.textBaseline = 'middle';
-  g.fillText(text, W / 2, H / 2 + 3);
+  const x = align === 'left' ? W * 0.06 : W / 2;
+  g.fillText(text, x, H * main + 3 - (accent ? 6 : 0));
+  if (sub) {
+    g.globalAlpha = 0.75;
+    let s2 = 40;
+    g.font = `400 ${s2}px ${fam}`;
+    while (g.measureText(sub).width > maxW && s2 > 16) g.font = `400 ${(s2 -= 2)}px ${fam}`;
+    g.fillText(sub, x, H * 0.74 - (accent ? 6 : 0));
+    g.globalAlpha = 1;
+  }
   const tex = new THREE.CanvasTexture(c);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = 4;
   // bedruckte Schilder: vom Raumlicht beleuchtet (nicht selbstleuchtend), leicht aufgehellt, damit sie lesbar bleiben
   return new THREE.Mesh(
     new THREE.PlaneGeometry(w, h),
-    new THREE.MeshStandardMaterial({ map: tex, roughness: 0.75, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.3 }),
+    new THREE.MeshStandardMaterial({ map: tex, roughness: chalk ? 0.95 : 0.7, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: chalk ? 0.2 : 0.3 }),
   );
 }
 

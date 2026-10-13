@@ -454,6 +454,35 @@ export class Products {
         i++;
       }
     }
+    // Regalstopper („Wobbler“): Bio, Regional, Aktion, Neu – Kacheln hinter den Artikeln im Preis-Atlas
+    this.wobbler = {};
+    const wt = document.createElement('canvas');
+    wt.width = 192;
+    wt.height = 128;
+    const wg = wt.getContext('2d');
+    for (const [key, bg, fg, t1, t2] of [
+      ['bio', '#3f6b3a', '#ffffff', 'BIO', 'kontrolliert'],
+      ['regional', '#2f5d6b', '#ffffff', 'REGIONAL', 'vom Neckar'],
+      ['aktion', '#b8322a', '#f6d85a', 'AKTION', 'diese Woche'],
+      ['neu', '#1f2120', '#d9b85a', 'NEU', 'im Sortiment'],
+    ]) {
+      wg.fillStyle = bg;
+      wg.fillRect(0, 0, 192, 128);
+      wg.strokeStyle = 'rgba(255,255,255,0.5)';
+      wg.lineWidth = 4;
+      wg.strokeRect(6, 6, 180, 116);
+      wg.fillStyle = fg;
+      wg.textAlign = 'center';
+      wg.textBaseline = 'middle';
+      fit(wg, t1, 96, 52, 170, 800, 50);
+      fit(wg, t2, 96, 96, 170, 500, 22);
+      const x = (i % GRID) * TILE;
+      const y = Math.floor(i / GRID) * TILE;
+      pg.drawImage(wt, x, y, TILE, TILE);
+      this.wobbler[key] = [i % GRID, Math.floor(i / GRID)];
+      i++;
+    }
+    this.wobbleCount = new Map();
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 8;
@@ -463,7 +492,7 @@ export class Products {
     ptex.anisotropy = 8;
     ptex.flipY = false;
     this.mats = {
-      preis: atlasMaterial(ptex, 0.55, 0),
+      preis: atlasMaterial(ptex, 0.55, 0, THREE.DoubleSide),
       matt: atlasMaterial(tex, 0.75, 0),
       glanz: atlasMaterial(tex, 0.3, 0.05),
       metall: atlasMaterial(tex, 0.35, 0.55),
@@ -504,6 +533,31 @@ export class Products {
     o.updateMatrix();
     if (!this.items.has('tag')) this.items.set('tag', []);
     this.items.get('tag').push({ m: o.matrix.clone(), tile: kind.tile });
+  }
+
+  // Regalstopper quer zur Regalfront: von beiden Gangrichtungen sichtbar
+  addWobbler(tile, x, y, z, dir) {
+    const o = new THREE.Object3D();
+    o.position.set(x, y, -z);
+    o.rotation.set(0, dir[1] !== 0 ? Math.PI / 2 : 0, 0);
+    o.scale.set(0.12, 0.08, 1);
+    o.updateMatrix();
+    if (!this.items.has('tag')) this.items.set('tag', []);
+    this.items.get('tag').push({ m: o.matrix.clone(), tile });
+  }
+
+  wobblerFor(p) {
+    const n = this.wobbleCount.get(p) || 0;
+    if (n >= 2) return null; // je Artikel höchstens zwei Stopper im ganzen Laden
+    const h = (p.n.length * 31 + p.b.length * 7 + Math.round(p.pr * 100)) % 7;
+    let key = null;
+    if (p.b === 'Grünwerk') key = 'bio';
+    else if (/Neckar/.test(p.b) && h < 4) key = 'regional';
+    else if (p.b === 'Basis+' && h < 3) key = 'aktion';
+    else if ((p.b === 'Nonna Lia' || p.b === 'Casa Verde' || p.b === 'Kaizen') && h === 1) key = 'neu';
+    if (!key) return null;
+    this.wobbleCount.set(p, n + 1);
+    return this.wobbler[key];
   }
 
   pick(code, i) {
@@ -557,6 +611,13 @@ export class Products {
         const c = blockStart + 0.034; // Etikett links unter dem Artikel, wie im Handel üblich
         if (along === 'x') this.addTag(kind, c, y + tagDy, front + dir[1] * tagOut, dir);
         else this.addTag(kind, front + dir[0] * tagOut, y + tagDy, c, dir);
+        const wob = tags && y > 0.7 && y < 1.6 && this.wobblerFor(kind.p); // Stopper in Sicht- und Greifhöhe
+        if (wob) {
+          const out = tagOut + 0.065;
+          const wx = blockStart + 0.004;
+          if (along === 'x') this.addWobbler(wob, wx, y + tagDy + 0.035, front + dir[1] * out, dir);
+          else this.addWobbler(wob, front + dir[0] * out, y + tagDy + 0.035, wx, dir);
+        }
       }
       pos += 0.012;
     }
@@ -585,8 +646,8 @@ export class Products {
   }
 }
 
-function atlasMaterial(map, roughness, metalness) {
-  const mat = new THREE.MeshStandardMaterial({ map, roughness, metalness });
+function atlasMaterial(map, roughness, metalness, side = THREE.FrontSide) {
+  const mat = new THREE.MeshStandardMaterial({ map, roughness, metalness, side });
   const scale = (TILE - 2 * PAD) / (TILE * GRID);
   mat.onBeforeCompile = (shader) => {
     shader.vertexShader = shader.vertexShader

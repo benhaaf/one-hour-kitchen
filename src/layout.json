@@ -291,7 +291,7 @@
       "typ": "Warenfläche (Längsplatzierung)",
       "farbe": "#3b6fb0",
       "licht": {
-        "kelvin": 4000,
+        "kelvin": 3600,
         "staerke": 1.15,
         "leuchte": "panel",
         "abstand": 1.9,
@@ -340,7 +340,7 @@
       "typ": "sonstige Fläche · Hinterbefüllung",
       "farbe": "#4a4a4f",
       "licht": {
-        "kelvin": 4000,
+        "kelvin": 3600,
         "staerke": 0.8,
         "leuchte": "panel",
         "abstand": 2.6,
@@ -364,7 +364,7 @@
       "typ": "sonstige Fläche · Anlieferung",
       "farbe": "#4a4a4f",
       "licht": {
-        "kelvin": 4000,
+        "kelvin": 3600,
         "staerke": 0.8,
         "leuchte": "panel",
         "abstand": 2.4,
@@ -1541,16 +1541,20 @@
     ]
   },
   "materialien": {
-    "_hinweis": "Farben der Oberflächen. Böden je Zone stehen bei den Zonen (holz/beton/fliese).",
-    "wand": "#e9e2d6",
+    "_hinweis": "Farben der Oberflächen. Böden je Zone stehen bei den Zonen (holz/beton/fliese). wandkopf = dunkles Band über den Regalen ab 'von' m.",
+    "wand": "#e6dfd3",
     "decke": "#2b2a2c",
     "akzent": "#b84a32",
-    "beton": "#b3ada4",
-    "holz": "#b98a5a",
+    "beton": "#a39c92",
+    "holz": "#9a7048",
     "fliese": "#e7e3dc",
     "filz": "#40594a",
     "akzentstreifen_hoehe": 2.62,
-    "filz_paneele": []
+    "filz_paneele": [],
+    "wandkopf": {
+      "von": 2.3,
+      "farbe": "#2b302d"
+    }
   },
   "wege": [
     {
@@ -3935,6 +3939,81 @@
           15.35,
           10.9
         ]
+      },
+      {
+        "typ": "schrift",
+        "text": "Frische",
+        "sub": "Molkerei · Käse · Kräuter",
+        "pos": [
+          3.8,
+          11.93
+        ],
+        "richtung": [
+          0,
+          -1
+        ],
+        "y": 2.75,
+        "hoehe": 0.55
+      },
+      {
+        "typ": "schrift",
+        "text": "Wein & Genuss",
+        "sub": "Dessert · Wein · Getränke",
+        "pos": [
+          13.2,
+          11.93
+        ],
+        "richtung": [
+          0,
+          -1
+        ],
+        "y": 2.75,
+        "hoehe": 0.55
+      },
+      {
+        "typ": "schrift",
+        "text": "Vorratskammer",
+        "sub": "Basissortiment",
+        "pos": [
+          15.73,
+          6.85
+        ],
+        "richtung": [
+          -1,
+          0
+        ],
+        "y": 2.75,
+        "hoehe": 0.55
+      },
+      {
+        "typ": "schrift",
+        "text": "Kochwelten",
+        "sub": "Pasta · Asian · Mexican",
+        "pos": [
+          0.03,
+          7.3
+        ],
+        "richtung": [
+          1,
+          0
+        ],
+        "y": 2.75,
+        "hoehe": 0.55
+      },
+      {
+        "typ": "schrift",
+        "text": "Guten Appetit!",
+        "sub": "Shop. Cook. Enjoy.",
+        "pos": [
+          12.6,
+          0.03
+        ],
+        "richtung": [
+          0,
+          1
+        ],
+        "y": 2.75,
+        "hoehe": 0.5
       }
     ]
   },

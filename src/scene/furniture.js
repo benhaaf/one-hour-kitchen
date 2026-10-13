@@ -37,6 +37,12 @@ const MATERIALS = {
   topf: std(0x55595e, 0.3, 0.8),
   brett: std(0xc79a62, 0.8),
   erde: std(0x3b2a1e, 1),
+  // Premium-Ladenbau: Eiche, Räuchereiche, mattschwarzer Stahl; Basis in hellem Metall
+  eiche: std(0xa77d52, 0.6),
+  eicheDunkel: std(0x4e3a2a, 0.6),
+  schwarzMatt: std(0x1d1e20, 0.55, 0.2),
+  regalWeiss: std(0xecebe7, 0.5, 0.1),
+  regalGrau: std(0xcfcec9, 0.45, 0.3),
 };
 
 const G = {
@@ -261,6 +267,13 @@ const TEX = {
       g.fillRect(0, 0, W, 3);
       g.fillRect(0, H - 3, W, 3);
     }),
+  preisleisteDunkel: () =>
+    canvasTex(512, 32, (g, W, H) => {
+      g.fillStyle = '#232427';
+      g.fillRect(0, 0, W, H);
+      g.fillStyle = '#3a3b3f';
+      g.fillRect(0, 0, W, 2);
+    }),
   kochtresen: () =>
     canvasTex(1024, 300, (g, W, H) => {
       g.fillStyle = '#efe9df';
@@ -433,7 +446,7 @@ const BUILDERS = {
     b.geo('metall', G.box(0.02, 0.5, 0.02), sx, 1.25, sz, yaw);
     for (const d of [n, [-n[0], -n[1]]]) {
       const [px, pz] = at(0, (d === n ? 1 : -1) * 0.012);
-      sign(ctx.extra, 'OBST & GEMÜSE · O1', { w: 1.1, h: 0.22, bg: '#4a7340', fg: '#fff' }, px, 1.45, pz, d);
+      sign(ctx.extra, 'Obst & Gemüse', { w: 1.1, h: 0.28, chalk: true, sub: 'O1 · heute frisch' }, px, 1.45, pz, d);
     }
     // Kollision: Kette kleiner Quadrate entlang der Achse
     const r = D / 2;
@@ -451,24 +464,35 @@ const BUILDERS = {
     if (!b.materials[`welt-${m.id}`]) b.materials[`welt-${m.id}`] = std(new THREE.Color(col), 0.55);
     const wm = `welt-${m.id}`;
     // Korpus: Sockel, Mittelwand, Seitenteile
-    b.box('anthrazit', [x1 + 0.02, x2 - 0.02, z1 + 0.04, z2 - 0.04], 0, 0.1);
-    b.box('korpus', [x1 + 0.03, x2 - 0.03, zc - 0.02, zc + 0.02], 0.1, H - 0.01);
-    for (const x of [x1, x2 - 0.03]) b.box('korpus', [x, x + 0.03, z1, z2], 0, H);
-    b.box('holz', [x1, x2, z1 + 0.02, z2 - 0.02], H - 0.03, H);
+    // Feinkost-Ladenbau: Rückwand Räuchereiche, Rahmen mattschwarz, Böden Eiche mit LED-Lichtleiste
+    b.box('schwarzMatt', [x1 + 0.02, x2 - 0.02, z1 + 0.04, z2 - 0.04], 0, 0.1);
+    b.box('eicheDunkel', [x1 + 0.03, x2 - 0.03, zc - 0.02, zc + 0.02], 0.1, H - 0.01);
+    for (const x of [x1, x2 - 0.03]) b.box('schwarzMatt', [x, x + 0.03, z1, z2], 0, H);
+    b.box('eicheDunkel', [x1, x2, z1 + 0.02, z2 - 0.02], H - 0.03, H);
     const levels = [0.1, 0.45, 0.82, 1.22];
     for (const seite of ['vorne', 'hinten']) {
       const f = faceFrame(m.rechteck, seite);
       for (const y of levels.slice(1)) {
-        b.box('holzHell', faceRect(f, x1 + 0.03, x2 - 0.03, 0, -0.25), y - 0.025, y);
-        ctx.priceRail(f, x1 + 0.03, x2 - 0.03, y - 0.065, y - 0.025);
+        b.box('eiche', faceRect(f, x1 + 0.03, x2 - 0.03, 0, -0.25), y - 0.025, y);
+        b.box('led', faceRect(f, x1 + 0.04, x2 - 0.04, -0.012, -0.022), y - 0.03, y - 0.025);
+        ctx.priceRail(f, x1 + 0.03, x2 - 0.03, y - 0.065, y - 0.025, 'preisDunkel');
       }
-      ctx.priceRail(f, x1 + 0.03, x2 - 0.03, 0.06, 0.1);
+      b.box('led', faceRect(f, x1 + 0.04, x2 - 0.04, -0.012, -0.022), H - 0.035, H - 0.03);
+      ctx.priceRail(f, x1 + 0.03, x2 - 0.03, 0.06, 0.1, 'preisDunkel');
       if (m.regal?.[seite]) this.blockFace(b, m, ctx, f, levels, m.regal[seite]);
+    }
+    // Stirnseite zum Rundlauf (−x): Räuchereiche mit Kreidetafel der Rezepte dieser Kochwelt
+    b.box('eicheDunkel', [x1 - 0.012, x1, z1 + 0.02, z2 - 0.02], 0.1, H - 0.03);
+    {
+      const rz = ctx.layout.rezepte.filter((r) => r.welt === m.welt);
+      sign(ctx.extra, m.welt, { w: 0.46, h: 0.3, chalk: true, sub: rz.map((r) => r.nr).join(' · ') }, x1 - 0.016, 1.35, zc, [-1, 0]);
+      rz.forEach((r, k) => sign(ctx.extra, r.titel, { w: 0.46, h: 0.09, chalk: true }, x1 - 0.016, 1.08 - k * 0.11, zc, [-1, 0]));
     }
     // Regalkopf zum Gang (+x): Kochwelt-Stele mit Rezeptkarten „» schnell“
     const ex = x2 + 0.005;
-    b.box(wm, [x2 - 0.03, ex + 0.02, z1, z2], 0, 0.1);
-    for (const y of [0.45, 0.85, 1.25]) b.box('holzHell', [x2, x2 + 0.16, z1 + 0.04, z2 - 0.04], y - 0.025, y);
+    b.box('schwarzMatt', [x2 - 0.03, ex + 0.02, z1, z2], 0, 0.1);
+    b.box(wm, [ex + 0.02, ex + 0.025, z1 + 0.02, z2 - 0.02], 0.02, 0.08); // Farbkante der Kochwelt am Sockel
+    for (const y of [0.45, 0.85, 1.25]) b.box('eiche', [x2, x2 + 0.16, z1 + 0.04, z2 - 0.04], y - 0.025, y);
     const P = ctx.products;
     const kopf = m.regal?.kopf || { gruppen: [] };
     // Regalkopf: Rezeptkarten aller drei Rezepte dieser Kochwelt (oben), darunter Waren aus dem Kopf-Sortiment
@@ -481,18 +505,20 @@ const BUILDERS = {
       b.geo('glas', G.box(0.03, 0.13, 0.11), x2 + 0.08, 1.31, zc + dz, Math.PI / 2, -0.2);
       plane(ctx.extra, ctx.cardMats[r.nr], 0.095, 0.13, x2 + 0.09, 1.33, zc + dz, [1, 0], -0.2);
     });
-    if (kopf.titel) sign(ctx.extra, kopf.titel, { w: 0.52, h: 0.12, bg: '#2b2c30', fg: '#f4f1ec', font: '700' }, x2 + 0.165, 1.08, zc, [1, 0]);
+    if (kopf.titel) sign(ctx.extra, kopf.titel, { w: 0.52, h: 0.12, chalk: true }, x2 + 0.165, 1.08, zc, [1, 0]);
     // Stele mit Kochwelt-Namen (Reckzone)
-    b.box(wm, [x2 - 0.02, x2 + 0.03, zc - 0.03, zc + 0.03], H, H + 0.45);
-    sign(ctx.extra, m.welt.toUpperCase(), { w: 0.5, h: 0.3, bg: col, fg: '#fff', font: '800' }, x2 + 0.035, H + 0.22, zc, [1, 0]);
+    b.box('schwarzMatt', [x2 - 0.02, x2 + 0.03, zc - 0.03, zc + 0.03], H, H + 0.45);
+    sign(ctx.extra, m.welt, { w: 0.5, h: 0.3, bg: '#1f2120', fg: '#f3efe6', font: '600', serif: true, accent: col, sub: 'Kochwelt' }, x2 + 0.035, H + 0.22, zc, [1, 0]);
     // Kopfschild über die ganze Gondel (beidseitig)
-    b.box('anthrazit', [(x1 + x2) / 2 - 0.01, (x1 + x2) / 2 + 0.01, zc - 0.01, zc + 0.01], H, H + 0.18);
+    b.box('schwarzMatt', [(x1 + x2) / 2 - 0.01, (x1 + x2) / 2 + 0.01, zc - 0.01, zc + 0.01], H, H + 0.18);
     // Kopfschild je Seite: jede Seite gehört zu „ihrer“ Koje
     for (const [seite, d] of [['vorne', [0, -1]], ['hinten', [0, 1]]]) {
       const face = m.regal?.[seite];
       if (!face) continue;
       const wc = face.titel.startsWith('PASTA') ? '#a8432c' : face.titel.startsWith('ASIAN') ? '#b08a34' : '#3f6e4a';
-      sign(ctx.extra, face.titel, { w: 2.8, h: 0.26, bg: wc, fg: '#fff', font: '800' }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
+      const [t1, ...rest] = face.titel.split(' · ');
+      const nice = t1.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
+      sign(ctx.extra, nice, { w: 2.8, h: 0.3, bg: '#1f2120', fg: '#f3efe6', font: '600', serif: true, accent: wc, sub: rest.join(' · ') }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
     }
   },
 
@@ -525,7 +551,7 @@ const BUILDERS = {
         ctx.products.shelf(fach.code, { along: 'x', from: a1, to: a2, front, y: y + 0.002, depth: d - 0.02, dir: [0, -1], maxH: 0.27, rows: 3, start: Math.round(y * 10), tagOut: 0.022, tagDy: -0.032 });
         ctx.priceRailAt([a1, a2, front - 0.015, front], y - 0.05, y - 0.01, [0, -1]);
       }
-      sign(ctx.extra, `${fach.code} · ${fach.name}`, { w: L - 0.12, h: 0.16, bg: '#f4f1ec', fg: '#1c1c1f', font: '700' }, (a1 + a2) / 2, H - 0.11, z1 + 0.195, [0, -1]);
+      sign(ctx.extra, fach.name, { w: L - 0.12, h: 0.16, bg: '#f6f4ef', fg: '#1f2120', font: '600', accent: '#46708f', sub: fach.code }, (a1 + a2) / 2, H - 0.11, z1 + 0.195, [0, -1]);
     });
     void f;
     void D;
@@ -546,7 +572,7 @@ const BUILDERS = {
       const a1 = x1 + i * L + 0.05;
       const a2 = x1 + (i + 1) * L - 0.05;
       for (const y of levels) ctx.products.shelf(fach.code, { along: 'x', from: a1, to: a2, front: z1 + 0.14, y, depth: z2 - z1 - 0.22, dir: [0, -1], maxH: 0.3, rows: 3, start: Math.round(y * 10), tagOut: 0.024, tagDy: -0.014 });
-      sign(ctx.extra, `${fach.code} · ${fach.name}`, { w: L - 0.12, h: 0.16, bg: '#f4f1ec', fg: '#1c1c1f', font: '700' }, (a1 + a2) / 2, H - 0.12, z1 + 0.035, [0, -1]);
+      sign(ctx.extra, fach.name, { w: L - 0.12, h: 0.16, bg: '#f6f4ef', fg: '#1f2120', font: '600', accent: '#6d4a63', sub: fach.code }, (a1 + a2) / 2, H - 0.12, z1 + 0.035, [0, -1]);
     });
     // Glastüren mit Griffen und LED-Kanten
     const doors = n * 2;
@@ -565,7 +591,7 @@ const BUILDERS = {
   weinregal(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
     const H = m.hoehe;
-    b.box('holzDunkel', [x1, x2, z2 - 0.04, z2], 0, H);
+    b.box('eicheDunkel', [x1, x2, z2 - 0.04, z2], 0, H);
     const n = m.faecher.length;
     const L = (x2 - x1) / n;
     for (let i = 0; i <= n; i++) {
@@ -575,14 +601,14 @@ const BUILDERS = {
     const levels = [0.08, 0.45, 0.82, 1.19, 1.56];
     for (const y of levels) {
       b.box('holz', [x1, x2, z1, z2 - 0.04], y - 0.03, y);
-      ctx.priceRailAt([x1, x2, z1 - 0.012, z1], y - 0.07, y - 0.03, [0, -1]);
+      ctx.priceRailAt([x1, x2, z1 - 0.012, z1], y - 0.07, y - 0.03, [0, -1], 'preisDunkel');
     }
     b.box('holzDunkel', [x1, x2, z1, z2], H - 0.05, H);
     m.faecher.forEach((fach, i) => {
       const a1 = x1 + i * L + 0.04;
       const a2 = x1 + (i + 1) * L - 0.04;
       for (const y of levels) ctx.products.shelf(fach.code, { along: 'x', from: a1, to: a2, front: z1 + 0.02, y, depth: z2 - z1 - 0.08, dir: [0, -1], maxH: 0.34, rows: 2, gap: 0.006, start: Math.round(y * 10), tagOut: 0.039, tagDy: -0.05 });
-      sign(ctx.extra, `${fach.code} · ${fach.name}`, { w: L - 0.14, h: 0.17, bg: '#3a1520', fg: '#f4f1ec', font: '700' }, (a1 + a2) / 2, H + 0.14, z1 + 0.25, [0, -1]);
+      sign(ctx.extra, fach.name, { w: L - 0.14, h: 0.22, chalk: true, sub: `${fach.code} · passt zum Rezept` }, (a1 + a2) / 2, H + 0.15, z1 + 0.25, [0, -1]);
       b.box('holzDunkel', [(a1 + a2) / 2 - 0.01, (a1 + a2) / 2 + 0.01, z1 + 0.25, z1 + 0.27], H, H + 0.06);
     });
   },
@@ -593,17 +619,18 @@ const BUILDERS = {
     const xc = (x1 + x2) / 2;
     const seiten = Object.keys(m.seiten);
     const doppelt = seiten.length > 1;
-    b.box('anthrazit', [x1 + 0.03, x2 - 0.03, z1 + 0.02, z2 - 0.02], 0, 0.1);
+    // Trockensortiment wie im Vollsortimenter: helles Metallregal, klare helle Schilder
+    b.box('regalGrau', [x1 + 0.03, x2 - 0.03, z1 + 0.02, z2 - 0.02], 0, 0.1);
     // Rückwand: beim Wandregal an der Wand, bei der Gondel in der Mitte
     const back = doppelt ? [xc - 0.02, xc + 0.02] : m.seiten.links ? [x2 - 0.04, x2] : [x1, x1 + 0.04];
-    b.box('korpus', [back[0], back[1], z1, z2], 0.1, H);
-    for (const z of [z1, z2 - 0.03]) b.box('korpus', [x1, x2, z, z + 0.03], 0, H);
+    b.box('regalWeiss', [back[0], back[1], z1, z2], 0.1, H);
+    for (const z of [z1, z2 - 0.03]) b.box('regalWeiss', [x1, x2, z, z + 0.03], 0, H);
     const levels = H > 1.8 ? [0.1, 0.45, 0.82, 1.2, 1.56] : [0.1, 0.45, 0.82, 1.2];
     for (const seite of seiten) {
       const f = faceFrame(m.rechteck, seite);
       const depth = doppelt ? (x2 - x1) / 2 - 0.04 : x2 - x1 - 0.06;
       for (const y of levels.slice(1)) {
-        b.box('holzHell', faceRect(f, z1 + 0.03, z2 - 0.03, 0, -depth), y - 0.025, y);
+        b.box('regalGrau', faceRect(f, z1 + 0.03, z2 - 0.03, 0, -depth), y - 0.025, y);
         ctx.priceRail(f, z1 + 0.03, z2 - 0.03, y - 0.065, y - 0.025);
       }
       const secs = m.seiten[seite];
@@ -613,15 +640,16 @@ const BUILDERS = {
         const a2 = z1 + (i + 1) * L - 0.04;
         for (const y of levels) ctx.products.shelf(s.code, { along: 'z', from: a1, to: a2, front: f.front, y, depth, dir: f.dir, maxH: 0.32, rows: 2, start: Math.round(y * 10) + i, tagOut: 0.008 });
         const [sx, sz] = f.at((a1 + a2) / 2, 0.02);
-        if (H > 1.8) sign(ctx.extra, `${s.code} · ${s.name}`, { w: L - 0.2, h: 0.2, bg: '#3f5873', fg: '#fff', font: '700' }, sx, H - 0.14, sz, f.dir);
+        const bs = { bg: '#f6f4ef', fg: '#1f2120', font: '600', accent: '#3f5873', sub: s.code };
+        if (H > 1.8) sign(ctx.extra, s.name, { ...bs, w: Math.min(1.5, L - 0.2), h: 0.2 }, sx, H - 0.14, sz, f.dir);
         else {
           const [px, pz] = f.at((a1 + a2) / 2, -0.01);
           b.box('anthrazit', [px - 0.01, px + 0.01, pz - 0.01, pz + 0.01], H, H + 0.25);
-          sign(ctx.extra, `${s.code} · ${s.name}`, { w: Math.min(1.5, L - 0.2), h: 0.2, bg: '#3f5873', fg: '#fff', font: '700' }, sx, H + 0.33, sz, f.dir);
+          sign(ctx.extra, s.name, { ...bs, w: Math.min(1.5, L - 0.2), h: 0.2 }, sx, H + 0.33, sz, f.dir);
         }
       });
     }
-    b.box('holz', [x1, x2, z1, z2], H - 0.03, H);
+    b.box('regalWeiss', [x1, x2, z1, z2], H - 0.03, H);
   },
 
   kochtresen(b, m, ctx) {
@@ -745,17 +773,17 @@ const BUILDERS = {
   impulsregal(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
     const H = m.hoehe;
-    b.box('korpus', [x1, x1 + 0.04, z1, z2], 0, H);
-    for (const z of [z1, z2 - 0.03]) b.box('korpus', [x1, x2, z, z + 0.03], 0, H);
+    b.box('schwarzMatt', [x1, x1 + 0.04, z1, z2], 0, H);
+    for (const z of [z1, z2 - 0.03]) b.box('schwarzMatt', [x1, x2, z, z + 0.03], 0, H);
     const levels = [0.08, 0.42, 0.76, 1.08];
     for (const y of levels) {
-      b.box('holzHell', [x1 + 0.04, x2, z1 + 0.03, z2 - 0.03], y - 0.025, y);
-      ctx.priceRailAt([x2, x2 + 0.012, z1 + 0.03, z2 - 0.03], y - 0.06, y - 0.025, [1, 0]);
+      b.box('eiche', [x1 + 0.04, x2, z1 + 0.03, z2 - 0.03], y - 0.025, y);
+      ctx.priceRailAt([x2, x2 + 0.012, z1 + 0.03, z2 - 0.03], y - 0.06, y - 0.025, [1, 0], 'preisDunkel');
       ctx.products.shelf('IMPULS', { along: 'z', from: z1 + 0.03, to: z2 - 0.03, front: x2, y, depth: x2 - x1 - 0.06, dir: [1, 0], maxH: 0.3, rows: 2, start: Math.round(y * 10), tagOut: 0.019, tagDy: -0.043 });
     }
     b.box('akzent', [x1, x2, z1, z2], H - 0.02, H);
     b.box('anthrazit', [x1 + 0.01, x1 + 0.03, (z1 + z2) / 2 - 0.01, (z1 + z2) / 2 + 0.01], H, H + 0.25);
-    sign(ctx.extra, 'ERGÄNZEN? · Kräuter · Schoko', { w: 1.3, h: 0.22, bg: '#b84a32', fg: '#fff', font: '800' }, x1 + 0.035, H + 0.33, (z1 + z2) / 2, [1, 0]);
+    sign(ctx.extra, 'Noch etwas dazu?', { w: 1.3, h: 0.28, bg: '#1f2120', fg: '#f3efe6', font: '600', serif: true, accent: '#b84a32', sub: 'Kräuter · Schokolade · Riegel' }, x1 + 0.035, H + 0.33, (z1 + z2) / 2, [1, 0]);
   },
 
   glasbruestung(b, m) {
@@ -838,7 +866,7 @@ BUILDERS['kochwelt-gondel'].blockFace = function (b, m, ctx, f, levels, face) {
     // Blockschild (Reckzone): Fachcode, Warengruppe und die Rezepte, die daraus kochen
     const rez = ctx.layout.rezepte.filter((r) => r.zutaten.some(([nm, c]) => c === bl.code && (bl.artikel || []).includes(nm))).map((r) => r.nr);
     const [sx, sz] = f.at((a1 + a2) / 2, 0.01);
-    sign(ctx.extra, `${bl.code} · ${bl.name}${rez.length ? `   für ${rez.join(' ')}` : ''}`, { w: Math.min(2.1, L - 0.12), h: 0.2, bg: '#f4f1ec', fg: '#1c1c1f', font: '800', border: '#2b2c30' }, sx, m.hoehe - 0.13, sz, f.dir);
+    sign(ctx.extra, bl.name, { w: Math.min(1.6, L - 0.2), h: 0.2, bg: '#2a2c2b', fg: '#efe9de', font: '600', accent: m.farbe, sub: `${bl.code}${rez.length ? ` · für Rezept ${rez.join(' ')}` : ''}` }, sx, m.hoehe - 0.13, sz, f.dir);
   });
 };
 
@@ -903,6 +931,9 @@ export function buildFurniture(layout) {
   const railMat = lit(TEX.preisleiste(), { roughness: 0.8 });
   railMat.map.wrapS = THREE.RepeatWrapping;
   b.materials.preis = railMat;
+  const railDark = lit(TEX.preisleisteDunkel(), { roughness: 0.6 });
+  railDark.map.wrapS = THREE.RepeatWrapping;
+  b.materials.preisDunkel = railDark;
   const extra = b.extra;
   const ctx = {
     rand,
@@ -916,22 +947,22 @@ export function buildFurniture(layout) {
     fresh: new Fresh(),
     cardMats: {},
     // Preisschiene an einer Regalfront (Abschnitt a1–a2, Höhe y0–y1) – alle in einem Draw Call
-    priceRail(f, a1, a2, y0, y1) {
+    priceRail(f, a1, a2, y0, y1, mat = 'preis') {
       const [x, z] = f.at((a1 + a2) / 2, 0.004);
-      this.railGeo(a2 - a1, y1 - y0, x, (y0 + y1) / 2, z, f.dir);
+      this.railGeo(a2 - a1, y1 - y0, x, (y0 + y1) / 2, z, f.dir, mat);
     },
-    priceRailAt([x1, x2, z1, z2], y0, y1, dir) {
+    priceRailAt([x1, x2, z1, z2], y0, y1, dir, mat = 'preis') {
       const alongX = Math.abs(dir[1]) > 0;
       const len = alongX ? x2 - x1 : z2 - z1;
       const x = dir[0] > 0 ? x2 + 0.003 : dir[0] < 0 ? x1 - 0.003 : (x1 + x2) / 2;
       const z = dir[1] > 0 ? z2 + 0.003 : dir[1] < 0 ? z1 - 0.003 : (z1 + z2) / 2;
-      this.railGeo(len, y1 - y0, x, (y0 + y1) / 2, z, dir);
+      this.railGeo(len, y1 - y0, x, (y0 + y1) / 2, z, dir, mat);
     },
-    railGeo(len, h, x, y, z, dir) {
+    railGeo(len, h, x, y, z, dir, mat = 'preis') {
       const g = new THREE.PlaneGeometry(len, h);
       const uv = g.attributes.uv;
       for (let i = 0; i < uv.count; i++) uv.setX(i, uv.getX(i) * (len / 1.2));
-      b.geo('preis', g, x, y, z, yawFacing(dir[0], dir[1]));
+      b.geo(mat, g, x, y, z, yawFacing(dir[0], dir[1]));
     },
   };
   for (const m of layout.moebel) {
@@ -957,7 +988,7 @@ export function buildFurniture(layout) {
       const oz = dir[0] !== 0 ? s * (w / 2 - 0.1) : 0;
       b.box('metall', [x + ox - 0.005, x + ox + 0.005, z + oz - 0.005, z + oz + 0.005], 2.5 + h / 2, 3.2);
     }
-    const opts = { w, h, bg: d.farbe, fg: '#fff', font: '800' };
+    const opts = { w, h: h * 1.1, bg: '#1f2120', fg: '#f3efe6', font: '600', accent: d.farbe };
     const yaw = yawFacing(dir[0], dir[1]);
     for (const s of [1, -1]) {
       const m = signMesh(d.text, opts);

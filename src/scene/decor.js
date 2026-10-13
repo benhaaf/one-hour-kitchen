@@ -96,6 +96,24 @@ const TEX = {
       const lh = Math.min(90, (h - 140) / t.zeilen.length);
       t.zeilen.forEach((z, i) => fitText(g, z, 34, 110 + lh / 2 + i * lh, w - 68, 400, Math.min(38, lh * 0.55), CHALK));
     }),
+  // Wandbeschriftung (aufgemalte Lettern auf dem dunklen Wandkopf), optional mit Unterzeile
+  schrift: (text, color, sub) =>
+    canvasTex(1024, 256, (g, w, h) => {
+      g.clearRect(0, 0, w, h);
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.fillStyle = color;
+      let size = sub ? 120 : 150;
+      g.font = `400 ${size}px Georgia, "Times New Roman", serif`;
+      while (g.measureText(text).width > w * 0.92) g.font = `400 ${(size -= 6)}px Georgia, "Times New Roman", serif`;
+      g.fillText(text, w / 2, sub ? h * 0.38 : h / 2);
+      if (sub) {
+        g.globalAlpha = 0.8;
+        g.font = `500 40px ${SANS}`;
+        g.fillText(sub.toUpperCase().split('').join(String.fromCharCode(8202)), w / 2, h * 0.8);
+        g.globalAlpha = 1;
+      }
+    }),
   // Neon-Schriftzug (Leuchtschrift mit Schein)
   neon: (text, color, weight = '700') =>
     canvasTex(1024, 256, (g, w, h) => {
@@ -632,6 +650,11 @@ export class Decor {
         const [x, z] = e.pos;
         const tex = TEX.neon(e.text, e.farbe, e.schrift || '700');
         plane(extra, glow(tex), e.hoehe * 4, e.hoehe, x + dir[0] * 0.02, e.y, z + dir[1] * 0.02, dir).renderOrder = 4;
+      } else if (e.typ === 'schrift') {
+        const [x, z] = e.pos;
+        const tex = TEX.schrift(e.text, e.farbe || '#efe7d6', e.sub);
+        const mat = new THREE.MeshStandardMaterial({ map: tex, transparent: true, alphaTest: 0.05, roughness: 0.9, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.25 });
+        plane(extra, mat, e.hoehe * 4, e.hoehe, x + dir[0] * 0.02, e.y, z + dir[1] * 0.02, dir);
       } else if (e.typ === 'pflanze') {
         const [x, z] = e.pos;
         this.plant(b, x, 0, z, 1);

@@ -253,12 +253,15 @@ export class Panels {
     let body = '';
     if (sl.typ === 'einleitung') {
       body = `
-        <p class="sl-kicker">${esc(sl.zeile)}</p>
-        <h1 class="sl-title">${esc(sl.titel)}</h1>
-        <p class="sl-sub">${esc(sl.untertitel)}</p>
-        <p class="sl-frage"><span>Leitfrage</span>${esc(sl.fragestellung)}</p>
-        <h3>Ablauf</h3>
-        <ol class="sl-agenda">${sl.agenda.map((a) => `<li>${esc(a)}</li>`).join('')}</ol>
+        <div class="sl-hero">
+          <p class="sl-kicker">${esc(sl.zeile)}</p>
+          <h1 class="sl-title">${esc(sl.titel)}</h1>
+          <p class="sl-sub">${esc(sl.untertitel)}</p>
+        </div>
+        <div class="sl-cols sl-cols-hero">
+          <p class="sl-frage"><span>Leitfrage</span>${esc(sl.fragestellung)}</p>
+          <ol class="sl-agenda">${sl.agenda.map((a, i) => `<li><b>${String(i + 1).padStart(2, '0')}</b>${esc(a)}</li>`).join('')}</ol>
+        </div>
         ${sl.legende ? `<p class="sl-legende">${sl.legende.map((x) => marks(x).replace(/^Q =/, tag('Q') + ' =').replace(/^A =/, tag('A') + ' =')).join(' · ')}</p>` : ''}
         <p class="sl-team">${esc(sl.team)}</p>`;
     } else if (sl.typ === 'folie') {
@@ -282,11 +285,12 @@ export class Panels {
         <p class="sl-frage"><span>Schema aus Modul 7</span>Quellenwissen · Fallannahme · Entscheidung · Aussagegrenze</p></div>` : ''}</div>
         ${sl.hinweise ? `<ul class="sl-hinweise">${sl.hinweise.map((a) => `<li>${marks(a)}</li>`).join('')}</ul>` : ''}`;
     }
-    if (sl.fuss) body += `<p class="sl-fuss">${marks(sl.fuss)}</p>`;
     const side = sl.panel === 'seite';
-    const wide = !side && (sl.typ === 'quellen' || (sl.typ === 'folie' && (sl.tabelle || sl.flaechen || sl.rechnung || sl.felder || sl.karten || sl.matrix || sl.kette || sl.rezeptkarte)));
-    this.slide.className = `sl-${sl.typ}${wide ? ' sl-wide' : ''}${side ? ' sl-side' : ''}`;
-    this.slide.innerHTML = `<div class="sl-inner">${body}</div>`;
+    if (side && sl.fuss) body += `<p class="sl-fuss">${marks(sl.fuss)}</p>`;
+    // Folienrahmen 16:9 mit Fußzeile (Quelle links, Kapitel rechts) – wie eine echte Folie
+    const foot = side ? '' : `<footer class="sl-foot"><span class="sl-foot-q">${sl.fuss ? marks(sl.fuss) : 'One Hour Kitchen · Store-Konzept · Kurs HD25A23'}</span><span class="sl-foot-k">${esc(sl.kapitel || '')}</span></footer>`;
+    this.slide.className = `sl-${sl.typ}${side ? ' sl-side' : ' sl-frame'}`;
+    this.slide.innerHTML = `<div class="sl-inner">${body}</div>${foot}`;
     this.slide.hidden = false;
     this.slide.scrollTop = 0;
     this.slide.classList.remove('ic-in');
@@ -300,10 +304,18 @@ export class Panels {
     const inner = el.querySelector('.sl-inner');
     if (!inner) return;
     const big = document.body.classList.contains('presenting');
-    let z = big ? Math.min(1.6, Math.max(1, Math.min(window.innerHeight / 860, window.innerWidth / 1500))) : 1;
+    // Folienrahmen: Inhalt skaliert mit der Rahmenbreite (Entwurfsbreite 1100 px), dann so weit verkleinern, bis alles passt
+    const frame = el.classList.contains('sl-frame');
+    let z = frame ? Math.min(1.8, Math.max(0.6, el.clientWidth / 1100)) : big ? Math.min(1.6, Math.max(1, Math.min(window.innerHeight / 860, window.innerWidth / 1500))) : 1;
     inner.style.zoom = z;
-    for (let i = 0; i < 14 && el.scrollHeight > el.clientHeight + 2 && z > 0.5; i++) {
-      z *= Math.max(0.8, Math.min(0.97, Math.sqrt(el.clientHeight / el.scrollHeight)));
+    // Überlauf über Bildschirm-Rechtecke messen (unabhängig davon, wie der Browser zoom verrechnet)
+    const over = () => {
+      if (!frame) return el.scrollHeight > el.clientHeight + 2;
+      const last = inner.lastElementChild;
+      return last && last.getBoundingClientRect().bottom > inner.getBoundingClientRect().bottom + 2;
+    };
+    for (let i = 0; i < 16 && over() && z > 0.45; i++) {
+      z *= 0.94;
       inner.style.zoom = z;
     }
   }

@@ -158,26 +158,44 @@ export function buildWallDetails(layout) {
       else b.box('filz', [W - t, W, a, e], p.unten, p.oben);
     }
   }
-  // Akzentstreifen rundum – ausgespart über Schaufenster und hinter Filz-Paneelen
-  const y = M.akzentstreifen_hoehe;
-  const s = 0.012;
-  const walls = {
-    front: { len: W, rect: (a, e) => [a, e, s, s + 0.005] },
-    rueck: { len: W, rect: (a, e) => [a, e, D - s - 0.005, D - s] },
-    links: { len: D, rect: (a, e) => [s, s + 0.005, a, e] },
-    rechts: { len: D, rect: (a, e) => [W - s - 0.005, W - s, a, e] },
-  };
-  for (const [name, w] of Object.entries(walls)) {
-    const cut = [
-      ...layout.oeffnungen.filter((o) => o.wand === name && o.typ === 'glas' && o.hoehe > y && (o.unten ?? 0) < y),
-      ...M.filz_paneele.filter((p) => p.wand === name && p.unten < y + 0.05 && p.oben > y),
-    ].sort((a, e) => a.von - e.von);
-    let x = 0;
-    for (const c of cut) {
-      if (c.von > x) b.box('akzent', w.rect(x, c.von), y, y + 0.05);
-      x = Math.max(x, c.bis);
+  // Wandkopf: dunkles Band über den Regalen (Premium-Ladenbau) mit Eichenleiste; ausgespart über hohen Öffnungen
+  const K = M.wandkopf;
+  if (K) {
+    const H = layout.raum.hoehe;
+    b.materials.wandkopf = new THREE.MeshStandardMaterial({ color: K.farbe, roughness: 0.85 });
+    b.materials.leiste = new THREE.MeshStandardMaterial({ color: 0x9a7048, roughness: 0.6 });
+    const y0 = K.von;
+    const [vx1, vx2, vz1, vz2] = layout.raum.verkaufsraum || [0, W, 0, D];
+    const segs = (len, cuts) => {
+      const out = [];
+      let x = 0;
+      for (const c of cuts.sort((a, e) => a.von - e.von)) {
+        if (c.von > x) out.push([x, c.von]);
+        x = Math.max(x, c.bis);
+      }
+      if (x < len) out.push([x, len]);
+      return out;
+    };
+    const hohe = (name) => layout.oeffnungen.filter((o) => o.wand === name && (o.unten ?? 0) + (o.hoehe ?? 0) > y0);
+    const band = (rect) => {
+      b.box('wandkopf', rect(0.001, 0.011), y0, H - 0.005);
+      b.box('leiste', rect(0.001, 0.03), y0 - 0.04, y0);
+    };
+    // Front (innen) und linke Wand
+    for (const [a, e] of segs(vx2, hohe('front'))) band((n1, n2) => [a, e, vz1 + n1, vz1 + n2]);
+    for (const [a, e] of segs(vz2, hohe('links'))) band((n1, n2) => [vx1 + n1, vx1 + n2, a, e]);
+    // Lagerwände zur Ladenseite (hinten und rechts)
+    for (const w of layout.innenwaende || []) {
+      const [ax, az] = w.von;
+      const [bx, bz] = w.bis;
+      if (ax === bx && ax === vx2) {
+        const f = ax - 0.05;
+        band((n1, n2) => [f - n2, f - n1, Math.min(az, bz), Math.max(az, bz)]);
+      } else if (az === bz && az === vz2) {
+        const f = az - 0.05;
+        band((n1, n2) => [Math.min(ax, bx), Math.min(Math.max(ax, bx), vx2 - 0.05), f - n2, f - n1]);
+      }
     }
-    if (x < w.len) b.box('akzent', w.rect(x, w.len), y, y + 0.05);
   }
   // Sockelleisten an allen Wänden (ausgespart an Türen)
   b.materials.sockel = new THREE.MeshStandardMaterial({ color: 0x1b1b1d, roughness: 0.6 });

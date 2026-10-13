@@ -193,13 +193,13 @@ export function buildStreet(layout) {
   b.box('fassade', [-0.2, 18.0, -0.2, 0.0], 3.4, 9);
   for (let x = 0.8; x < 17; x += 2.2) for (const y of [4.2, 6.8]) b.box('glas', [x, x + 1.4, -0.24, -0.2], y, y + 1.6);
   // Markise über dem Schaufenster
-  b.geo('rot', new THREE.BoxGeometry(5.4, 0.04, 1.1), 3.05, 2.98, -0.6, 0, 0.18);
+  b.geo('dunkel', new THREE.BoxGeometry(5.4, 0.04, 1.1), 3.05, 2.98, -0.6, 0, 0.18); // Markise Schwarzstahl
 
   // Kundenstopper vor dem Laden
   const aTex = canvasTex(256, 384, (g, w, h) => {
     g.fillStyle = '#1f2421';
     g.fillRect(0, 0, w, h);
-    g.fillStyle = '#b84a32';
+    g.fillStyle = '#2b2e2c';
     g.fillRect(0, 0, w, 64);
     g.fillStyle = '#fff';
     g.textBaseline = 'middle';

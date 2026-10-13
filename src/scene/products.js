@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 
 const GRID = 16;
-const TILE = 128;
+const TILE = 176;
 const PAD = 4;
 const SANS = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 const SERIF = 'Georgia, "Times New Roman", serif';
@@ -232,85 +232,238 @@ const isLight = (hex) => {
   return ((v >> 16) & 255) * 0.299 + ((v >> 8) & 255) * 0.587 + (v & 255) * 0.114 > 150;
 };
 
-function drawLabel(g, s, p) {
-  const br = BRANDS[p.b] || { st: 'klassik' };
-  const fam = br.serif ? SERIF : SANS;
-  const fg = isLight(p.c) ? '#1f1d1b' : '#f6f2ea';
-  g.fillStyle = p.c;
-  g.fillRect(0, 0, s, s);
+// ---------- Etiketten: eigene Gestaltung je Marke (klassisch, ruhig – wie echte Markenartikel) ----------
+// Logische Zeichenfläche 120 × 120; der Atlas skaliert sie auf die Kachelgröße.
+const L = 120;
 
-  if (p.form === 'wein') {
-    // Weinetikett: cremefarbenes Rückenetikett in Flaschenmitte, Kapsel oben in Flaschenfarbe
-    g.fillStyle = p.a;
-    g.fillRect(s * 0.06, s * 0.22, s * 0.88, s * 0.7);
-    g.strokeStyle = 'rgba(0,0,0,0.35)';
-    g.lineWidth = 1.5;
-    g.strokeRect(s * 0.1, s * 0.26, s * 0.8, s * 0.62);
-    g.fillStyle = isLight(p.a) ? '#2a1a14' : '#f6f2ea';
-    g.textAlign = 'center';
-    g.textBaseline = 'middle';
-    g.font = `400 11px ${SERIF}`;
-    g.fillText(p.b, s / 2, s * 0.36);
-    fit(g, p.n, s / 2, s * 0.55, s * 0.76, 700, 22, SERIF);
-    g.font = `italic 400 11px ${SERIF}`;
-    g.fillText(p.s, s / 2, s * 0.75);
-    return;
-  }
+const FILL = { tomate: '#9c2f27', blatt: '#4f6b2a', oliven: '#55603a', glanz: '#c58a2a', bohnen: '#c9a46a', kaese: '#e8d9a6', kakao: '#4a2c1c', tropfen: '#3a1e12', frucht: '#e9c45a', milch: '#f3f0e8' };
+const CAPS = {
+  glas: { 'Casa Verde': '#9a7d3a', 'Pomodoro Rossa': '#8f2a22', 'Basis+': '#d9d6cf', Kochwerk: '#2b2c30', 'Umami Lab': '#1f2120', 'La Milpa': '#3f5e3a', 'Sol & Maíz': '#7f2620', 'Hof Neckar': '#3e6a96', 'Nonna Lia': '#1e3d6e', Kaizen: '#1f2120' },
+  flasche: { 'Casa Verde': '#9a7d3a', Kaizen: '#b8322a', 'Umami Lab': '#1f2120', Limonata: '#b89a3a', Neckarquelle: '#3e6a96', Neckarbräu: '#b89a3a', 'Basis+': '#3f6b3a', 'Sol & Maíz': '#2f5d3a' },
+};
+export function capOf(p) {
+  if (p.cap) return p.cap;
+  if (p.form === 'dose') return '#b9bbbd';
+  if (p.form === 'wein') return isLight(p.c) ? '#c9b27a' : '#5a1f22';
+  if (p.form === 'becher') return isLight(p.a) ? p.a : '#efebe3';
+  if (p.form === 'tetra') return '#f3f0e8';
+  if (p.form === 'oel' || p.form === 'flasche') return CAPS.flasche[p.b] || '#2b2c30';
+  if (p.form === 'glas') return CAPS.glas[p.b] || '#8a8378';
+  return p.c;
+}
+export function baseOf(p) {
+  if (p.form === 'glas') return FILL[visualOf(p)] || p.c;
+  return p.c;
+}
 
+function center(g, text, y, maxW, weight, px, fam = SANS, col) {
+  if (col) g.fillStyle = col;
   g.textAlign = 'center';
   g.textBaseline = 'middle';
-  // Markenkopf je Stil
-  if (br.st === 'eigen') {
-    g.fillStyle = p.a;
-    g.fillRect(0, 0, s, s * 0.2);
-    g.fillStyle = '#ffffff';
-    fit(g, p.b.toUpperCase(), s / 2, s * 0.1, s * 0.8, 800, 14);
-  } else if (br.st === 'premium') {
-    g.strokeStyle = p.a;
-    g.lineWidth = 2;
-    g.strokeRect(5, 5, s - 10, s - 10);
-    g.fillStyle = p.a;
-    fit(g, p.b, s / 2, s * 0.12, s * 0.8, 600, 16, SERIF);
-  } else if (br.st === 'bio') {
-    g.fillStyle = p.a;
-    fit(g, p.b, s / 2, s * 0.11, s * 0.7, 800, 14);
-    dot(g, s * 0.84, s * 0.12, 11, '#3f6b3a');
-    g.fillStyle = '#ffffff';
-    g.font = `800 8px ${SANS}`;
-    g.fillText('BIO', s * 0.84, s * 0.125);
-  } else if (br.st === 'asia') {
-    dot(g, s * 0.8, s * 0.16, 12, p.a);
-    g.fillStyle = fg;
-    fit(g, p.b.toUpperCase(), s * 0.42, s * 0.12, s * 0.66, 800, 13);
-  } else if (br.st === 'gewuerz') {
-    g.fillStyle = p.a;
-    g.fillRect(0, s * 0.72, s, s * 0.28);
-    g.fillStyle = fg;
-    fit(g, p.b.toUpperCase(), s / 2, s * 0.1, s * 0.8, 700, 12);
-  } else {
-    g.fillStyle = p.a;
-    g.fillRect(0, s * 0.03, s, s * 0.17);
-    g.fillStyle = isLight(p.a) ? '#1f1d1b' : '#ffffff';
-    fit(g, p.b.toUpperCase(), s / 2, s * 0.115, s * 0.86, 800, 13, fam);
-  }
-  // Produktname
-  g.fillStyle = br.st === 'premium' ? '#f6f2ea' : fg;
-  fit(g, p.n, s / 2, s * 0.31, s * 0.9, 800, 22, fam);
-  // Produktfenster
-  const wx = s * 0.16;
-  const wy = s * 0.42;
-  const ww = s * 0.68;
-  const wh = s * 0.3;
+  fit(g, text, L / 2, y, maxW, weight, px, fam);
+}
+
+function window_(g, x, y, w, h, p, { r = 8, bg = 'rgba(255,255,255,0.6)', ellipse = false } = {}) {
   g.save();
-  roundRect(g, wx, wy, ww, wh, 10);
-  g.fillStyle = br.st === 'premium' ? '#efe4c6' : 'rgba(255,255,255,0.55)';
+  if (ellipse) {
+    g.beginPath();
+    g.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+  } else roundRect(g, x, y, w, h, r);
+  g.fillStyle = bg;
   g.fill();
   g.clip();
-  drawVisual(g, visualOf(p), wx, wy, ww, wh, p);
+  drawVisual(g, visualOf(p), x, y, w, h, p);
   g.restore();
-  // Inhalt / Gewicht
-  g.fillStyle = br.st === 'gewuerz' ? (isLight(p.a) ? '#1f1d1b' : '#ffffff') : br.st === 'premium' ? p.a : fg;
-  fit(g, p.s, s / 2, s * 0.84, s * 0.9, 600, 12);
+}
+
+const STYLES = {
+  // Premium-Pasta (à la Barilla): tiefblau, cremefarbenes Oval mit Serifenschrift, Sichtfenster unten
+  premium(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    center(g, p.b, 13, 96, 400, 13, SERIF, p.a);
+    g.fillStyle = '#f3ead2';
+    g.beginPath();
+    g.ellipse(L / 2, 44, 52, 22, 0, 0, Math.PI * 2);
+    g.fill();
+    g.strokeStyle = '#b8323a';
+    g.lineWidth = 1.5;
+    g.beginPath();
+    g.ellipse(L / 2, 44, 48, 18, 0, 0, Math.PI * 2);
+    g.stroke();
+    center(g, p.n, 44, 86, 700, 17, SERIF, p.c);
+    window_(g, 22, 72, 76, 28, p, { r: 4, bg: '#efe4c6' });
+    center(g, p.s, 110, 100, 500, 10, SANS, '#e9e2cf');
+  },
+  // Feinkost (à la Mutti/Bertolli): Creme mit Doppelrahmen, Medaillon, Serifen
+  feinkost(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    g.strokeStyle = p.a;
+    g.lineWidth = 2;
+    g.strokeRect(5, 5, L - 10, L - 10);
+    g.lineWidth = 0.8;
+    g.strokeRect(9, 9, L - 18, L - 18);
+    center(g, p.b, 21, 92, 'italic 400', 13, SERIF, p.a);
+    center(g, p.n, 40, 96, 700, 15, SERIF, isLight(p.c) ? '#2a2420' : '#f3ead2');
+    window_(g, 34, 52, 52, 40, p, { ellipse: true, bg: '#fbf6ea' });
+    g.fillStyle = p.a;
+    g.fillRect(9, 98, L - 18, 13);
+    center(g, p.s, 104.5, 96, 500, 9, SANS, isLight(p.a) ? '#2a2420' : '#f6f0e2');
+  },
+  // Klassische Marke (à la Mutti rot / Ritter Sport): Vollfarbe, großer Schriftzug, Bildband
+  klassik(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    center(g, p.b, 15, 100, 'italic 700', 16, SERIF, p.a);
+    g.fillStyle = p.a;
+    g.fillRect(0, 30, L, 2);
+    window_(g, 0, 36, L, 38, p, { r: 0, bg: 'rgba(255,255,255,0.18)' });
+    g.fillStyle = p.a;
+    g.fillRect(0, 76, L, 2);
+    center(g, p.n, 90, 104, 800, 16, SANS, isLight(p.c) ? '#1f1d1b' : '#ffffff');
+    center(g, p.s, 108, 100, 500, 10, SANS, isLight(p.c) ? '#3a3632' : '#efe7d6');
+  },
+  // Eigenmarke (à la Gut & Günstig): weiß, schlicht, farbiger Balken unten
+  eigen(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    g.fillStyle = p.a;
+    g.textAlign = 'left';
+    g.textBaseline = 'middle';
+    fit(g, p.b, 10, 13, 60, 800, 12);
+    center(g, p.n, 34, 104, 700, 17, SANS, '#2b2c30');
+    window_(g, 18, 48, 84, 38, p, { r: 6, bg: '#efece6' });
+    g.fillStyle = p.a;
+    g.fillRect(0, 96, L, 24);
+    center(g, p.s, 108, 104, 600, 11, SANS, '#ffffff');
+  },
+  // Bio (à la Alnatura): Kraftpapier, Blatt, Kleinschreibung, Bio-Siegel
+  bio(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    g.fillStyle = '#4f6b45';
+    g.beginPath();
+    g.ellipse(17, 15, 8, 4, -0.6, 0, Math.PI * 2);
+    g.fill();
+    g.textAlign = 'left';
+    g.textBaseline = 'middle';
+    fit(g, p.b.toLowerCase(), 28, 15, 60, 600, 13);
+    dot(g, 100, 16, 10, '#5b8a3a');
+    g.fillStyle = '#fff';
+    g.font = `800 7px ${SANS}`;
+    g.textAlign = 'center';
+    g.fillText('BIO', 100, 16.5);
+    center(g, p.n, 38, 104, 600, 15, SANS, '#2e3a28');
+    window_(g, 20, 50, 80, 40, p, { ellipse: true, bg: '#efe6d0' });
+    center(g, p.s, 104, 104, 500, 10, SANS, '#4a4436');
+  },
+  // Gewürze (à la Ostmann): dunkel, rundes Fenster mit Gewürzfarbe
+  gewuerz(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    center(g, p.b.toUpperCase(), 12, 90, 700, 9, SANS, '#cbbf9e');
+    window_(g, 32, 22, 56, 46, p, { ellipse: true, bg: '#e9e2d0' });
+    center(g, p.n, 82, 104, 400, 15, SERIF, '#f3ead2');
+    g.fillStyle = p.a;
+    g.fillRect(0, 96, L, 24);
+    center(g, p.s, 108, 100, 600, 10, SANS, isLight(p.a) ? '#1f1d1b' : '#ffffff');
+  },
+  // Asia (à la Kikkoman): hell/schwarz, roter Kreis, senkrechter Balken
+  asia(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    g.fillStyle = p.a;
+    g.fillRect(0, 0, 16, L);
+    dot(g, 98, 20, 11, '#b8322a');
+    const fg = isLight(p.c) ? '#1f1d1b' : '#f3ead2';
+    g.fillStyle = fg;
+    g.textAlign = 'left';
+    g.textBaseline = 'middle';
+    fit(g, p.b.toUpperCase(), 24, 18, 60, 800, 11);
+    fit(g, p.n, 24, 40, 90, 700, 16);
+    window_(g, 24, 54, 84, 36, p, { r: 3, bg: isLight(p.c) ? '#efe9de' : '#3a3632' });
+    g.fillStyle = fg;
+    g.textAlign = 'left';
+    fit(g, p.s, 24, 104, 90, 500, 10);
+  },
+  // Mexiko (à la Old El Paso): warme Farben, Stufenmuster oben
+  mex(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    g.fillStyle = p.a;
+    for (let x = 0; x < L; x += 12) {
+      g.beginPath();
+      g.moveTo(x, 10);
+      g.lineTo(x + 6, 2);
+      g.lineTo(x + 12, 10);
+      g.fill();
+    }
+    g.fillRect(0, 10, L, 3);
+    const fg = isLight(p.c) ? '#2a1f18' : '#f6ecd6';
+    center(g, p.b, 25, 100, 'italic 700', 14, SERIF, fg);
+    center(g, p.n, 42, 104, 800, 15, SANS, fg);
+    window_(g, 16, 54, 88, 36, p, { r: 18, bg: 'rgba(255,248,232,0.75)' });
+    center(g, p.s, 104, 100, 500, 10, SANS, fg);
+  },
+  // Regional (à la Weihenstephan): weiß, blaues Karoband, Serifen
+  regional(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    for (let x = 0; x < L; x += 6)
+      for (let y = 0; y < 12; y += 6) {
+        g.fillStyle = (x / 6 + y / 6) % 2 ? p.a : '#ffffff';
+        g.fillRect(x, y, 6, 6);
+      }
+    center(g, p.b, 24, 100, 400, 13, SERIF, p.a === '#3e6a96' || !isLight(p.a) ? p.a : '#3e6a96');
+    center(g, p.n, 42, 104, 700, 16, SANS, isLight(p.c) ? '#1f2a3a' : '#ffffff');
+    window_(g, 22, 54, 76, 36, p, { r: 6, bg: '#eef1f4' });
+    center(g, p.s, 104, 104, 500, 10, SANS, isLight(p.c) ? '#3a4656' : '#f3f0e8');
+  },
+  // Getränke: ovales Etikett auf Flaschenfarbe
+  drink(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    g.fillStyle = p.a === p.c ? '#f3ead2' : p.a;
+    g.beginPath();
+    g.ellipse(L / 2, L / 2, 50, 46, 0, 0, Math.PI * 2);
+    g.fill();
+    g.strokeStyle = '#b89a3a';
+    g.lineWidth = 1.5;
+    g.beginPath();
+    g.ellipse(L / 2, L / 2, 46, 42, 0, 0, Math.PI * 2);
+    g.stroke();
+    const fg = isLight(g.fillStyle) ? '#2a2420' : '#f3ead2';
+    center(g, p.b, 34, 76, 'italic 400', 12, SERIF, fg);
+    center(g, p.n, 58, 82, 700, 16, SERIF, fg);
+    center(g, p.s, 80, 78, 500, 9, SANS, fg);
+  },
+  // Wein: Flaschenfarbe mit cremefarbenem Etikett
+  wein(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    // Etikett nur im mittleren Drittel der Flasche – darüber und darunter sieht man das Glas
+    g.fillStyle = p.a;
+    g.fillRect(14, 40, L - 28, 58);
+    g.strokeStyle = 'rgba(0,0,0,0.3)';
+    g.lineWidth = 1;
+    g.strokeRect(18, 44, L - 36, 50);
+    const fg = isLight(p.a) ? '#2a1a14' : '#f6f2ea';
+    center(g, p.b, 52, 76, 400, 8, SERIF, fg);
+    center(g, p.n, 68, 78, 700, 15, SERIF, fg);
+    center(g, p.s, 84, 76, 'italic 400', 8, SERIF, fg);
+  },
+};
+const BRAND_STYLE = { premium: 'premium', feinkost: 'feinkost', klassik: 'klassik', eigen: 'eigen', bio: 'bio', gewuerz: 'gewuerz', asia: 'asia', mex: 'mex', regional: 'regional', drink: 'drink', wein: 'wein' };
+
+function drawLabel(g, s, p) {
+  const br = BRANDS[p.b] || { st: 'klassik' };
+  let st = p.form === 'wein' ? 'wein' : BRAND_STYLE[br.st] || 'klassik';
+  if (br.st === 'feinkost' && p.form === 'tafel') st = 'klassik';
+  g.save();
+  g.scale(s / L, s / L);
+  STYLES[st](g, p);
+  g.restore();
 }
 
 function dot(g, x, y, r, col) {
@@ -323,7 +476,7 @@ function dot(g, x, y, r, col) {
 function fit(g, text, x, y, maxW, weight, px, fam = SANS) {
   let size = px;
   g.font = `${weight} ${size}px ${fam}`;
-  while (g.measureText(text).width > maxW && size > 7) g.font = `${weight} ${--size}px ${fam}`;
+  while (g.measureText(text).width > maxW && size > 5) g.font = `${weight} ${--size}px ${fam}`;
   g.fillText(text, x, y);
 }
 
@@ -360,55 +513,70 @@ function drawPrice(g, W, H, p) {
   fit(g, euro(p.pr), W - 12, H - 28, W * 0.42, 800, 54);
 }
 
-// ---------- Geometrien mit UVs, die eine ganze Kachel nutzen ----------
-function boxGeo() {
-  const g = new THREE.BoxGeometry(1, 1, 1);
-  const uv = g.attributes.uv;
-  for (let i = 0; i < uv.count; i++) uv.setY(i, 1 - uv.getY(i)); // Atlas ohne flipY
-  // Oben/unten: nur die Grundfarbe (Kachelecke)
-  for (const face of [2, 3]) for (let k = 0; k < 4; k++) uv.setXY(face * 4 + k, 0.04, 0.04);
-  return g;
-}
-// Etikett nur auf der vorderen Hälfte (u = 0,5 zeigt zum Kunden), hinten Randfarbe – sonst sieht man nur ein Stück Text
+// ---------- Geometrien: Kachel = oben ein Streifen (links Deckelfarbe, rechts Grundfarbe), darunter das Etikett ----------
+const STRIP = 0.1;
+const CAP = [0.25, 0.05];
+const BASE = [0.75, 0.05];
+const lab = (v) => STRIP + v * (1 - STRIP);
+// Etikett nur auf der vorderen Hälfte (u = 0,5 zeigt zum Kunden), hinten Randfarbe
 const frontU = (u) => Math.min(0.97, Math.max(0.03, (u - 0.27) / 0.46));
-function cylGeo(rTop = 0.5, rBot = 0.5, seg = 12) {
-  const g = new THREE.CylinderGeometry(rTop, rBot, 1, seg, 1);
+
+function boxGeo({ topCap = false, segY = 1 } = {}) {
+  const g = new THREE.BoxGeometry(1, 1, 1, 1, segY, 1);
   const uv = g.attributes.uv;
-  const nSide = (seg + 1) * 2;
+  const nrm = g.attributes.normal;
   for (let i = 0; i < uv.count; i++) {
-    if (i < nSide) uv.setXY(i, frontU(uv.getX(i)), 1 - uv.getY(i));
-    else uv.setXY(i, 0.04, 0.04); // Deckel: Grundfarbe
-  }
-  return g;
-}
-function latheGeo(profile) {
-  const g = new THREE.LatheGeometry(profile.map(([r, y]) => new THREE.Vector2(r, y)), 10);
-  const uv = g.attributes.uv;
-  const pos = g.attributes.position;
-  const H = Math.max(...profile.map((p) => p[1]));
-  for (let i = 0; i < uv.count; i++) {
-    const y = pos.getY(i) / H;
-    // Etikett im mittleren Bereich, oben/unten Glasfarbe
-    const v = y < 0.08 || y > 0.62 ? 0.04 : 1 - (y - 0.08) / 0.54;
-    uv.setY(i, v);
-    uv.setX(i, v === 0.04 ? 0.04 : frontU(uv.getX(i)));
+    const ny = nrm.getY(i);
+    if (ny > 0.5) uv.setXY(i, ...(topCap ? CAP : BASE));
+    else if (ny < -0.5) uv.setXY(i, ...BASE);
+    else uv.setY(i, lab(1 - uv.getY(i)));
   }
   return g;
 }
 
+// Kissenbeutel (Nudeln, Reis, Chips): bauchig, oben und unten flach verschweißt
+function pillowGeo() {
+  const g = boxGeo({ segY: 8 });
+  const pos = g.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const y = pos.getY(i);
+    const t = Math.abs(y) * 2;
+    const k = t > 0.92 ? 0.12 : 0.25 + 0.75 * Math.sqrt(1 - t * t * 0.9);
+    pos.setZ(i, pos.getZ(i) * k);
+    pos.setX(i, pos.getX(i) * (t > 0.92 ? 1.03 : 1 - 0.03 * t));
+  }
+  g.computeVertexNormals();
+  return g;
+}
+
+// Drehkörper mit Zonen: Etikett [l0, l1], Deckel/Kappe (cap), Rest Grund- bzw. Glasfarbe
+function latheZ(profile, { l0, l1, cap = (y) => false }) {
+  const g = new THREE.LatheGeometry(profile.map(([r, y]) => new THREE.Vector2(r, y)), 12);
+  const uv = g.attributes.uv;
+  const pos = g.attributes.position;
+  for (let i = 0; i < uv.count; i++) {
+    const y = pos.getY(i);
+    if (cap(y)) uv.setXY(i, ...CAP);
+    else if (y >= l0 - 1e-4 && y <= l1 + 1e-4) uv.setXY(i, frontU(uv.getX(i)), lab(1 - (y - l0) / (l1 - l0)));
+    else uv.setXY(i, ...BASE);
+  }
+  g.computeVertexNormals();
+  return g;
+}
+
 const GEOS = {
-  packung: boxGeo,
-  kiste: boxGeo,
-  beutel: boxGeo,
-  schale: boxGeo,
-  tetra: boxGeo,
-  tafel: boxGeo,
-  glas: () => cylGeo(0.48, 0.5),
-  dose: () => cylGeo(0.5, 0.5),
-  becher: () => cylGeo(0.5, 0.38),
-  flasche: () => latheGeo([[0, 0], [0.48, 0], [0.5, 0.02], [0.5, 0.6], [0.32, 0.72], [0.16, 0.82], [0.15, 1], [0, 1]]),
-  wein: () => latheGeo([[0, 0], [0.48, 0], [0.5, 0.02], [0.5, 0.62], [0.3, 0.74], [0.14, 0.8], [0.13, 1], [0, 1]]),
-  oel: () => latheGeo([[0, 0], [0.47, 0], [0.5, 0.02], [0.5, 0.66], [0.42, 0.74], [0.18, 0.84], [0.16, 1], [0, 1]]),
+  packung: () => boxGeo(),
+  kiste: () => boxGeo(),
+  beutel: pillowGeo,
+  schale: () => boxGeo({ topCap: true }),
+  tetra: () => boxGeo({ topCap: true }),
+  tafel: () => boxGeo(),
+  glas: () => latheZ([[0, 0], [0.44, 0], [0.5, 0.03], [0.5, 0.8], [0.45, 0.85], [0.46, 0.86], [0.47, 0.87], [0.47, 0.98], [0.44, 1], [0, 1]], { l0: 0.03, l1: 0.8, cap: (y) => y >= 0.855 }),
+  dose: () => latheZ([[0, 0], [0.45, 0], [0.49, 0.015], [0.5, 0.045], [0.5, 0.95], [0.48, 0.985], [0.45, 1], [0, 1]], { l0: 0.045, l1: 0.95, cap: (y) => y < 0.04 || y > 0.955 }),
+  becher: () => latheZ([[0, 0], [0.4, 0], [0.5, 0.88], [0.53, 0.9], [0.53, 0.96], [0.5, 1], [0, 1]], { l0: 0, l1: 0.88, cap: (y) => y > 0.885 }),
+  flasche: () => latheZ([[0, 0], [0.47, 0], [0.5, 0.02], [0.5, 0.58], [0.4, 0.68], [0.2, 0.77], [0.17, 0.84], [0.19, 0.86], [0.19, 1], [0, 1]], { l0: 0.02, l1: 0.58, cap: (y) => y >= 0.85 }),
+  wein: () => latheZ([[0, 0], [0.47, 0], [0.5, 0.02], [0.5, 0.6], [0.42, 0.68], [0.16, 0.76], [0.14, 0.8], [0.15, 1], [0, 1]], { l0: 0.02, l1: 0.6, cap: (y) => y >= 0.79 }),
+  oel: () => latheZ([[0, 0], [0.47, 0], [0.5, 0.02], [0.5, 0.68], [0.3, 0.8], [0.17, 0.86], [0.19, 0.88], [0.19, 1], [0, 1]], { l0: 0.02, l1: 0.68, cap: (y) => y >= 0.87 }),
   tag: () => {
     const g = new THREE.PlaneGeometry(1, 1);
     const uv = g.attributes.uv;
@@ -443,8 +611,15 @@ export class Products {
         drawLabel(tg, tmp.width, p);
         const x = (i % GRID) * TILE;
         const y = Math.floor(i / GRID) * TILE;
-        g.drawImage(tmp, x, y, TILE, TILE); // Rand gestreckt (gegen Bluten der Mipmaps)
-        g.drawImage(tmp, x + PAD, y + PAD);
+        const inner = TILE - 2 * PAD;
+        const sh = Math.round(inner * 0.1);
+        g.drawImage(tmp, x, y + sh, TILE, TILE - sh); // Rand gestreckt (gegen Bluten der Mipmaps)
+        g.drawImage(tmp, x + PAD, y + PAD + sh, inner, inner - sh);
+        // Streifen oben: Deckel-/Kappenfarbe links, Grund-/Glasfarbe rechts
+        g.fillStyle = capOf(p);
+        g.fillRect(x, y, TILE / 2, PAD + sh);
+        g.fillStyle = baseOf(p);
+        g.fillRect(x + TILE / 2, y, TILE / 2, PAD + sh);
         drawPrice(ptg, 256, 128, p);
         pg.drawImage(ptmp, x, y, TILE, TILE);
         pg.drawImage(ptmp, x + PAD, y + PAD, TILE - 2 * PAD, TILE - 2 * PAD);
@@ -512,8 +687,9 @@ export class Products {
     const [w, h, d] = p.m.map((v) => v * scale);
     const o = new THREE.Object3D();
     const round = p.form === 'glas' || p.form === 'dose' || p.form === 'becher' || p.form === 'flasche' || p.form === 'wein' || p.form === 'oel';
+    // Drehkörper starten bei y = 0 (Boden) – alle Geometrien sind auf 0..1 normiert
     const yaw = Math.atan2(dir[0], -dir[1]) + (round ? Math.PI : 0);
-    const isLathe = p.form === 'flasche' || p.form === 'wein' || p.form === 'oel';
+    const isLathe = round;
     o.position.set(x, isLathe ? y : y + h / 2, -z);
     o.rotation.set(tilt, yaw, 0, 'YXZ');
     o.scale.set(w, h, d);

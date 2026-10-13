@@ -23,7 +23,7 @@ const MATERIALS = {
   chrom: std(0xc9ccd0, 0.25, 0.9),
   edelstahl: std(0xb9bdc2, 0.32, 0.85),
   stein: std(0x3a3a3c, 0.35, 0.1),
-  akzent: std(0xb84a32, 0.55),
+  akzent: std(0x2b2e2c, 0.5, 0.2), // Akzent = Schwarzstahl (Fensterrahmen, Kanten)
   gruen: std(0x4a7340, 0.6),
   gelb: std(0xb08a34, 0.6),
   polster: std(0x7a3b2e, 0.9),
@@ -43,6 +43,11 @@ const MATERIALS = {
   schwarzMatt: std(0x1d1e20, 0.55, 0.2),
   regalWeiss: std(0xecebe7, 0.5, 0.1),
   regalGrau: std(0xcfcec9, 0.45, 0.3),
+  front: std(0x2f3a35, 0.65), // Küchenfronten tiefgrün-grau, matt
+  messing: std(0xb39b6b, 0.35, 0.8),
+  terrazzo: std(0xd9d4ca, 0.4),
+  kupfer: std(0xb87348, 0.35, 0.85),
+  kochzone: new THREE.MeshBasicMaterial({ color: 0x5a5d62 }),
 };
 
 const G = {
@@ -98,148 +103,321 @@ function faceRect(f, a1, a2, n1, n2) {
 
 // ---------- Texturen ----------
 const ANLASS = {
-  schnell: { sym: '»', text: 'schnell', sub: '≤ 20 Min.', farbe: '#b84a32' },
-  besonders: { sym: '★', text: 'besonders', sub: 'Menü für 2', farbe: '#6d4a63' },
-  günstig: { sym: '€', text: 'günstig', sub: '≤ 4 € je Portion', farbe: '#4a7340' },
+  schnell: { sym: '»', text: 'schnell', sub: '≤ 20 Min.', farbe: '#9c4a34' },
+  besonders: { sym: '★', text: 'besonders', sub: 'Menü mit Dessert', farbe: '#6a4f5e' },
+  günstig: { sym: '€', text: 'günstig', sub: '≤ 4 € je Portion', farbe: '#4f6b45' },
 };
-const WELT_FARBE = { 'Pasta Night': '#a8432c', 'Asian Night': '#b08a34', 'Mexican Night': '#3f6e4a' };
+const WELT_FARBE = { 'Pasta Night': '#a8432c', 'Asian Night': '#a8843a', 'Mexican Night': '#3f6e4a' };
+const SERIF = 'Georgia, "Times New Roman", serif';
+// „DESSERT & WEIN“ → „Dessert & Wein“, Codes wie K1–K6 bleiben
+const titleCase = (t) => t.split(' ').map((w) => (/\d/.test(w) || w.length <= 1 ? w : w.charAt(0) + w.slice(1).toLowerCase())).join(' ');
 
-export function recipeCardTexture(r, w = 300, h = 420) {
+function rr(g, x, y, w, h, r) {
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r);
+  g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r);
+  g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+}
+
+// Gezeichnetes „Foodfoto“: Teller von oben mit dem Gericht der Kochwelt
+function drawPlate(g, cx, cy, r, rez) {
+  let t = rez.nr.charCodeAt(2) * 97 + rez.titel.length * 13;
+  const rnd = () => ((t = (t * 1664525 + 1013904223) % 4294967296) / 4294967296);
+  const blob = (x, y, rx, ry, col, rot = 0) => {
+    g.fillStyle = col;
+    g.beginPath();
+    g.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2);
+    g.fill();
+  };
+  // Holztisch als Hintergrund
+  g.save();
+  g.beginPath();
+  g.arc(cx, cy, r * 1.25, 0, Math.PI * 2);
+  g.clip();
+  g.fillStyle = '#b48a5e';
+  g.fillRect(cx - r * 1.3, cy - r * 1.3, r * 2.6, r * 2.6);
+  g.strokeStyle = 'rgba(80,50,25,0.25)';
+  g.lineWidth = 2;
+  for (let i = -6; i <= 6; i++) {
+    g.beginPath();
+    g.moveTo(cx - r * 1.3, cy + i * r * 0.22 + Math.sin(i) * 3);
+    g.bezierCurveTo(cx - r * 0.4, cy + i * r * 0.22 + 4, cx + r * 0.4, cy + i * r * 0.22 - 4, cx + r * 1.3, cy + i * r * 0.22);
+    g.stroke();
+  }
+  g.restore();
+  const asian = rez.welt.startsWith('Asian');
+  // Teller bzw. Schale
+  blob(cx + r * 0.06, cy + r * 0.08, r, r, 'rgba(0,0,0,0.22)');
+  blob(cx, cy, r, r, asian ? '#2b2c30' : '#f7f4ee');
+  blob(cx, cy, r * 0.8, r * 0.8, asian ? '#3a3b40' : '#efebe3');
+  if (rez.welt.startsWith('Pasta')) {
+    g.strokeStyle = '#e8c76a';
+    g.lineWidth = r * 0.05;
+    for (let i = 0; i < 26; i++) {
+      g.beginPath();
+      const a = rnd() * Math.PI * 2;
+      g.arc(cx + Math.cos(a) * r * 0.18, cy + Math.sin(a) * r * 0.18, r * (0.2 + rnd() * 0.35), a, a + 1.6 + rnd() * 2);
+      g.stroke();
+    }
+    for (let i = 0; i < 9; i++) blob(cx + (rnd() - 0.5) * r * 0.9, cy + (rnd() - 0.5) * r * 0.9, r * 0.08, r * 0.07, '#b8322a');
+    for (let i = 0; i < 6; i++) blob(cx + (rnd() - 0.5) * r * 0.8, cy + (rnd() - 0.5) * r * 0.8, r * 0.07, r * 0.035, '#4f7f3a', rnd() * 3);
+    for (let i = 0; i < 14; i++) blob(cx + (rnd() - 0.5) * r, cy + (rnd() - 0.5) * r, r * 0.02, r * 0.02, '#f6efd8');
+  } else if (asian) {
+    blob(cx, cy, r * 0.74, r * 0.74, '#c98a4a');
+    g.strokeStyle = '#efd9a0';
+    g.lineWidth = r * 0.045;
+    for (let i = 0; i < 18; i++) {
+      g.beginPath();
+      const y = cy - r * 0.5 + i * r * 0.06;
+      g.moveTo(cx - r * 0.55, y);
+      g.bezierCurveTo(cx - r * 0.2, y - r * 0.12, cx + r * 0.2, y + r * 0.12, cx + r * 0.55, y);
+      g.stroke();
+    }
+    blob(cx + r * 0.28, cy - r * 0.2, r * 0.17, r * 0.17, '#fbf7ec');
+    blob(cx + r * 0.28, cy - r * 0.2, r * 0.08, r * 0.08, '#f0a830');
+    for (let i = 0; i < 7; i++) blob(cx - r * 0.3 + (rnd() - 0.5) * r * 0.4, cy + r * 0.25 + (rnd() - 0.5) * r * 0.3, r * 0.1, r * 0.05, '#5e8f3a', rnd() * 3);
+  } else {
+    for (let i = 0; i < 3; i++) {
+      const a = -0.6 + i * 0.6;
+      g.save();
+      g.translate(cx + Math.sin(a) * r * 0.35, cy - Math.cos(a) * r * 0.05);
+      g.rotate(a);
+      blob(0, 0, r * 0.22, r * 0.5, '#e8c56a');
+      blob(0, -r * 0.05, r * 0.15, r * 0.38, '#7a3b26');
+      for (let k = 0; k < 4; k++) blob((rnd() - 0.5) * r * 0.18, (rnd() - 0.5) * r * 0.6, r * 0.05, r * 0.04, k % 2 ? '#c0392b' : '#6b9a45');
+      g.restore();
+    }
+    blob(cx + r * 0.45, cy + r * 0.45, r * 0.18, r * 0.18, '#7fa64a');
+  }
+}
+
+// Rezeptkarte (Kartenspender / Regalkopf): Foto, Nummer, Titel, Zutaten mit Fachcode
+export function recipeCardTexture(r, w = 360, h = 504) {
   return canvasTex(w, h, (g) => {
     const an = ANLASS[r.anlass];
-    g.fillStyle = '#fbf8f2';
+    const wc = WELT_FARBE[r.welt] || '#a8432c';
+    g.fillStyle = '#fbf9f5';
     g.fillRect(0, 0, w, h);
-    g.fillStyle = WELT_FARBE[r.welt] || '#b84a32';
-    g.fillRect(0, 0, w, 74);
+    // Foto oben
+    g.save();
+    g.beginPath();
+    g.rect(0, 0, w, 168);
+    g.clip();
+    drawPlate(g, w / 2, 92, 96, r);
+    g.restore();
+    // Nummer als Pille
+    g.fillStyle = wc;
+    rr(g, 16, 16, 66, 30, 15);
+    g.fill();
     g.fillStyle = '#fff';
+    g.font = `700 17px ${SANS}`;
     g.textBaseline = 'middle';
-    g.font = `800 30px ${SANS}`;
-    g.fillText(`${r.nr}`, 16, 26);
-    g.font = `600 17px ${SANS}`;
-    g.fillText(`${an.sym} ${an.text.toUpperCase()} · ${r.welt}`, 16, 56);
-    g.fillStyle = '#1c1c1f';
-    g.font = `800 23px ${SANS}`;
+    g.textAlign = 'center';
+    g.fillText(r.nr, 49, 32);
+    g.textAlign = 'left';
+    // Titel
+    g.fillStyle = '#8a8378';
+    g.font = `600 13px ${SANS}`;
+    g.fillText(`${an.sym}  ${an.text.toUpperCase()}  ·  ${r.welt.toUpperCase()}`, 20, 192);
+    g.fillStyle = '#1f2120';
+    g.font = `400 27px ${SERIF}`;
     const words = r.titel.split(' ');
     let line = '';
-    let y = 104;
+    let y = 226;
     for (const wd of words) {
       const t = line ? `${line} ${wd}` : wd;
-      if (g.measureText(t).width > w - 30) {
-        g.fillText(line, 16, y);
-        y += 27;
+      if (g.measureText(t).width > w - 40) {
+        g.fillText(line, 20, y);
+        y += 30;
         line = wd;
       } else line = t;
     }
-    g.fillText(line, 16, y);
-    y += 30;
-    g.font = `600 15px ${SANS}`;
+    g.fillText(line, 20, y);
+    y += 28;
     g.fillStyle = '#6b6258';
-    g.fillText(`${r.zeit} · ${r.preis}`, 16, y);
-    y += 26;
-    g.font = `500 15px ${SANS}`;
+    g.font = `500 14px ${SANS}`;
+    g.fillText(`${r.zeit}  ·  ${r.preis}`, 20, y);
+    y += 18;
+    g.fillStyle = '#e4ddd1';
+    g.fillRect(20, y, w - 40, 1);
+    y += 20;
     for (const [n, code] of r.zutaten) {
-      g.fillStyle = '#1c1c1f';
-      g.fillText(`• ${n}`, 16, y);
-      g.fillStyle = '#b84a32';
-      g.font = `800 15px ${SANS}`;
-      g.textAlign = 'right';
-      g.fillText(code, w - 16, y);
-      g.textAlign = 'left';
+      g.fillStyle = '#2b2c30';
       g.font = `500 15px ${SANS}`;
-      y += 22;
+      g.fillText(n, 20, y);
+      g.fillStyle = '#efe9de';
+      rr(g, w - 64, y - 11, 44, 22, 11);
+      g.fill();
+      g.fillStyle = '#4a4540';
+      g.font = `700 12px ${SANS}`;
+      g.textAlign = 'center';
+      g.fillText(code, w - 42, y);
+      g.textAlign = 'left';
+      y += 25;
     }
+    g.fillStyle = '#1f2120';
+    g.fillRect(0, h - 34, w, 34);
     g.fillStyle = '#efe7d6';
-    g.fillRect(0, h - 40, w, 40);
-    g.fillStyle = '#1c1c1f';
-    g.font = `700 14px ${SANS}`;
-    g.fillText('ONE HOUR KITCHEN · Shop. Cook. Enjoy.', 16, h - 20);
+    g.font = `400 14px ${SERIF}`;
+    g.fillText('One Hour Kitchen', 20, h - 17);
+    g.font = `500 11px ${SANS}`;
+    g.textAlign = 'right';
+    g.fillText('Shop. Cook. Enjoy.', w - 20, h - 17);
+    g.textAlign = 'left';
   });
 }
 
 const TEX = {
   dashboard(layout) {
-    const W = 1536;
-    const H = 840;
+    // Moderne Bildschirm-Oberfläche: helles UI, Karten mit Foodfotos, Spalten = Küche, Zeilen = Anlass
+    const W = 1600;
+    const H = 1000;
     return canvasTex(W, H, (g) => {
-      g.fillStyle = '#16171a';
-      g.fillRect(0, 0, W, H);
       g.fillStyle = '#f4f1ec';
+      g.fillRect(0, 0, W, H);
       g.textBaseline = 'middle';
-      g.font = `800 64px ${SANS}`;
-      g.fillText('Was kochst du heute?', 40, 62);
-      g.font = `500 30px ${SANS}`;
-      g.fillStyle = '#c9c4bc';
-      g.fillText('1. Küche wählen  ·  2. Anlass wählen  ·  3. Rezeptkarte ziehen', 40, 118);
+      g.fillStyle = '#1f2120';
+      g.font = `400 72px ${SERIF}`;
+      g.fillText('Was kochst du heute?', 56, 82);
+      // Schritte als Chips
+      ['1  Küche wählen', '2  Anlass wählen', '3  Rezeptkarte ziehen'].forEach((t, i) => {
+        const x = 56 + i * 250;
+        g.fillStyle = i === 2 ? '#1f2120' : '#e7e1d7';
+        rr(g, x, 134, 232, 44, 22);
+        g.fill();
+        g.fillStyle = i === 2 ? '#f4f1ec' : '#3a3632';
+        g.font = `600 22px ${SANS}`;
+        g.fillText(t, x + 22, 157);
+      });
+      g.fillStyle = '#8a8378';
+      g.font = `500 22px ${SANS}`;
+      g.textAlign = 'right';
+      g.fillText('Rezepte des Monats · Oktober', W - 56, 82);
+      g.textAlign = 'left';
       const welten = ['Pasta Night', 'Asian Night', 'Mexican Night'];
       const zeilen = ['schnell', 'besonders', 'günstig'];
       const x0 = 300;
-      const cw = (W - x0 - 30) / 3;
-      const y0 = 160;
-      const rh = (H - y0 - 20) / 3.35;
+      const gap = 18;
+      const cw = (W - x0 - 56 - gap * 2) / 3;
+      const y0 = 214;
+      const hh = 56;
+      const rh = (H - y0 - hh - 40 - gap * 2) / 3;
       welten.forEach((wl, i) => {
+        const x = x0 + i * (cw + gap);
         g.fillStyle = WELT_FARBE[wl];
-        g.fillRect(x0 + i * cw + 6, y0, cw - 12, rh * 0.35);
-        g.fillStyle = '#fff';
-        g.font = `800 36px ${SANS}`;
-        g.textAlign = 'center';
-        g.fillText(wl.replace(' Night', '').toUpperCase(), x0 + i * cw + cw / 2, y0 + rh * 0.18);
-        g.textAlign = 'left';
+        g.beginPath();
+        g.arc(x + 14, y0 + hh / 2, 8, 0, Math.PI * 2);
+        g.fill();
+        g.fillStyle = '#1f2120';
+        g.font = `400 34px ${SERIF}`;
+        g.fillText(wl, x + 34, y0 + hh / 2);
       });
       zeilen.forEach((z, j) => {
         const an = ANLASS[z];
-        const y = y0 + rh * 0.35 + 10 + j * rh;
-        g.fillStyle = an.farbe;
-        g.fillRect(30, y + 6, x0 - 50, rh - 12);
-        g.fillStyle = '#fff';
-        g.font = `800 52px ${SANS}`;
-        g.fillText(an.sym, 46, y + rh * 0.36);
-        g.font = `800 32px ${SANS}`;
-        g.fillText(an.text, 100, y + rh * 0.36);
-        g.font = `500 22px ${SANS}`;
-        g.fillText(an.sub, 46, y + rh * 0.72);
+        const y = y0 + hh + 12 + j * (rh + gap);
+        g.fillStyle = '#1f2120';
+        g.beginPath();
+        g.arc(86, y + rh / 2 - 22, 30, 0, Math.PI * 2);
+        g.fill();
+        g.fillStyle = '#f4f1ec';
+        g.font = `700 30px ${SANS}`;
+        g.textAlign = 'center';
+        g.fillText(an.sym, 86, y + rh / 2 - 21);
+        g.textAlign = 'left';
+        g.fillStyle = '#1f2120';
+        g.font = `600 30px ${SANS}`;
+        g.fillText(an.text, 128, y + rh / 2 - 22);
+        g.fillStyle = '#8a8378';
+        g.font = `500 21px ${SANS}`;
+        g.fillText(an.sub, 128, y + rh / 2 + 16);
         welten.forEach((wl, i) => {
           const r = layout.rezepte.find((x) => x.welt === wl && x.anlass === z);
-          const cx = x0 + i * cw + 6;
-          g.fillStyle = '#26282c';
-          g.fillRect(cx, y + 6, cw - 12, rh - 12);
-          g.fillStyle = an.farbe;
-          g.fillRect(cx, y + 6, 10, rh - 12);
+          const cx = x0 + i * (cw + gap);
+          g.fillStyle = 'rgba(0,0,0,0.06)';
+          rr(g, cx + 2, y + 5, cw, rh, 18);
+          g.fill();
+          g.fillStyle = '#ffffff';
+          rr(g, cx, y, cw, rh, 18);
+          g.fill();
           if (!r) return;
-          g.fillStyle = '#f4f1ec';
-          g.font = `800 30px ${SANS}`;
-          g.fillText(r.nr, cx + 26, y + rh * 0.3);
-          fitText(g, r.titel, cx + 92, y + rh * 0.3, cw - 120, 700, 28);
-          g.fillStyle = '#c9c4bc';
-          g.font = `500 22px ${SANS}`;
-          g.fillText(`${r.zeit} · ${r.preis}`, cx + 26, y + rh * 0.68);
-          g.fillStyle = '#d9b24a';
-          g.textAlign = 'right';
-          g.fillText('Karte ▼', cx + cw - 34, y + rh * 0.68);
+          // Foto links
+          g.save();
+          rr(g, cx, y, rh, rh, 18);
+          g.clip();
+          drawPlate(g, cx + rh / 2, y + rh / 2, rh * 0.36, r);
+          g.restore();
+          const tx = cx + rh + 22;
+          g.fillStyle = WELT_FARBE[wl];
+          g.font = `700 20px ${SANS}`;
+          g.fillText(r.nr, tx, y + 38);
+          g.fillStyle = '#1f2120';
+          // Titel: max. zwei Zeilen
+          g.font = `400 28px ${SERIF}`;
+          const maxW = cw - rh - 44;
+          const lines = [];
+          let line = '';
+          for (const wd of r.titel.split(' ')) {
+            const t = line ? `${line} ${wd}` : wd;
+            if (g.measureText(t).width > maxW && line) {
+              lines.push(line);
+              line = wd;
+            } else line = t;
+          }
+          lines.push(line);
+          if (lines.length > 2) lines.splice(1, lines.length - 1, `${lines.slice(1).join(' ').slice(0, 16)}…`);
+          lines.forEach((l, k) => g.fillText(l, tx, y + 78 + k * 33));
+          g.fillStyle = '#8a8378';
+          g.font = `500 20px ${SANS}`;
+          g.fillText(`${r.zeit} · ${r.preis}`, tx, y + rh - 30);
           g.textAlign = 'left';
         });
       });
     });
   },
   dashboardBack: () =>
-    canvasTex(1536, 840, (g, W, H) => {
-      g.fillStyle = '#b84a32';
+    canvasTex(1600, 1000, (g, W, H) => {
+      g.fillStyle = '#1f2120';
       g.fillRect(0, 0, W, H);
-      g.fillStyle = '#fff';
       g.textBaseline = 'middle';
-      g.font = `800 70px ${SANS}`;
-      g.fillText('Kochen lernen bei uns', 50, 90);
-      g.font = `500 34px ${SANS}`;
-      const rows = ['Mo 18:30  Pasta Basics – 59 €', 'Mi 18:30  Ramen-Abend – 59 €', 'Do 18:30  Taco Night – 59 €', 'Fr          Firmen-Events auf Anfrage', 'täglich 12–13:30  Live-Cooking zum Probieren'];
-      rows.forEach((r, i) => g.fillText(r, 60, 210 + i * 78));
-      g.fillStyle = '#fff';
-      g.fillRect(W - 360, H - 380, 300, 300);
-      g.fillStyle = '#1c1c1f';
-      for (let i = 0; i < 15; i++) for (let j = 0; j < 15; j++) if ((i * 7 + j * 13 + i * j) % 3 === 0) g.fillRect(W - 345 + i * 18, H - 365 + j * 18, 18, 18);
-      g.fillStyle = '#fff';
-      g.font = `700 28px ${SANS}`;
-      g.fillText('Kurs buchen →', W - 600, H - 230);
+      g.fillStyle = '#b39b6b';
+      g.font = `600 22px ${SANS}`;
+      g.fillText('SHOWKÜCHE · KURSPROGRAMM', 70, 90);
+      g.fillStyle = '#f4f1ec';
+      g.font = `400 80px ${SERIF}`;
+      g.fillText('Kochen lernen bei uns', 70, 170);
+      const rows = [['Mo', '18:30', 'Pasta Basics', '59 €'], ['Mi', '18:30', 'Ramen-Abend', '59 €'], ['Do', '18:30', 'Taco Night', '59 €'], ['Fr', '', 'Firmen-Events', 'auf Anfrage'], ['täglich', '12–13:30', 'Live-Cooking zum Probieren', 'gratis']];
+      rows.forEach(([d, t, n, p], i) => {
+        const y = 290 + i * 104;
+        g.fillStyle = 'rgba(255,255,255,0.08)';
+        g.fillRect(70, y + 46, 900, 1);
+        g.fillStyle = '#b39b6b';
+        g.font = `600 30px ${SANS}`;
+        g.fillText(d, 70, y);
+        g.fillStyle = '#c9c4bc';
+        g.fillText(t, 220, y);
+        g.fillStyle = '#f4f1ec';
+        g.font = `400 38px ${SERIF}`;
+        g.fillText(n, 400, y);
+        g.font = `500 28px ${SANS}`;
+        g.textAlign = 'right';
+        g.fillText(p, 970, y);
+        g.textAlign = 'left';
+      });
+      g.fillStyle = '#f4f1ec';
+      rr(g, W - 450, H - 470, 340, 340, 24);
+      g.fill();
+      g.fillStyle = '#1f2120';
+      for (let i = 0; i < 15; i++) for (let j = 0; j < 15; j++) if ((i * 7 + j * 13 + i * j) % 3 === 0) g.fillRect(W - 425 + i * 19.5, H - 445 + j * 19.5, 19.5, 19.5);
+      g.fillStyle = '#c9c4bc';
+      g.font = `500 26px ${SANS}`;
+      g.textAlign = 'center';
+      g.fillText('Kurs buchen', W - 280, H - 90);
+      g.textAlign = 'left';
     }),
-  plakat: (titel, zeilen, farbe = '#b84a32') =>
+  plakat: (titel, zeilen, farbe = '#2b2e2c') =>
     canvasTex(512, 720, (g, W, H) => {
       g.fillStyle = '#fbf8f2';
       g.fillRect(0, 0, W, H);
@@ -266,6 +444,29 @@ const TEX = {
       g.fillStyle = '#c9c4ba';
       g.fillRect(0, 0, W, 3);
       g.fillRect(0, H - 3, W, 3);
+    }),
+  plakette: () =>
+    canvasTex(1024, 160, (g, W, H) => {
+      g.fillStyle = '#b39b6b';
+      g.fillRect(0, 0, W, H);
+      g.fillStyle = '#2a2420';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      g.font = `400 70px Georgia, "Times New Roman", serif`;
+      g.fillText('Live-Cooking · täglich 12–13:30', W / 2, H / 2 + 4);
+    }),
+  glasband: () =>
+    canvasTex(2048, 128, (g, W, H) => {
+      g.clearRect(0, 0, W, H);
+      g.fillStyle = 'rgba(245,245,240,0.55)';
+      g.fillRect(0, 22, W, H - 44);
+      g.fillStyle = 'rgba(255,255,255,0.0)';
+      g.fillStyle = 'rgba(120,120,115,0.55)';
+      g.textBaseline = 'middle';
+      g.font = `400 46px Georgia, "Times New Roman", serif`;
+      const t = 'Showküche   ·   One Hour Kitchen   ·   ';
+      const tw = g.measureText(t).width;
+      for (let x = 30; x < W; x += tw) g.fillText(t, x, H / 2 + 2);
     }),
   preisleisteDunkel: () =>
     canvasTex(512, 32, (g, W, H) => {
@@ -367,34 +568,49 @@ const BUILDERS = {
   },
 
   'matrix-dashboard'(b, m, ctx) {
+    // Freistehende Stele: Eichen-Seitenwangen, rahmenloser Bildschirm, darunter schräges Kartenpult mit 3×3 Acryl-Fächern
     const [x1, x2, z1, z2] = m.rechteck;
     const H = m.hoehe;
     const zc = (z1 + z2) / 2;
-    // Füße + Stelen
-    for (const x of [x1 + 0.08, x2 - 0.08]) {
-      b.box('anthrazit', [x - 0.05, x + 0.05, z1 + 0.05, z2 - 0.05], 0, H);
-      b.box('anthrazit', [x - 0.25, x + 0.25, z1, z2], 0, 0.04);
+    const cx = (x1 + x2) / 2;
+    // Sockel (Schattenfuge) + Seitenwangen
+    b.box('schwarzMatt', [x1 + 0.02, x2 - 0.02, zc - 0.16, zc + 0.16], 0, 0.05);
+    for (const x of [x1, x2 - 0.06]) {
+      b.box('eiche', [x, x + 0.06, zc - 0.15, zc + 0.15], 0.05, H);
     }
-    // Bildschirm-Rahmen
-    const y0 = 0.98;
-    b.box('anthrazit', [x1 + 0.13, x2 - 0.13, zc - 0.045, zc + 0.045], y0 - 0.03, H - 0.02);
-    const w = x2 - x1 - 0.32;
-    const h = H - 0.05 - y0;
-    plane(ctx.extra, unlit(TEX.dashboard(ctx.layout)), w, h, (x1 + x2) / 2, y0 + h / 2 - 0.01, zc - 0.047, [0, -1]);
-    plane(ctx.extra, unlit(TEX.dashboardBack()), w, h, (x1 + x2) / 2, y0 + h / 2 - 0.01, zc + 0.047, [0, 1]);
-    // Kartenspender: 9 Fächer unter dem Bildschirm (3 je Küche)
-    b.box('holzHell', [x1 + 0.16, x2 - 0.16, z1 - 0.12, zc], 0.82, 0.86);
+    // Kopfblende mit Markenname
+    b.box('schwarzMatt', [x1 + 0.06, x2 - 0.06, zc - 0.05, zc + 0.05], H - 0.14, H);
+    sign(ctx.extra, 'One Hour Kitchen', { w: 0.9, h: 0.1, bg: '#1d1e20', fg: '#efe7d6', font: '400', serif: true }, cx, H - 0.07, zc - 0.052, [0, -1]);
+    sign(ctx.extra, 'One Hour Kitchen', { w: 0.9, h: 0.1, bg: '#1d1e20', fg: '#efe7d6', font: '400', serif: true }, cx, H - 0.07, zc + 0.052, [0, 1]);
+    // Bildschirm: dünner Rahmen, Glasfront
+    const y0 = 1.02;
+    const top = H - 0.17;
+    const w = x2 - x1 - 0.2;
+    const h = top - y0;
+    b.box('schwarz', [x1 + 0.08, x2 - 0.08, zc - 0.035, zc + 0.035], y0 - 0.02, top + 0.01);
+    plane(ctx.extra, unlit(TEX.dashboard(ctx.layout)), w, h, cx, y0 + h / 2 - 0.005, zc - 0.037, [0, -1]);
+    plane(ctx.extra, unlit(TEX.dashboardBack()), w, h, cx, y0 + h / 2 - 0.005, zc + 0.037, [0, 1]);
+    // Kartenpult (Eiche), um 25° geneigt, mit Lichtkante
+    const pz1 = z1 - 0.2;
+    b.box('eiche', [x1 + 0.06, x2 - 0.06, pz1, zc - 0.035], 0.86, 0.9);
+    b.box('led', [x1 + 0.08, x2 - 0.08, pz1 - 0.003, pz1], 0.865, 0.875);
+    b.box('schwarzMatt', [x1 + 0.1, x2 - 0.1, pz1 + 0.05, zc - 0.06], 0.05, 0.86);
     const wl = ['Pasta Night', 'Asian Night', 'Mexican Night'];
     const an = ['schnell', 'besonders', 'günstig'];
     const colW = w / 3;
     wl.forEach((welt, i) => {
+      // Spaltenkopf: Kochwelt als kleines Schild
+      sign(ctx.extra, welt, { w: colW - 0.12, h: 0.045, bg: '#25282a', fg: '#efe7d6', font: '500', accent: WELT_FARBE[welt] }, x1 + 0.1 + (i + 0.5) * colW, 0.985, pz1 + 0.02, [0, -1]);
       an.forEach((a, j) => {
         const r = ctx.layout.rezepte.find((x) => x.welt === welt && x.anlass === a);
-        const x = x1 + 0.16 + i * colW + (j + 0.5) * (colW / 3);
-        b.geo('glas', G.box(0.17, 0.12, 0.05), x, 0.92, z1 - 0.06, 0, -0.25);
+        const x = x1 + 0.1 + i * colW + (j + 0.5) * (colW / 3);
+        // Acrylfach: Rückwand + Front, Karte steckt dazwischen
+        b.geo('glas', G.box(0.13, 0.17, 0.004), x, 0.97, pz1 + 0.075, 0, -0.35);
+        b.geo('glas', G.box(0.13, 0.08, 0.004), x, 0.93, pz1 + 0.045, 0, -0.35);
+        b.geo('chrom', G.box(0.13, 0.004, 0.035), x, 0.892, pz1 + 0.06, 0, -0.35);
         if (r) {
           if (!ctx.cardMats[r.nr]) ctx.cardMats[r.nr] = lit(recipeCardTexture(r));
-          plane(ctx.extra, ctx.cardMats[r.nr], 0.1, 0.14, x, 0.95, z1 - 0.055, [0, -1], -0.25);
+          plane(ctx.extra, ctx.cardMats[r.nr], 0.1, 0.14, x, 0.975, pz1 + 0.068, [0, -1], -0.35);
         }
       });
     });
@@ -478,6 +694,9 @@ const BUILDERS = {
         ctx.priceRail(f, x1 + 0.03, x2 - 0.03, y - 0.065, y - 0.025, 'preisDunkel');
       }
       b.box('led', faceRect(f, x1 + 0.04, x2 - 0.04, -0.012, -0.022), H - 0.035, H - 0.03);
+      // zurückgesetzte Sockelblende und Eichen-Abschlusskante oben
+      b.box('schwarzMatt', faceRect(f, x1 + 0.03, x2 - 0.03, -0.03, -0.05), 0.0, 0.1);
+      b.box('eiche', faceRect(f, x1, x2, 0.02, -0.03), H - 0.04, H);
       ctx.priceRail(f, x1 + 0.03, x2 - 0.03, 0.06, 0.1, 'preisDunkel');
       if (m.regal?.[seite]) this.blockFace(b, m, ctx, f, levels, m.regal[seite]);
     }
@@ -485,8 +704,8 @@ const BUILDERS = {
     b.box('eicheDunkel', [x1 - 0.012, x1, z1 + 0.02, z2 - 0.02], 0.1, H - 0.03);
     {
       const rz = ctx.layout.rezepte.filter((r) => r.welt === m.welt);
-      sign(ctx.extra, m.welt, { w: 0.46, h: 0.3, chalk: true, sub: rz.map((r) => r.nr).join(' · ') }, x1 - 0.016, 1.35, zc, [-1, 0]);
-      rz.forEach((r, k) => sign(ctx.extra, r.titel, { w: 0.46, h: 0.09, chalk: true }, x1 - 0.016, 1.08 - k * 0.11, zc, [-1, 0]));
+      sign(ctx.extra, m.welt, { w: 0.46, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: m.farbe, sub: `Rezepte ${rz.map((r) => r.nr).join(' · ')}` }, x1 - 0.016, 1.35, zc, [-1, 0]);
+      rz.forEach((r, k) => sign(ctx.extra, `${r.nr}  ${r.titel}`, { w: 0.46, h: 0.09, bg: '#2f3234', fg: '#e4dccb', font: '400', align: 'left' }, x1 - 0.016, 1.1 - k * 0.1, zc, [-1, 0]));
     }
     // Regalkopf zum Gang (+x): Kochwelt-Stele mit Rezeptkarten „» schnell“
     const ex = x2 + 0.005;
@@ -505,10 +724,10 @@ const BUILDERS = {
       b.geo('glas', G.box(0.03, 0.13, 0.11), x2 + 0.08, 1.31, zc + dz, Math.PI / 2, -0.2);
       plane(ctx.extra, ctx.cardMats[r.nr], 0.095, 0.13, x2 + 0.09, 1.33, zc + dz, [1, 0], -0.2);
     });
-    if (kopf.titel) sign(ctx.extra, kopf.titel, { w: 0.52, h: 0.12, chalk: true }, x2 + 0.165, 1.08, zc, [1, 0]);
+    if (kopf.titel) sign(ctx.extra, kopf.titel, { w: 0.52, h: 0.12, bg: '#25282a', fg: '#efe7d6', font: '500', brass: true }, x2 + 0.165, 1.08, zc, [1, 0]);
     // Stele mit Kochwelt-Namen (Reckzone)
     b.box('schwarzMatt', [x2 - 0.02, x2 + 0.03, zc - 0.03, zc + 0.03], H, H + 0.45);
-    sign(ctx.extra, m.welt, { w: 0.5, h: 0.3, bg: '#1f2120', fg: '#f3efe6', font: '600', serif: true, accent: col, sub: 'Kochwelt' }, x2 + 0.035, H + 0.22, zc, [1, 0]);
+    sign(ctx.extra, m.welt, { w: 0.5, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: col, sub: 'Kochwelt' }, x2 + 0.035, H + 0.22, zc, [1, 0]);
     // Kopfschild über die ganze Gondel (beidseitig)
     b.box('schwarzMatt', [(x1 + x2) / 2 - 0.01, (x1 + x2) / 2 + 0.01, zc - 0.01, zc + 0.01], H, H + 0.18);
     // Kopfschild je Seite: jede Seite gehört zu „ihrer“ Koje
@@ -518,7 +737,7 @@ const BUILDERS = {
       const wc = face.titel.startsWith('PASTA') ? '#a8432c' : face.titel.startsWith('ASIAN') ? '#b08a34' : '#3f6e4a';
       const [t1, ...rest] = face.titel.split(' · ');
       const nice = t1.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
-      sign(ctx.extra, nice, { w: 2.8, h: 0.3, bg: '#1f2120', fg: '#f3efe6', font: '600', serif: true, accent: wc, sub: rest.join(' · ') }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
+      sign(ctx.extra, nice, { w: 2.8, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: wc, sub: rest.join(' · ') }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
     }
   },
 
@@ -551,7 +770,7 @@ const BUILDERS = {
         ctx.products.shelf(fach.code, { along: 'x', from: a1, to: a2, front, y: y + 0.002, depth: d - 0.02, dir: [0, -1], maxH: 0.27, rows: 3, start: Math.round(y * 10), tagOut: 0.022, tagDy: -0.032 });
         ctx.priceRailAt([a1, a2, front - 0.015, front], y - 0.05, y - 0.01, [0, -1]);
       }
-      sign(ctx.extra, fach.name, { w: L - 0.12, h: 0.16, bg: '#f6f4ef', fg: '#1f2120', font: '600', accent: '#46708f', sub: fach.code }, (a1 + a2) / 2, H - 0.11, z1 + 0.195, [0, -1]);
+      sign(ctx.extra, fach.name, { w: L - 0.12, h: 0.16, bg: '#25282a', fg: '#efe7d6', font: '500', accent: '#46708f', sub: fach.code }, (a1 + a2) / 2, H - 0.11, z1 + 0.195, [0, -1]);
     });
     void f;
     void D;
@@ -572,7 +791,7 @@ const BUILDERS = {
       const a1 = x1 + i * L + 0.05;
       const a2 = x1 + (i + 1) * L - 0.05;
       for (const y of levels) ctx.products.shelf(fach.code, { along: 'x', from: a1, to: a2, front: z1 + 0.14, y, depth: z2 - z1 - 0.22, dir: [0, -1], maxH: 0.3, rows: 3, start: Math.round(y * 10), tagOut: 0.024, tagDy: -0.014 });
-      sign(ctx.extra, fach.name, { w: L - 0.12, h: 0.16, bg: '#f6f4ef', fg: '#1f2120', font: '600', accent: '#6d4a63', sub: fach.code }, (a1 + a2) / 2, H - 0.12, z1 + 0.035, [0, -1]);
+      sign(ctx.extra, fach.name, { w: L - 0.12, h: 0.16, bg: '#25282a', fg: '#efe7d6', font: '500', accent: '#6d4a63', sub: fach.code }, (a1 + a2) / 2, H - 0.12, z1 + 0.035, [0, -1]);
     });
     // Glastüren mit Griffen und LED-Kanten
     const doors = n * 2;
@@ -640,7 +859,7 @@ const BUILDERS = {
         const a2 = z1 + (i + 1) * L - 0.04;
         for (const y of levels) ctx.products.shelf(s.code, { along: 'z', from: a1, to: a2, front: f.front, y, depth, dir: f.dir, maxH: 0.32, rows: 2, start: Math.round(y * 10) + i, tagOut: 0.008 });
         const [sx, sz] = f.at((a1 + a2) / 2, 0.02);
-        const bs = { bg: '#f6f4ef', fg: '#1f2120', font: '600', accent: '#3f5873', sub: s.code };
+        const bs = { bg: '#25282a', fg: '#efe7d6', font: '500', accent: '#3f5873', sub: s.code };
         if (H > 1.8) sign(ctx.extra, s.name, { ...bs, w: Math.min(1.5, L - 0.2), h: 0.2 }, sx, H - 0.14, sz, f.dir);
         else {
           const [px, pz] = f.at((a1 + a2) / 2, -0.01);
@@ -650,15 +869,27 @@ const BUILDERS = {
       });
     }
     b.box('regalWeiss', [x1, x2, z1, z2], H - 0.03, H);
+    // Blende mit Lichtleiste über dem Regal (nur Wandregal)
+    if (!doppelt) {
+      for (const seite of seiten) {
+        const f = faceFrame(m.rechteck, seite);
+        b.box('regalWeiss', faceRect(f, z1, z2, 0.12, -0.02), H, H + 0.12);
+        b.box('led', faceRect(f, z1 + 0.02, z2 - 0.02, 0.1, 0.0), H - 0.005, H);
+      }
+    }
   },
 
   kochtresen(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
     const h = m.hoehe;
-    b.box('weiss', [x1, x2, z1 + 0.02, z2], 0.08, h - 0.04);
-    b.box('anthrazit', [x1, x2, z1 + 0.04, z2 - 0.02], 0, 0.08);
-    b.box('stein', [x1 - 0.03, x2 + 0.03, z1 - 0.06, z2 + 0.02], h - 0.04, h);
-    plane(ctx.extra, lit(TEX.kochtresen()), x2 - x1 - 0.2, 0.62, (x1 + x2) / 2, 0.47, z1 + 0.015, [0, -1]);
+    // Korpus mit Eichen-Lamellen zur Zuschauerseite, Sockel mit Schattenfuge, Terrazzo-Platte mit Überstand
+    b.box('front', [x1, x2, z1 + 0.04, z2], 0.08, h - 0.04);
+    b.box('schwarzMatt', [x1 + 0.03, x2 - 0.03, z1 + 0.08, z2 - 0.03], 0, 0.08);
+    for (let x = x1 + 0.03; x < x2 - 0.03; x += 0.06) b.box('eiche', [x, x + 0.035, z1 + 0.005, z1 + 0.04], 0.08, h - 0.04);
+    b.box('terrazzo', [x1 - 0.04, x2 + 0.04, z1 - 0.12, z2 + 0.02], h - 0.04, h);
+    // kleine Messingplakette statt großer Schrift
+    b.box('messing', [(x1 + x2) / 2 - 0.3, (x1 + x2) / 2 + 0.3, z1 - 0.002, z1 + 0.005], 0.62, 0.72);
+    plane(ctx.extra, lit(TEX.plakette(), { metalness: 0.5, roughness: 0.4 }), 0.58, 0.09, (x1 + x2) / 2, 0.67, z1 - 0.004, [0, -1]);
     // Kochfeld, Töpfe, Pfanne, Brett mit Gemüse
     const cx = (x1 + x2) / 2;
     b.box('schwarz', [cx - 0.45, cx + 0.15, z2 - 0.5, z2 - 0.1], h, h + 0.008);
@@ -668,26 +899,39 @@ const BUILDERS = {
     b.box('brett', [cx + 0.45, cx + 0.85, z2 - 0.45, z2 - 0.18], h, h + 0.025);
     ctx.fresh.crate(b, cx + 0.65, h + 0.025, z2 - 0.315, 0.3, 0.2, 'tomate', 0);
     for (let i = 0; i < 6; i++) b.geo('teller', G.disc(0.07, 0.015, 20), x1 + 0.25 + i * 0.16, h + 0.008, z1 + 0.12); // Probierschälchen
-    // Dunstabzugshaube über dem Kochfeld
-    b.box('edelstahl', [cx - 0.75, cx + 0.45, z2 - 0.75, z2 + 0.05], 2.3, 2.6);
-    b.box('edelstahl', [cx - 0.25, cx - 0.05, z2 - 0.45, z2 - 0.25], 2.6, 3.2);
-    b.box('led', [cx - 0.65, cx + 0.35, z2 - 0.65, z2 - 0.05], 2.295, 2.3);
+    // Induktionsfeld mit Kochzonen
+    for (const [dx, dz, r] of [[-0.32, -0.2, 0.09], [-0.1, -0.35, 0.07], [0.02, -0.18, 0.1]]) b.geo('kochzone', new THREE.RingGeometry(r - 0.006, r, 24), cx + dx, h + 0.0095, z2 + dz, 0, -Math.PI / 2);
+    // Inselhaube: schlanker Edelstahlkasten mit LED-Unterseite, an Stahlseilen
+    b.box('edelstahl', [cx - 0.7, cx + 0.4, z2 - 0.7, z2 - 0.02], 2.38, 2.52);
+    b.box('led', [cx - 0.66, cx + 0.36, z2 - 0.66, z2 - 0.06], 2.375, 2.38);
+    for (const [dx, dz] of [[-0.65, -0.65], [0.35, -0.65], [-0.65, -0.07], [0.35, -0.07]]) b.box('metall', [cx + dx - 0.004, cx + dx + 0.004, z2 + dz - 0.004, z2 + dz + 0.004], 2.52, 3.2);
+    // Pendelleuchten über dem Tresen (Zuschauerseite)
+    for (const dx of [-0.9, 0, 0.9]) {
+      b.box('metall', [cx + dx - 0.003, cx + dx + 0.003, z1 + 0.2 - 0.003, z1 + 0.2 + 0.003], 1.95, 3.2);
+      b.geo('messing', new THREE.CylinderGeometry(0.07, 0.11, 0.16, 20, 1, true), cx + dx, 1.9, z1 + 0.2);
+      b.geo('led', new THREE.CircleGeometry(0.1, 20), cx + dx, 1.83, z1 + 0.2, 0, Math.PI / 2);
+    }
+    // Messer- und Utensilienleiste
+    b.box('messing', [cx + 0.45, cx + 1.05, z2 - 0.03, z2 - 0.01], h + 0.3, h + 0.33);
+    for (let i = 0; i < 5; i++) b.box(i % 2 ? 'schwarz' : 'edelstahl', [cx + 0.5 + i * 0.11, cx + 0.53 + i * 0.11, z2 - 0.03, z2 - 0.015], h + 0.1, h + 0.3);
     // Schild hängt zur Zuschauerseite
-    sign(ctx.extra, 'SHOWKÜCHE · LIVE-COOKING', { w: 1.6, h: 0.22, bg: '#b84a32', fg: '#fff', font: '800' }, cx - 0.15, 2.45, z2 - 0.76, [0, -1]);
+    sign(ctx.extra, 'Showküche', { w: 1.6, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Live-Cooking 12–13:30 · Kurse ab 18:30' }, cx - 0.15, 2.45, z2 - 0.76, [0, -1]);
   },
 
   kurstisch(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
     const h = m.hoehe;
-    for (const x of [x1 + 0.08, x2 - 0.12]) for (const z of [z1 + 0.08, z2 - 0.12]) b.box('anthrazit', [x, x + 0.04, z, z + 0.04], 0, h - 0.04);
-    b.box('holz', [x1, x2, z1, z2], h - 0.04, h);
+    for (const x of [x1 + 0.08, x2 - 0.12]) for (const z of [z1 + 0.08, z2 - 0.12]) b.box('schwarzMatt', [x, x + 0.05, z, z + 0.05], 0, h - 0.05);
+    b.box('schwarzMatt', [x1 + 0.1, x2 - 0.1, z1 + 0.1, z2 - 0.1], h - 0.09, h - 0.05);
+    b.box('eiche', [x1, x2, z1, z2], h - 0.05, h);
     for (const x of m.stuehle_x) {
       for (const [i, z] of m.stuehle_z.entries()) {
         const facing = i === 0 ? 1 : -1; // Stuhl blickt zum Tisch
-        b.box('holz', [x - 0.2, x + 0.2, z - 0.2, z + 0.2], 0.44, 0.48);
-        for (const dx of [-0.17, 0.15]) for (const dz of [-0.17, 0.15]) b.box('anthrazit', [x + dx, x + dx + 0.02, z + dz, z + dz + 0.02], 0, 0.44);
+        b.box('eiche', [x - 0.2, x + 0.2, z - 0.2, z + 0.2], 0.44, 0.47);
+        for (const dx of [-0.17, 0.15]) for (const dz of [-0.17, 0.15]) b.box('schwarzMatt', [x + dx, x + dx + 0.02, z + dz, z + dz + 0.02], 0, 0.44);
         const bz = z - facing * 0.19;
-        b.box('holz', [x - 0.2, x + 0.2, bz - 0.02, bz + 0.02], 0.48, 0.88);
+        b.box('eiche', [x - 0.19, x + 0.19, bz - 0.015, bz + 0.015], 0.62, 0.86);
+        for (const dx of [-0.17, 0.15]) b.box('schwarzMatt', [x + dx, x + dx + 0.02, bz - 0.01, bz + 0.01], 0.47, 0.64);
         b.geo('teller', G.disc(0.11, 0.015, 24), x, h + 0.008, z + facing * 0.38);
         b.geo('glas', G.disc(0.035, 0.12, 16), x + 0.14, h + 0.06, z + facing * 0.3);
       }
@@ -698,10 +942,21 @@ const BUILDERS = {
     const [x1, x2, z1, z2] = m.rechteck;
     const h = m.hoehe;
     const fx2 = x2 - 0.5; // daneben Hochschrank (Kühlschrank)
-    b.box('weiss', [x1, fx2, z1 + 0.02, z2], 0.1, h - 0.04);
-    b.box('anthrazit', [x1, fx2, z1 + 0.06, z2], 0, 0.1);
-    b.box('stein', [x1, fx2, z1 - 0.02, z2], h - 0.04, h);
-    for (let x = x1 + 0.6; x < fx2; x += 0.6) b.box('grau', [x - 0.004, x + 0.004, z1 + 0.015, z1 + 0.02], 0.12, h - 0.06);
+    b.box('front', [x1, fx2, z1 + 0.02, z2], 0.1, h - 0.04);
+    b.box('schwarzMatt', [x1, fx2, z1 + 0.06, z2], 0, 0.1);
+    b.box('terrazzo', [x1, fx2, z1 - 0.02, z2], h - 0.04, h);
+    // Fronten mit Fugen und Messing-Griffleisten
+    for (let x = x1 + 0.6; x < fx2; x += 0.6) b.box('schwarzMatt', [x - 0.004, x + 0.004, z1 + 0.015, z1 + 0.02], 0.12, h - 0.06);
+    for (let x = x1 + 0.1; x < fx2 - 0.3; x += 0.6) b.box('messing', [x, x + 0.4, z1 + 0.008, z1 + 0.018], h - 0.12, h - 0.1);
+    // Spritzschutz Edelstahl vor der Glaswand
+    b.box('edelstahl', [x1, fx2, z2 - 0.02, z2], h, h + 0.5);
+    // Hängeleiste mit Pfannen
+    b.box('messing', [x1 + 0.2, x1 + 1.8, z2 - 0.06, z2 - 0.04], 1.75, 1.77);
+    for (let i = 0; i < 4; i++) {
+      const px = x1 + 0.4 + i * 0.4;
+      b.box('metall', [px - 0.003, px + 0.003, z2 - 0.06, z2 - 0.05], 1.55, 1.76);
+      b.geo(i % 2 ? 'topf' : 'kupfer', G.disc(0.09 + (i % 2) * 0.02, 0.02, 20), px, 1.45, z2 - 0.08, 0, Math.PI / 2);
+    }
     // Spüle + Armatur, Backofen
     b.box('edelstahl', [x1 + 0.3, x1 + 0.9, z1 + 0.08, z2 - 0.1], h - 0.01, h + 0.002);
     b.box('schwarz', [x1 + 0.35, x1 + 0.85, z1 + 0.12, z2 - 0.14], h - 0.005, h + 0.004);
@@ -716,9 +971,7 @@ const BUILDERS = {
     b.box('holz', [x1 + 1.0, fx2 - 0.1, z2 - 0.22, z2], 1.45, 1.48);
     for (let i = 0; i < 10; i++) ctx.products.add(ctx.products.pick('B3', i), x1 + 1.05 + i * 0.12, 1.48, z2 - 0.1, [0, -1]);
     b.box('anthrazit', [x1 + 1.0, x1 + 1.02, z2 - 0.02, z2], h, 1.48);
-    // Rückseite zum Gang: Tafel „Kursküche“
-    b.box('holzDunkel', [x1, fx2, z2, z2 + 0.03], h, h + 0.45);
-    plane(ctx.extra, lit(TEX.kurskueche()), 1.6, 0.4, (x1 + fx2) / 2, h + 0.23, z2 + 0.032, [0, 1]);
+    void TEX.kurskueche;
   },
 
   hocker(b, m) {
@@ -747,8 +1000,8 @@ const BUILDERS = {
     b.box('metall', [x1 + 0.07, x1 + 0.09, z1 + 0.34, z1 + 0.36], h, h + 0.13);
     // Ablage am Ende, Tütenhalter
     b.box('weiss', [x1 - 0.35, x1, z1, z1 + 0.5], h - 0.12, h - 0.08);
-    sign(ctx.extra, 'KASSE 1', { w: 0.6, h: 0.2, bg: '#b84a32', fg: '#fff', font: '800' }, (x1 + x2) / 2, 2.45, (z1 + z2) / 2, [-1, 0]);
-    sign(ctx.extra, 'KASSE 1', { w: 0.6, h: 0.2, bg: '#b84a32', fg: '#fff', font: '800' }, (x1 + x2) / 2, 2.45, (z1 + z2) / 2 + 0.01, [0, 1]);
+    sign(ctx.extra, 'Kasse 1', { w: 0.6, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true }, (x1 + x2) / 2, 2.45, (z1 + z2) / 2, [-1, 0]);
+    sign(ctx.extra, 'Kasse 1', { w: 0.6, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true }, (x1 + x2) / 2, 2.45, (z1 + z2) / 2 + 0.01, [0, 1]);
     b.box('metall', [(x1 + x2) / 2 - 0.006, (x1 + x2) / 2 + 0.006, (z1 + z2) / 2 - 0.006, (z1 + z2) / 2 + 0.006], 2.55, 3.2);
   },
 
@@ -765,8 +1018,8 @@ const BUILDERS = {
       // Ablage für Taschen
       b.box('chrom', [x1 + 0.05, x1 + 0.4, zc + 0.15, zc + 0.32], 0.88, 0.9);
     }
-    sign(ctx.extra, 'SB-KASSE', { w: 0.7, h: 0.2, bg: '#4f8a6a', fg: '#1c1c1f', font: '800' }, (x1 + x2) / 2 - 0.2, 2.45, (z1 + z2) / 2, [-1, 0]);
-    sign(ctx.extra, 'SB-KASSE', { w: 0.7, h: 0.2, bg: '#4f8a6a', fg: '#1c1c1f', font: '800' }, (x1 + x2) / 2 - 0.2, 2.45, (z1 + z2) / 2 + 0.01, [0, 1]);
+    sign(ctx.extra, 'SB-Kasse', { w: 0.7, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true }, (x1 + x2) / 2 - 0.2, 2.45, (z1 + z2) / 2, [-1, 0]);
+    sign(ctx.extra, 'SB-Kasse', { w: 0.7, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true }, (x1 + x2) / 2 - 0.2, 2.45, (z1 + z2) / 2 + 0.01, [0, 1]);
     b.box('metall', [(x1 + x2) / 2 - 0.206, (x1 + x2) / 2 - 0.194, (z1 + z2) / 2 - 0.006, (z1 + z2) / 2 + 0.006], 2.55, 3.2);
   },
 
@@ -783,7 +1036,7 @@ const BUILDERS = {
     }
     b.box('akzent', [x1, x2, z1, z2], H - 0.02, H);
     b.box('anthrazit', [x1 + 0.01, x1 + 0.03, (z1 + z2) / 2 - 0.01, (z1 + z2) / 2 + 0.01], H, H + 0.25);
-    sign(ctx.extra, 'Noch etwas dazu?', { w: 1.3, h: 0.28, bg: '#1f2120', fg: '#f3efe6', font: '600', serif: true, accent: '#b84a32', sub: 'Kräuter · Schokolade · Riegel' }, x1 + 0.035, H + 0.33, (z1 + z2) / 2, [1, 0]);
+    sign(ctx.extra, 'Noch etwas dazu?', { w: 1.3, h: 0.28, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Kräuter · Schokolade · Riegel' }, x1 + 0.035, H + 0.33, (z1 + z2) / 2, [1, 0]);
   },
 
   glasbruestung(b, m) {
@@ -792,7 +1045,39 @@ const BUILDERS = {
     const xc = (x1 + x2) / 2;
     b.box('glas', [xc - 0.006, xc + 0.006, z1, z2], 0.05, H - 0.04);
     b.box('edelstahl', [x1, x2, z1, z2], H - 0.04, H);
-    for (let z = z1; z <= z2 + 0.01; z += (z2 - z1) / 3) b.box('edelstahl', [xc - 0.02, xc + 0.02, Math.min(z, z2 - 0.04), Math.min(z, z2 - 0.04) + 0.04], 0, H);
+  },
+
+  // Raumhohe Glaswand mit schmalem Schwarzstahlrahmen, satiniertem Sichtschutzband und Pfosten alle ~1,2 m
+  glaswand(b, m, ctx) {
+    const H = m.hoehe;
+    if (!ctx.etchMat) {
+      ctx.etchMat = new THREE.MeshStandardMaterial({ map: TEX.glasband(), transparent: true, roughness: 0.4, depthWrite: false });
+    }
+    for (const [ax, az, bx, bz] of m.segmente) {
+      const alongX = Math.abs(bx - ax) > Math.abs(bz - az);
+      const len = alongX ? bx - ax : bz - az;
+      const c = alongX ? (az + bz) / 2 : (ax + bx) / 2;
+      const rect = (a1, a2, t) => (alongX ? [a1, a2, c - t, c + t] : [c - t, c + t, a1, a2]);
+      const a0 = alongX ? ax : az;
+      // Glas
+      b.box('glas', rect(a0, a0 + len, 0.005), 0.06, H - 0.05);
+      // Rahmen: Bodenschiene, Kopfschiene, Pfosten
+      b.box('schwarzMatt', rect(a0, a0 + len, 0.025), 0, 0.06);
+      b.box('schwarzMatt', rect(a0, a0 + len, 0.025), H - 0.05, H);
+      const n = Math.max(1, Math.round(len / 1.2));
+      for (let i = 0; i <= n; i++) {
+        const p = a0 + (i * len) / n;
+        b.box('schwarzMatt', rect(Math.max(a0, p - 0.02), Math.min(a0 + len, p + 0.02), 0.025), 0, H);
+      }
+      // satiniertes Band mit Schriftzug (beidseitig)
+      const mid = a0 + len / 2;
+      for (const s2 of [-1, 1]) {
+        const dir = alongX ? [0, s2] : [s2, 0];
+        const [px, pz] = alongX ? [mid, c + s2 * 0.007] : [c + s2 * 0.007, mid];
+        const pl = plane(ctx.extra, ctx.etchMat, len - 0.06, 0.26, px, 1.25, pz, dir);
+        pl.renderOrder = 2;
+      }
+    }
   },
 
   kuehlzelle(b, m, ctx) {
@@ -805,7 +1090,7 @@ const BUILDERS = {
     const dx = x2 - 1.2;
     b.box('edelstahl', [dx, dx + 0.9, z2, z2 + 0.03], 0.05, 2.05);
     b.box('chrom', [dx + 0.75, dx + 0.8, z2 + 0.03, z2 + 0.07], 0.95, 1.2);
-    sign(ctx.extra, 'KÜHLZELLE · Hinterbefüllung K1–K6', { w: 1.5, h: 0.2, bg: '#46708f', fg: '#fff', font: '700' }, x1 + 2.2, 1.9, z2 + 0.01, [0, 1]);
+    sign(ctx.extra, 'KÜHLZELLE · Hinterbefüllung K1–K6', { w: 1.5, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '500', brass: true }, x1 + 2.2, 1.9, z2 + 0.01, [0, 1]);
     sign(ctx.extra, '+2 °C', { w: 0.3, h: 0.14, bg: '#1c1c1f', fg: '#4f8a6a', font: '700' }, dx + 0.45, 2.15, z2 + 0.035, [0, 1]);
   },
 
@@ -866,7 +1151,7 @@ BUILDERS['kochwelt-gondel'].blockFace = function (b, m, ctx, f, levels, face) {
     // Blockschild (Reckzone): Fachcode, Warengruppe und die Rezepte, die daraus kochen
     const rez = ctx.layout.rezepte.filter((r) => r.zutaten.some(([nm, c]) => c === bl.code && (bl.artikel || []).includes(nm))).map((r) => r.nr);
     const [sx, sz] = f.at((a1 + a2) / 2, 0.01);
-    sign(ctx.extra, bl.name, { w: Math.min(1.6, L - 0.2), h: 0.2, bg: '#2a2c2b', fg: '#efe9de', font: '600', accent: m.farbe, sub: `${bl.code}${rez.length ? ` · für Rezept ${rez.join(' ')}` : ''}` }, sx, m.hoehe - 0.13, sz, f.dir);
+    sign(ctx.extra, bl.name, { w: Math.min(1.6, L - 0.2), h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '500', accent: m.farbe, sub: `${bl.code}${rez.length ? ` · für Rezept ${rez.join(' ')}` : ''}` }, sx, m.hoehe - 0.13, sz, f.dir);
   });
 };
 
@@ -910,6 +1195,7 @@ export function footprints(m) {
     const r = m.durchmesser / 2 - 0.03;
     return m.stationen.map(([x, z]) => [x - r, x + r, z - r, z + r]);
   }
+  if (m.segmente) return m.segmente.map(([a, c, b2, d]) => [Math.min(a, b2), Math.max(a, b2), Math.min(c, d), Math.max(c, d)]);
   if (m.mitte) {
     const half = (Math.abs(m.richtung[0]) * m.laenge + Math.abs(m.richtung[1]) * m.tiefe) / 2;
     const halfZ = (Math.abs(m.richtung[1]) * m.laenge + Math.abs(m.richtung[0]) * m.tiefe) / 2;
@@ -988,10 +1274,10 @@ export function buildFurniture(layout) {
       const oz = dir[0] !== 0 ? s * (w / 2 - 0.1) : 0;
       b.box('metall', [x + ox - 0.005, x + ox + 0.005, z + oz - 0.005, z + oz + 0.005], 2.5 + h / 2, 3.2);
     }
-    const opts = { w, h: h * 1.1, bg: '#1f2120', fg: '#f3efe6', font: '600', accent: d.farbe };
+    const opts = { w, h: h * 1.15, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: d.farbe };
     const yaw = yawFacing(dir[0], dir[1]);
     for (const s of [1, -1]) {
-      const m = signMesh(d.text, opts);
+      const m = signMesh(titleCase(d.text), opts);
       m.position.set(x, 2.5, -z);
       m.rotation.y = yaw + (s < 0 ? Math.PI : 0);
       m.translateZ(0.006);

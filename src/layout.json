@@ -951,15 +951,36 @@
     },
     {
       "id": "M19",
-      "name": "Glasbrüstung Showküche",
-      "typ": "glasbruestung",
+      "name": "Glaswand Showküche",
+      "typ": "glaswand",
+      "hoehe": 2.5,
+      "segmente": [
+        [
+          7.95,
+          5.2,
+          8.01,
+          9.53
+        ],
+        [
+          7.95,
+          9.47,
+          11.61,
+          9.53
+        ],
+        [
+          11.55,
+          7.6,
+          11.61,
+          9.53
+        ]
+      ],
       "rechteck": [
         7.95,
-        8.05,
-        5.75,
-        8.8
+        11.61,
+        9.47,
+        9.53
       ],
-      "hoehe": 1.0
+      "_hinweis": "Glaswände an drei Seiten (links, hinten, rechts teilweise); vorn zur Übergangszone offen für Zuschauer"
     },
     {
       "id": "L1",
@@ -1544,7 +1565,7 @@
     "_hinweis": "Farben der Oberflächen. Böden je Zone stehen bei den Zonen (holz/beton/fliese). wandkopf = dunkles Band über den Regalen ab 'von' m.",
     "wand": "#e6dfd3",
     "decke": "#2b2a2c",
-    "akzent": "#b84a32",
+    "akzent": "#2b2e2c",
     "beton": "#a39c92",
     "holz": "#9a7048",
     "fliese": "#e7e3dc",
@@ -2041,6 +2062,7 @@
         "M12",
         "M13",
         "M14",
+        "M19",
         "M15",
         "Z4"
       ],
@@ -3864,7 +3886,7 @@
         ],
         "y": 3.0,
         "hoehe": 0.34,
-        "farbe": "#ff5a3c",
+        "farbe": "#f2dcb0",
         "_ort": "Fassade über dem Schaufenster"
       },
       {
@@ -3878,9 +3900,9 @@
           0,
           -1
         ],
-        "y": 2.55,
+        "y": 2.72,
         "hoehe": 0.36,
-        "farbe": "#ff8a3d",
+        "farbe": "#f2dcb0",
         "schrift": "italic 700"
       },
       {

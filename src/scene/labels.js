@@ -46,7 +46,7 @@ export function textSprite(lines, { height = 0.3, bg = 'rgba(28,28,31,0.82)', fg
 }
 
 // Flaches Schild (Plane) mit Text. Stile: Standard, accent (Farbleiste unten), serif, chalk (Kreidetafel), sub (zweite Zeile)
-export function signMesh(text, { w, h, bg = '#1c1c1f', fg = '#f4f1ec', font = '600', border = null, accent = null, serif = false, chalk = false, sub = null, align = 'center' }) {
+export function signMesh(text, { w, h, bg = '#1c1c1f', fg = '#f4f1ec', font = '600', border = null, accent = null, serif = false, chalk = false, sub = null, align = 'center', brass = false }) {
   const H = 160;
   const W = Math.round((H * w) / h);
   const c = document.createElement('canvas');
@@ -73,9 +73,10 @@ export function signMesh(text, { w, h, bg = '#1c1c1f', fg = '#f4f1ec', font = '6
     g.lineWidth = 8;
     g.strokeRect(4, 4, W - 8, H - 8);
   }
-  if (accent) {
-    g.fillStyle = accent;
-    g.fillRect(0, H - 14, W, 14);
+  // Einheitliches Schildsystem: feine Messinglinie unten, Bereichsfarbe nur als kleiner Punkt vor dem Titel
+  if (accent || brass) {
+    g.fillStyle = '#b39b6b';
+    g.fillRect(W * 0.04, H - 12, W * 0.92, 3);
   }
   g.fillStyle = fg;
   const main = sub ? 0.4 : 0.5;
@@ -91,7 +92,17 @@ export function signMesh(text, { w, h, bg = '#1c1c1f', fg = '#f4f1ec', font = '6
   g.textAlign = align;
   g.textBaseline = 'middle';
   const x = align === 'left' ? W * 0.06 : W / 2;
-  g.fillText(text, x, H * main + 3 - (accent ? 6 : 0));
+  const ty = H * main + 3 - (accent ? 6 : 0);
+  g.fillText(text, x, ty);
+  if (accent && !chalk) {
+    const tw = g.measureText(text).width;
+    const mx = align === 'left' ? x - size * 0.45 : x - tw / 2 - size * 0.45;
+    g.fillStyle = accent;
+    g.beginPath();
+    g.arc(Math.max(size * 0.2, mx), ty - size * 0.05, size * 0.16, 0, Math.PI * 2);
+    g.fill();
+    g.fillStyle = fg;
+  }
   if (sub) {
     g.globalAlpha = 0.75;
     let s2 = 40;

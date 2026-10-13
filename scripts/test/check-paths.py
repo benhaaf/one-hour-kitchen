@@ -3,7 +3,9 @@ import json, math, sys
 L = json.load(open('src/layout.json')); R = 0.25
 rects = []
 for m in L['moebel']:
-    if 'rechteck' in m: rects.append((m['id'], m['rechteck']))
+    if 'segmente' in m:
+        for a, c, b2, d in m['segmente']: rects.append((m['id'], [min(a, b2), max(a, b2), min(c, d), max(c, d)]))
+    elif 'rechteck' in m: rects.append((m['id'], m['rechteck']))
     elif 'mitte' in m:
         cx, cz = m['mitte']; u = m['richtung']; n = math.hypot(*u)
         rects.append((m['id'], ('rot', cx, cz, m['laenge'], m['tiefe'], u[0] / n, u[1] / n)))

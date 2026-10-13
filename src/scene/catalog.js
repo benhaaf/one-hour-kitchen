@@ -48,15 +48,15 @@ export const CATALOG = {
     P('packung', NUDEL_KURZ, '#1e3d6e', '#e3d3a4', 'Nonna Lia', 'Fusilli', '500 g', 1.79),
     P('packung', [0.12, 0.17, 0.06], '#1e3d6e', '#e3d3a4', 'Nonna Lia', 'Ditalini', '500 g', 1.79),
     P('packung', [0.13, 0.16, 0.07], '#efe4c6', '#7b2d26', 'Forno Lia', 'Tagliatelle', 'all’uovo · 250 g', 2.49),
-    P('packung', NUDEL_LANG, '#f3f0e8', '#b9472f', 'Basis+', 'Spaghetti', '500 g', 0.89, { f: 4 }),
-    P('packung', NUDEL_KURZ, '#f3f0e8', '#b9472f', 'Basis+', 'Penne', '500 g', 0.89),
-    P('packung', NUDEL_LANG, '#c9b089', '#3f6b3a', 'Grünwerk', 'Vollkorn-Spaghetti', 'Bio · 500 g', 1.99),
+    P('beutel', [0.1, 0.27, 0.035], '#f3f0e8', '#b9472f', 'Basis+', 'Spaghetti', '500 g', 0.89, { f: 4 }),
+    P('beutel', [0.14, 0.21, 0.06], '#f3f0e8', '#b9472f', 'Basis+', 'Penne', '500 g', 0.89),
+    P('packung', NUDEL_LANG, '#d8c7a2', '#3f6b3a', 'Grünwerk', 'Vollkorn-Spaghetti', 'Bio · 500 g', 1.99),
   ],
   PA_NUDELN_B: [
     P('packung', [0.09, 0.3, 0.045], '#1e3d6e', '#e3d3a4', 'Nonna Lia', 'Spaghetti', '1 kg', 3.29),
-    P('packung', [0.15, 0.24, 0.07], '#f3f0e8', '#b9472f', 'Basis+', 'Penne', '1 kg', 1.69),
+    P('beutel', [0.16, 0.26, 0.08], '#f3f0e8', '#b9472f', 'Basis+', 'Penne', '1 kg', 1.69),
     P('packung', [0.15, 0.24, 0.07], '#1e3d6e', '#e3d3a4', 'Nonna Lia', 'Ditalini', '1 kg', 3.29),
-    P('packung', [0.09, 0.3, 0.045], '#f3f0e8', '#b9472f', 'Basis+', 'Spaghetti', '1 kg', 1.69),
+    P('beutel', [0.11, 0.31, 0.05], '#f3f0e8', '#b9472f', 'Basis+', 'Spaghetti', '1 kg', 1.69),
   ],
   PA_SAUCE: [
     P('glas', GLAS_SAUCE, '#f1e7d0', '#a8342b', 'Casa Verde', 'Sugo al Pomodoro', '400 g', 2.29, { f: 4 }),
@@ -122,12 +122,12 @@ export const CATALOG = {
   // ================= Kochwelt Asian (W2) =================
   AS_NUDELN: [
     P('packung', [0.11, 0.18, 0.05], '#f3f0e8', '#b8322a', 'Kaizen', 'Udon', '3 × 200 g', 2.99, { f: 4 }),
-    P('packung', [0.11, 0.18, 0.05], '#e7c45a', '#2b2c30', 'Umami Lab', 'Ramen', 'Weizennudeln · 4 × 70 g', 2.49, { f: 4 }),
+    P('beutel', [0.13, 0.19, 0.05], '#1f2120', '#c9a227', 'Umami Lab', 'Ramen', 'Weizennudeln · 4 × 70 g', 2.49, { f: 4 }),
     P('packung', [0.11, 0.18, 0.05], '#f3f0e8', '#3f6b3a', 'Kaizen', 'Reisnudeln', '250 g', 1.99),
     P('packung', [0.09, 0.22, 0.04], '#c9b089', '#2b2c30', 'Kaizen', 'Soba', 'Buchweizen · 300 g', 2.79),
-    P('packung', [0.11, 0.18, 0.05], '#e7c45a', '#b8322a', 'Umami Lab', 'Mie-Nudeln', '250 g', 1.49),
+    P('packung', [0.11, 0.18, 0.05], '#1f2120', '#c9a227', 'Umami Lab', 'Mie-Nudeln', '250 g', 1.49),
   ],
-  AS_NUDELN_B: [P('packung', [0.14, 0.22, 0.07], '#f3f0e8', '#b8322a', 'Kaizen', 'Udon', '6 × 200 g', 5.49), P('packung', [0.14, 0.22, 0.07], '#e7c45a', '#b8322a', 'Umami Lab', 'Mie-Nudeln', '500 g', 2.69)],
+  AS_NUDELN_B: [P('packung', [0.14, 0.22, 0.07], '#f3f0e8', '#b8322a', 'Kaizen', 'Udon', '6 × 200 g', 5.49), P('packung', [0.14, 0.22, 0.07], '#1f2120', '#c9a227', 'Umami Lab', 'Mie-Nudeln', '500 g', 2.69)],
   AS_REIS: [
     P('beutel', [0.13, 0.2, 0.06], '#f3f0e8', '#3f6b3a', 'Kaizen', 'Jasminreis', '1 kg', 2.99, { f: 4 }),
     P('beutel', [0.12, 0.18, 0.05], '#f3f0e8', '#b8322a', 'Kaizen', 'Sushireis', '500 g', 2.49),
@@ -138,9 +138,9 @@ export const CATALOG = {
   AS_SAUCE: [
     P('flasche', [0.06, 0.2, 0.06], '#2a1a12', '#b8322a', 'Kaizen', 'Shoyu', 'Sojasauce · 250 ml', 2.79, { f: 4 }),
     P('flasche', [0.05, 0.18, 0.05], '#6b4a1e', '#e3d3a4', 'Kaizen', 'Sesamöl', 'geröstet · 250 ml', 3.49),
-    P('flasche', [0.06, 0.19, 0.06], '#a8342b', '#3f6b3a', 'Umami Lab', 'Sriracha', '200 ml', 2.99),
-    P('glas', GLAS_KLEIN, '#f3f0e8', '#8f2a22', 'Umami Lab', 'Chili-Öl', 'knusprig · 200 g', 3.99),
-    P('becher', [0.09, 0.07, 0.09], '#f3f0e8', '#c9a227', 'Umami Lab', 'Miso-Paste', 'hell · 300 g', 3.49),
+    P('flasche', [0.06, 0.19, 0.06], '#1f2120', '#c9a227', 'Umami Lab', 'Sriracha', '200 ml', 2.99, { cap: '#3f6b3a' }),
+    P('glas', GLAS_KLEIN, '#1f2120', '#c9a227', 'Umami Lab', 'Chili-Öl', 'knusprig · 200 g', 3.99),
+    P('becher', [0.09, 0.07, 0.09], '#1f2120', '#c9a227', 'Umami Lab', 'Miso-Paste', 'hell · 300 g', 3.49),
     P('beutel', [0.1, 0.15, 0.04], '#2b2c30', '#c9a227', 'Kaizen', 'Sesam', 'geröstet · 100 g', 1.79),
     P('packung', [0.16, 0.2, 0.02], '#1f2a1f', '#8bab5a', 'Kaizen', 'Nori', '10 Blatt', 2.99),
     P('flasche', [0.06, 0.2, 0.06], '#3a2216', '#c9a227', 'Kaizen', 'Hoisin', '250 ml', 2.49),
@@ -275,8 +275,8 @@ export const CATALOG = {
   ],
   // ================= Basissortiment (B1–B7) =================
   B1: [
-    P('packung', [0.09, 0.3, 0.045], '#f3f0e8', '#b9472f', 'Basis+', 'Spaghetti', '1 kg', 1.69, { f: 4 }),
-    P('packung', NUDEL_KURZ, '#f3f0e8', '#b9472f', 'Basis+', 'Fusilli', '500 g', 0.89),
+    P('beutel', [0.11, 0.31, 0.05], '#f3f0e8', '#b9472f', 'Basis+', 'Spaghetti', '1 kg', 1.69, { f: 4 }),
+    P('beutel', [0.14, 0.21, 0.06], '#f3f0e8', '#b9472f', 'Basis+', 'Fusilli', '500 g', 0.89),
     P('beutel', [0.13, 0.2, 0.06], '#f3f0e8', '#3e6a96', 'Basis+', 'Basmati-Reis', '1 kg', 2.49, { f: 4 }),
     P('beutel', [0.13, 0.2, 0.06], '#f3f0e8', '#c9a227', 'Basis+', 'Langkornreis', '1 kg', 1.49),
     P('packung', [0.11, 0.18, 0.05], '#f3f0e8', '#d9873a', 'Basis+', 'Couscous', '500 g', 1.29),

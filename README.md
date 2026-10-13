@@ -38,10 +38,10 @@ Alle 19 Folien der PowerPoint stecken als Folien im Modell (Tabellen, Diagramm, 
 Kennzeichnung der Quellen: ✓ = Inhalt an Seminarskript bzw. Abstract geprüft, ◐ = Fundstelle vor der Prüfung im Volltext prüfen. „Annahme“ = gekennzeichnete Fallannahme (Schema Modul 7).
 
 ## Einkaufs-Spiel
-Am Matrix-Dashboard X/E drücken (oder „Einkauf“) → Küche × Anlass wählen → leuchtende Marker zeigen die Fachcodes der Rezeptkarte (O, W, K, B, D, G) → an jedem Marker X/E → an der Kasse bezahlen → Bon mit One-Hour-Check.
+Am Matrix-Dashboard X/E drücken (oder „Einkauf“) → Küche × Anlass wählen → leuchtende Marker zeigen die Fachcodes der Rezeptkarte (O, T, K, B, D, G) → an jedem Marker X/E → an der Kasse bezahlen → Bon mit One-Hour-Check.
 
 ## Inhalte ändern
-Alles steht in `src/layout.json`: Raum, Zonen, Möbel, Wege, Rezepte, Stationen, Folien (`praesentation.folien`, Reihenfolge und Kapitel in `praesentation.ablauf`, Sprechernotizen in `notizen`), Regalzonen (`regalzonen.belegung` = Inhalt je Zone und Regalfront), Simulation. Koordinaten in Metern, Ursprung vorne links von der Straße aus, Rechtecke `[x1, x2, z1, z2]`.
+Alles steht in `src/layout.json`: Raum, Zonen, Möbel, Wege, Rezepte, Stationen, Folien (`praesentation.folien`, Reihenfolge und Kapitel in `praesentation.ablauf`, Sprechernotizen in `notizen`), Regalzonen (Höhen; der Inhalt je Zone kommt aus dem Planogramm), Sortiment in `src/scene/catalog.js` (Warengruppen T1–T6, B1–B7, K1–K6, D1–D3, G1–G3 mit Marken und Sorten; `planFace` legt Herstellerblöcke und Großpackungen fest), Simulation. Koordinaten in Metern, Ursprung vorne links von der Straße aus, Rechtecke `[x1, x2, z1, z2]`.
 
 ## Bauen
 ```

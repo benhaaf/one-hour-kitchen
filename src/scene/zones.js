@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { toThree } from '../coords.js';
 import { textSprite } from './labels.js';
 import { footprints } from './furniture.js';
+import { planShelf } from './products.js';
 
 export function buildZones(layout) {
   const group = new THREE.Group();
@@ -68,7 +69,7 @@ export function buildZones(layout) {
 // Kundenseitige Regalfronten je Möbeltyp (vorne = Richtung Straße, hinten = Richtung Rückwand)
 export function shelfFaces(m) {
   switch (m.typ) {
-    case 'kochwelt-gondel':
+    case 'gondel':
       return Object.keys(m.regal || { hinten: 1, vorne: 1 }).filter((k) => k !== 'kopf');
     case 'kuehlregal':
     case 'glastuer-kuehlung':
@@ -83,11 +84,34 @@ export function shelfFaces(m) {
   }
 }
 
-// Inhalt je Regalzone für eine Regalfront (layout.regalzonen.belegung["M7:vorne"]), sonst allgemeine Beschreibung
+// Fachcodes einer Regalfront
+export function faceCodes(m, seite) {
+  if (m.regal?.[seite]) return [m.regal[seite]];
+  if (m.seiten?.[seite]) return m.seiten[seite].map((f) => ({ code: f.code, titel: f.name }));
+  if (m.faecher) return m.faecher.map((f) => ({ code: f.code, titel: f.name }));
+  if (m.typ === 'impulsregal') return [{ code: 'IMPULS', titel: 'Impuls' }];
+  return [];
+}
+
+// Inhalt je Regalzone, berechnet aus dem Planogramm (gleiche Belegung wie im 3D-Regal)
 export function zoneContent(layout, id, seite) {
   const RZ = layout.regalzonen;
-  const b = RZ.belegung?.[`${id}:${seite}`];
-  return RZ.zonen.map((z, i) => b?.[i] || z.inhalt);
+  const m = layout.moebel.find((x) => x.id === id);
+  const codes = m ? faceCodes(m, seite) : [];
+  if (!codes.length) return RZ.zonen.map((z) => z.inhalt);
+  const name = (p) => {
+    const size = (p.s || '').split('·').pop().trim();
+    return /\d/.test(size) && size.length < 9 ? `${p.n} ${size}` : p.n;
+  };
+  const pick = (lists) => {
+    const out = [];
+    for (const l of lists) for (const p of l) if (out.length < 3 && !out.includes(name(p))) out.push(name(p));
+    return out.join(', ');
+  };
+  const plans = codes.map((c) => planShelf(c.code, 5));
+  const level = (i) => pick(plans.map((pl) => pl.blocks.flatMap((b) => b.levels[i] || [])));
+  const bottom = pick(plans.map((pl) => (pl.bulk.length ? pl.bulk : pl.blocks.flatMap((b) => b.levels[b.levels.length - 1] || []))));
+  return [`${codes.map((c) => `${c.titel} ${c.code}`).join(' · ')}`, level(0), level(1), bottom];
 }
 
 // Höhenmarken der Regalzonen an ALLEN Regalfronten (Ahlert/Kenning/Brock 2020, S. 302–303)

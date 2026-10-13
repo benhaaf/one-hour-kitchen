@@ -1,6 +1,6 @@
 // Infokarte (Entscheidung · Begründung · Quelle · Annahme · Änderung ggü. Skizze), Folien und Rahmen-Overlay.
 import { footprints } from './scene/furniture.js';
-import { CATALOG } from './scene/products.js';
+import { planShelf } from './scene/products.js';
 import { shelfFaces, zoneContent } from './scene/zones.js';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
@@ -13,7 +13,7 @@ export function flaechenbilanz(layout) {
   const [vx1, vx2, vz1, vz2] = layout.raum.verkaufsraum;
   const total = (vx2 - vx1) * (vz2 - vz1);
   const area = (r) => Math.abs((r[1] - r[0]) * (r[3] - r[2]));
-  const WARE = new Set(['kochwelt-gondel', 'kuehlregal', 'glastuer-kuehlung', 'weinregal', 'basis-regal', 'impulsregal', 'schaufenster', 'obst-stand']);
+  const WARE = new Set(['gondel', 'kuehlregal', 'glastuer-kuehlung', 'weinregal', 'basis-regal', 'impulsregal', 'schaufenster', 'obst-stand']);
   const SONST = new Set(['kasse-band', 'sb-kasse', 'matrix-dashboard']);
   const showkueche = layout.zonen.find((z) => z.id === 'Z4');
   const erlebnis = showkueche ? area(showkueche.rechteck) : 0;
@@ -25,7 +25,7 @@ export function flaechenbilanz(layout) {
     const a = m.mitte ? m.laenge * m.tiefe : footprints(m).slice(0, 1).reduce((s, r) => s + area(r), 0);
     if (WARE.has(m.typ)) {
       ware += a;
-      const key = m.typ === 'kochwelt-gondel' ? 'Kochwelten' : m.typ === 'basis-regal' ? 'Basissortiment' : m.typ === 'obst-stand' ? 'Obst & Gemüse' : m.typ === 'kuehlregal' ? 'Kühlung' : m.typ === 'glastuer-kuehlung' ? 'Dessert & TK' : m.typ === 'weinregal' ? 'Wein & Getränke' : m.typ === 'impulsregal' ? 'Impuls an der Kasse' : 'Schaufenster';
+      const key = m.typ === 'gondel' ? 'Trockensortiment (3 Gondeln)' : m.typ === 'basis-regal' ? 'Basissortiment' : m.typ === 'obst-stand' ? 'Obst & Gemüse' : m.typ === 'kuehlregal' ? 'Kühlung' : m.typ === 'glastuer-kuehlung' ? 'Dessert & TK' : m.typ === 'weinregal' ? 'Wein & Getränke' : m.typ === 'impulsregal' ? 'Impuls an der Kasse' : 'Schaufenster';
       proBereich[key] = (proBereich[key] || 0) + a;
     } else if (SONST.has(m.typ)) sonst += a;
   }
@@ -109,36 +109,33 @@ export class Panels {
       <table class="planogram zonetable"><thead><tr><th></th>${Z.map((z) => `<th style="border-top:4px solid ${z.farbe}">${esc(z.name)}<small>${fmtH(z)} m</small></th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
   }
 
-  // Regalbild einer Kochwelt-Gondel: Produktblöcke (Spalten) × Regalzonen (Zeilen)
+  // Regalbild einer Gondelseite: Herstellerblöcke (Spalten) × Regalzonen (Zeilen) – aus demselben Planogramm wie im 3D-Regal
   planogram(id) {
     const L = this.layout;
     const m = L.moebel.find((x) => x.id === id);
     const face = m?.regal?.hinten;
     if (!face) return '';
-    // kurze Artikelnamen: Produkt + Größe (letzter Teil der Inhaltsangabe)
-    const names = (g) => (CATALOG[g] || []).map((k) => {
-      const size = (k.s || '').split('·').pop().trim();
-      return /\d/.test(size) ? `${k.n} ${size}` : k.n;
-    });
-    const short = (list) => (list.length > 3 ? `${list.slice(0, 3).join(', ')} …` : list.join(', '));
-    const uniq = (a) => [...new Set(a)];
-    const zonen = L.regalzonen.zonen;
-    const B = face.bloecke.slice().reverse(); // aus Kundensicht von links nach rechts
-    const cell = (zone, bl) => {
-      if (zone.name === 'Reckzone') {
-        const rez = L.rezepte.filter((r) => r.zutaten.some(([nm, c]) => c === bl.code && (bl.artikel || []).includes(nm))).map((r) => r.nr);
-        return `<b>${esc(bl.code)} · ${esc(bl.name)}</b>${rez.length ? `<br><small>für ${esc(rez.join(' '))}</small>` : ''}`;
-      }
-      if (zone.name === 'Bückzone') return esc(short(uniq(names(bl.gruppen[1] || bl.gruppen[0]))));
-      const list = uniq(names(bl.gruppen[0]));
-      const half = Math.ceil(list.length / 2);
-      return esc(short(zone.name === 'Sichtzone' ? list.slice(0, half) : list.slice(half).length ? list.slice(half) : list));
+    const plan = planShelf(face.code, 5);
+    const nm = (p) => {
+      const size = (p.s || '').split('·').pop().trim();
+      return /\d/.test(size) && size.length < 9 ? `${p.n} ${size}` : p.n;
     };
+    const B = plan.blocks;
+    const zonen = L.regalzonen.zonen;
     const fmtH = (z) => (z.von === 0 ? `< ${z.bis}` : `${z.von}–${z.bis}`).replace(/\./g, ',');
-    return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · Produktblöcke (senkrecht Warengruppe, waagerecht Regalzone)</span>
-      <table class="planogram"><thead><tr><th></th>${B.map((bl) => `<th>${esc(bl.name)}</th>`).join('')}</tr></thead>
-      <tbody>${zonen.map((z) => `<tr><th style="border-left:4px solid ${z.farbe}">${esc(z.name)}<small>${fmtH(z)} m</small></th>${B.map((bl) => `<td>${cell(z, bl)}</td>`).join('')}</tr>`).join('')}</tbody></table>
-      <p class="pg-note">Keine fertigen Pakete: Die Kundin sammelt nach ihrer Rezeptkarte. Fachcode W1 → Koje Pasta → Block. Kühlware steht im Kühlregal (Parmesan-Regel).</p></div>`;
+    const cell = (zi, bl) => {
+      if (zi === 0) return `<b>${esc(face.titel)} · ${esc(face.code)}</b>`;
+      if (zi === 3) {
+        const big = plan.bulk.filter((p) => p.b === bl.brand);
+        const rest = bl.levels.slice(2).flat();
+        return esc([...rest.map(nm), ...big.map((p) => `${nm(p)} (Groß)`)].join(', ') || '–');
+      }
+      return esc((bl.levels[zi - 1] || []).map(nm).join(', ') || '–');
+    };
+    return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · ${esc(face.titel)} (${esc(face.code)}) · Herstellerblöcke senkrecht, Regalzonen waagerecht</span>
+      <table class="planogram"><thead><tr><th></th>${B.map((bl) => `<th>${esc(bl.brand)}</th>`).join('')}</tr></thead>
+      <tbody>${zonen.map((z, zi) => `<tr><th style="border-left:4px solid ${z.farbe}">${esc(z.name)}<small>${fmtH(z)} m</small></th>${zi === 0 ? `<td colspan="${B.length}">${cell(0)}</td>` : B.map((bl) => `<td>${cell(zi, bl)}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      <p class="pg-note">Klassisch sortiert wie im Supermarkt: Jede Sorte steht genau einmal. Die Rezeptkarte führt über den Fachcode ${esc(face.code)} hierher; Kühlware steht in der Kühlung.</p></div>`;
   }
 
   hideCard() {
@@ -244,7 +241,7 @@ export class Panels {
     const row = ([n, c]) => `<li><span>${esc(n)}</span><b class="code code-${c[0]}">${esc(c)}</b></li>`;
     const card = `<div class="sl-rezept"><header><small>Rezept ${esc(r.nr)} · ${SYM[r.anlass] || ''} ${esc(r.anlass)}</small><h4>${esc(r.titel)}</h4><span>${esc(r.zeit)} · 2 Personen · ${esc(r.welt)}</span></header><ul>${r.zutaten.map(row).join('')}${r.ergaenzung
       .map(([n, c]) => row([`+ ${n}`, c]))
-      .join('')}</ul><footer>O Obst/Gemüse · W Kochwelt · K Kühlung · B Basis · D Dessert · G Getränke</footer></div>`;
+      .join('')}</ul><footer>O Obst/Gemüse · T Trockensortiment · K Kühlung · B Basis · D Dessert · G Getränke</footer></div>`;
     const steps = schritte ? `<ol class="sl-schritte">${schritte.map(([n, t, x]) => `<li><span>${esc(n)}</span><b>${esc(t)}</b><small>${esc(x)}</small></li>`).join('')}</ol>` : '';
     return `<div class="sl-rezept-wrap">${card}<div>${steps}${rechts}</div></div>`;
   }
@@ -346,7 +343,7 @@ export class Panels {
       .map(([k, v, t]) => `<div class="r-row"><dt>${esc(k)}</dt><dd><p>${esc(v)}</p>${t === 'A' ? '<span class="tag-annahme">Annahme</span>' : ''}</dd></div>`)
       .join('');
     const w = this.layout.praesentation?.folien?.wirtschaft;
-    const wrow = w ? `<div class="r-row"><dt>Wirtschaftliche Größe</dt><dd><p>${esc(w.merke ? w.merke[0] : w.titel)} · DB Showküche ${esc(w.rechnung[w.rechnung.length - 1][2])}</p><span class="tag-annahme">Annahme</span></dd></div>` : '';
+    const wrow = w ? `<div class="r-row"><dt>Wirtschaftliche Größe</dt><dd><p>${esc(w.titel)} (${esc(w.merke ? w.merke[1] : '')})</p><span class="tag-annahme">Annahme</span></dd></div>` : '';
     this.rahmen.querySelector('.rahmen-box').innerHTML = `
       <h1>One Hour Kitchen – Rahmen</h1>
       <dl>${rows}${wrow}<div class="r-row"><dt>Flächenbilanz</dt><dd><p>${fb.arten.map(([n, v]) => `${esc(n.split(' (')[0])} ${fmt(v)} m²`).join(' · ')}</p></dd></div></dl>

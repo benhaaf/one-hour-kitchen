@@ -184,7 +184,7 @@
     },
     {
       "id": "Z3",
-      "name": "Kochwelten (Kojen)",
+      "name": "Trockensortiment (Gondeln)",
       "rechteck": [
         0,
         7.9,
@@ -399,7 +399,7 @@
   "moebel": [
     {
       "id": "M1",
-      "name": "Schaufenster „Kochwelt des Monats“",
+      "name": "Schaufenster „Rezepte des Monats“",
       "typ": "schaufenster",
       "rechteck": [
         0.7,
@@ -440,8 +440,8 @@
     },
     {
       "id": "M4",
-      "name": "Kochwelt-Gondel Pasta",
-      "typ": "kochwelt-gondel",
+      "name": "Gondel Reis | Nudeln",
+      "typ": "gondel",
       "rechteck": [
         1.4,
         6.4,
@@ -449,82 +449,25 @@
         5.55
       ],
       "hoehe": 1.8,
-      "welt": "Pasta Night",
-      "farbe": "#a8432c",
       "regal": {
-        "hinten": {
-          "titel": "PASTA NIGHT · W1 · Rezepte #01 #02 #03",
-          "bloecke": [
-            {
-              "code": "W1",
-              "name": "Bohnen, Brühe & Gewürze",
-              "gruppen": [
-                "PA_BOHNEN",
-                "PA_BOHNEN_B"
-              ],
-              "artikel": [
-                "Bohnen"
-              ]
-            },
-            {
-              "code": "W1",
-              "name": "Tomaten & Saucen",
-              "gruppen": [
-                "PA_SAUCE",
-                "PA_SAUCE_B"
-              ],
-              "artikel": [
-                "Tomatensauce",
-                "Passata"
-              ]
-            },
-            {
-              "code": "W1",
-              "name": "Nudeln",
-              "gruppen": [
-                "PA_NUDELN",
-                "PA_NUDELN_B"
-              ],
-              "artikel": [
-                "Pasta"
-              ]
-            }
-          ]
-        },
         "vorne": {
-          "titel": "PASTA NIGHT · Feinkost",
-          "bloecke": [
-            {
-              "code": "W1",
-              "name": "Antipasti, Öl & Essig",
-              "gruppen": [
-                "PA_FEIN",
-                "PA_FEIN_B"
-              ],
-              "artikel": []
-            },
-            {
-              "code": "W1",
-              "name": "Brot & Grissini",
-              "gruppen": [
-                "PA_BROT"
-              ],
-              "artikel": []
-            }
-          ]
+          "code": "T2",
+          "titel": "Reis & Hülsenfrüchte"
+        },
+        "hinten": {
+          "code": "T1",
+          "titel": "Nudeln"
         },
         "kopf": {
-          "gruppen": [
-            "PA_NUDELN",
-            "PA_DRINK"
-          ]
+          "code": "T1",
+          "marke": "Nonna Lia"
         }
       }
     },
     {
       "id": "M5",
-      "name": "Kochwelt-Gondel Asian",
-      "typ": "kochwelt-gondel",
+      "name": "Gondel Saucen | Konserven",
+      "typ": "gondel",
       "rechteck": [
         1.4,
         6.4,
@@ -532,81 +475,26 @@
         7.6
       ],
       "hoehe": 1.8,
-      "welt": "Asian Night",
-      "farbe": "#b08a34",
       "regal": {
         "vorne": {
-          "titel": "PASTA NIGHT · Ergänzen: Drink + Dessert",
-          "bloecke": [
-            {
-              "code": "W1",
-              "name": "Gebäck & Dessert",
-              "gruppen": [
-                "PA_SUESS"
-              ],
-              "artikel": []
-            },
-            {
-              "code": "W1",
-              "name": "Getränke Italia",
-              "gruppen": [
-                "PA_DRINK"
-              ],
-              "artikel": []
-            }
-          ]
+          "code": "T3",
+          "titel": "Tomaten & Pastasaucen"
         },
         "hinten": {
-          "titel": "ASIAN NIGHT · W2 · Rezepte #04 #05 #06",
-          "bloecke": [
-            {
-              "code": "W2",
-              "name": "Saucen & Würze",
-              "gruppen": [
-                "AS_SAUCE",
-                "AS_SAUCE_B"
-              ],
-              "artikel": [
-                "Sojasauce",
-                "Sesam",
-                "Miso-Paste"
-              ]
-            },
-            {
-              "code": "W2",
-              "name": "Reis & Kokos",
-              "gruppen": [
-                "AS_REIS",
-                "AS_REIS_B"
-              ],
-              "artikel": []
-            },
-            {
-              "code": "W2",
-              "name": "Nudeln",
-              "gruppen": [
-                "AS_NUDELN",
-                "AS_NUDELN_B"
-              ],
-              "artikel": [
-                "Udon-Nudeln",
-                "Ramen-Nudeln"
-              ]
-            }
-          ]
+          "code": "T4",
+          "titel": "Konserven",
+          "unter": "Bohnen · Mais · Gemüse"
         },
         "kopf": {
-          "gruppen": [
-            "AS_NUDELN",
-            "AS_DRINK"
-          ]
+          "code": "T3",
+          "marke": "Casa Verde"
         }
       }
     },
     {
       "id": "M6",
-      "name": "Kochwelt-Gondel Mexican",
-      "typ": "kochwelt-gondel",
+      "name": "Gondel Internationale Küche",
+      "typ": "gondel",
       "rechteck": [
         1.4,
         6.4,
@@ -614,79 +502,20 @@
         9.65
       ],
       "hoehe": 1.8,
-      "welt": "Mexican Night",
-      "farbe": "#3f6e4a",
       "regal": {
         "vorne": {
-          "titel": "ASIAN NIGHT · Ergänzen: Drink + Dessert",
-          "bloecke": [
-            {
-              "code": "W2",
-              "name": "Snacks & Süßes",
-              "gruppen": [
-                "AS_SNACK"
-              ],
-              "artikel": []
-            },
-            {
-              "code": "W2",
-              "name": "Tee & Getränke",
-              "gruppen": [
-                "AS_DRINK"
-              ],
-              "artikel": []
-            }
-          ]
+          "code": "T5",
+          "titel": "Internationale Küche",
+          "unter": "Asien"
         },
         "hinten": {
-          "titel": "MEXICAN NIGHT · W3 · Rezepte #07 #08 #09",
-          "bloecke": [
-            {
-              "code": "W3",
-              "name": "Salsas & Gewürze",
-              "gruppen": [
-                "MX_SALSA"
-              ],
-              "artikel": []
-            },
-            {
-              "code": "W3",
-              "name": "Bohnen, Mais & Tomaten",
-              "gruppen": [
-                "MX_DOSE",
-                "MX_DOSE_B"
-              ],
-              "artikel": [
-                "Bohnen",
-                "Kidneybohnen",
-                "Mais",
-                "Tomaten (Dose)"
-              ]
-            },
-            {
-              "code": "W3",
-              "name": "Tortillas & Taco Shells",
-              "gruppen": [
-                "MX_TORT",
-                "MX_TORT_B"
-              ],
-              "artikel": [
-                "Tortillas",
-                "Taco-Shells"
-              ]
-            }
-          ]
+          "code": "T6",
+          "titel": "Internationale Küche",
+          "unter": "Mexiko"
         },
         "kopf": {
-          "titel": "Ergänzen: Nachos, Dips, Drinks",
-          "gruppen": [
-            "MX_ERG",
-            "MX_DRINK"
-          ],
-          "code": "W3",
-          "artikel": [
-            "Nachos & Salsa"
-          ]
+          "code": "T5",
+          "marke": "Lotus Garden"
         }
       }
     },
@@ -742,7 +571,7 @@
       "faecher": [
         {
           "code": "D1",
-          "name": "Eis & Mochi"
+          "name": "Eis"
         },
         {
           "code": "D2",
@@ -750,7 +579,7 @@
         },
         {
           "code": "D3",
-          "name": "TK-Gemüse & Teig"
+          "name": "Tiefkühlkost"
         }
       ]
     },
@@ -772,7 +601,7 @@
         },
         {
           "code": "G2",
-          "name": "Weißwein & Rosé"
+          "name": "Weißwein, Rosé & Sekt"
         },
         {
           "code": "G3",
@@ -795,15 +624,15 @@
         "links": [
           {
             "code": "B1",
-            "name": "Nudeln & Reis"
-          },
-          {
-            "code": "B2",
             "name": "Öl & Essig"
           },
           {
-            "code": "B3",
+            "code": "B2",
             "name": "Gewürze & Brühe"
+          },
+          {
+            "code": "B3",
+            "name": "Backen"
           }
         ]
       }
@@ -823,21 +652,21 @@
         "rechts": [
           {
             "code": "B4",
-            "name": "Konserven & Saucen"
+            "name": "Frühstück & Aufstrich"
           },
           {
             "code": "B5",
-            "name": "Backen & Mehl"
+            "name": "Kaffee & Tee"
           }
         ],
         "links": [
           {
             "code": "B6",
-            "name": "Frühstück & Brot"
+            "name": "Süßwaren & Gebäck"
           },
           {
             "code": "B7",
-            "name": "Snacks & Süßes"
+            "name": "Knabberartikel"
           }
         ]
       }
@@ -856,25 +685,15 @@
     },
     {
       "id": "M13",
-      "name": "Kurstisch (8 Plätze)",
-      "typ": "kurstisch",
+      "name": "Probiertheke (Stehtisch)",
+      "typ": "probiertheke",
       "rechteck": [
         8.6,
         10.9,
         6.85,
         7.85
       ],
-      "hoehe": 0.75,
-      "stuehle_x": [
-        8.95,
-        9.55,
-        10.15,
-        10.75
-      ],
-      "stuehle_z": [
-        6.5,
-        8.2
-      ]
+      "hoehe": 1.05
     },
     {
       "id": "M14",
@@ -939,7 +758,7 @@
     },
     {
       "id": "M18",
-      "name": "Impulsregal „Ergänzen“",
+      "name": "Impulsregal an der Kasse",
       "typ": "impulsregal",
       "rechteck": [
         10.3,
@@ -1015,7 +834,7 @@
         "GEWÜRZE",
         "SNACKS",
         "TORTILLAS",
-        "KURS-VORRAT"
+        "KÜCHEN-VORRAT"
       ]
     },
     {
@@ -1052,117 +871,37 @@
     }
   ],
   "regalzonen": {
-    "_hinweis": "Höhenbereiche (m) nach Ahlert/Kenning/Brock 2020, S. 302–303. Die Bänder erscheinen automatisch an allen Regalfronten (Kochwelt-Gondeln, Kühlung, Dessert, Wein, Basis, Impuls). 'belegung' = Inhalt je Zone und Regalfront (Reihenfolge wie 'zonen').",
+    "_hinweis": "Höhenbereiche (m) nach Ahlert/Kenning/Brock 2020, S. 302–303. Die Bänder erscheinen automatisch an allen Regalfronten (Gondeln, Kühlung, Dessert, Wein, Basis, Impuls). Der Inhalt je Zone wird aus dem Planogramm (catalog.js) berechnet.",
     "zonen": [
       {
         "name": "Reckzone",
         "von": 1.7,
         "bis": 2.2,
-        "inhalt": "Schild Produktblock + Fachcode",
+        "inhalt": "Warengruppenschild + Fachcode",
         "farbe": "#9aa0a6"
       },
       {
         "name": "Sichtzone",
         "von": 1.2,
         "bis": 1.7,
-        "inhalt": "Standardgrößen, Bestseller",
+        "inhalt": "Markenartikel, Bestseller",
         "farbe": "#3fbf7f"
       },
       {
         "name": "Greifzone",
         "von": 0.8,
         "bis": 1.2,
-        "inhalt": "Standardgrößen des Produktblocks",
+        "inhalt": "weitere Sorten derselben Marke",
         "farbe": "#f2c230"
       },
       {
         "name": "Bückzone",
         "von": 0,
         "bis": 0.8,
-        "inhalt": "Großpackungen, Getränke",
+        "inhalt": "Großpackungen, Eigenmarke",
         "farbe": "#e06c4f"
       }
-    ],
-    "belegung": {
-      "M4:hinten": [
-        "Blockschilder W1 · für #01–#03",
-        "Spaghetti, Penne · Sugo, Tomatensauce · Borlotti",
-        "Tagliatelle, Fusilli · Pomodori, Pesto · Brühe, Gewürz",
-        "Großpackungen: Spaghetti 1 kg, Passata 1 kg, Borlotti 800 g"
-      ],
-      "M4:vorne": [
-        "Schild Pasta Feinkost",
-        "Oliven, Antipasti, getr. Tomaten",
-        "Olivenöl 250 ml, Balsamico · Grissini, Taralli",
-        "Olivenöl 1 l · Ciabatta"
-      ],
-      "M5:vorne": [
-        "Schild Ergänzen: Drink + Dessert",
-        "Cantuccini, Amaretti",
-        "Löffelbiskuits, Kakao",
-        "Limone, Aranciata, Wasser 1 l"
-      ],
-      "M5:hinten": [
-        "Blockschilder W2 · für #04–#06",
-        "Udon, Ramen · Jasminreis · Shoyu, Miso",
-        "Reisnudeln, Soba · Kokosmilch · Sesam, Nori",
-        "Udon 6er · Jasminreis 5 kg · Shoyu 1 l"
-      ],
-      "M6:vorne": [
-        "Schild Ergänzen: Drink + Snack",
-        "Reiscracker, Glückskekse",
-        "Matcha-Kekse, Grüntee",
-        "Eistee, Lychee, Sake alkoholfrei"
-      ],
-      "M6:hinten": [
-        "Blockschilder W3 · für #07–#09",
-        "Tortillas · Kidney, schwarze Bohnen · Salsa",
-        "Taco Shells · Mais, Tomaten · Gewürze",
-        "Tortillas 16 St. · Kidney 800 g"
-      ],
-      "M7:vorne": [
-        "Fachschilder K1–K6",
-        "Rezept-Zutaten: Sahne, Parmesan, Tofu, Basilikum",
-        "Butter, Eier, Mozzarella, frische Tagliatelle",
-        "schwere Gebinde: Milch, Joghurt, Salat-Mix"
-      ],
-      "M8:vorne": [
-        "Fachschilder D1–D3",
-        "Desserts zum Menü: Tiramisu, Mochi",
-        "Panna Cotta, Eis",
-        "TK-Gemüse, TK-Pizza"
-      ],
-      "M9:vorne": [
-        "Fachschilder G1–G3",
-        "Weine zum Rezept des Monats",
-        "Riesling, Rosé · Limo 0,5 l",
-        "Mehrstück, Kisten"
-      ],
-      "M10:links": [
-        "Fachschilder B1–B3",
-        "Spaghetti, Reis · Olivenöl · Gewürze",
-        "Fusilli · Balsamico · Brühe",
-        "Großgebinde: Spaghetti 1 kg, Rapsöl 1 l"
-      ],
-      "M11:rechts": [
-        "Fachschilder B4/B5 über der Gondel",
-        "Tomaten, Tomatensauce · Mehl",
-        "Mais · Zucker",
-        "Konserven-Vorrat, Mehl 1 kg"
-      ],
-      "M11:links": [
-        "Fachschilder B6/B7 über der Gondel",
-        "Müsli, Konfitüre · Schokolade",
-        "Brot · Nüsse",
-        "Chips-Großpackungen"
-      ],
-      "M18:rechts": [
-        "–",
-        "Schokolade, Chili-Schoko (Blickhöhe an der Schlange)",
-        "Kräuter im Topf · Schoko",
-        "Nachschub"
-      ]
-    }
+    ]
   },
   "rezepte": [
     {
@@ -1175,11 +914,11 @@
       "zutaten": [
         [
           "Pasta",
-          "W1"
+          "T1"
         ],
         [
           "Tomatensauce",
-          "W1"
+          "T3"
         ],
         [
           "Sahne",
@@ -1199,7 +938,7 @@
         ],
         [
           "Olivenöl",
-          "B2"
+          "B1"
         ]
       ],
       "ergaenzung": [
@@ -1209,7 +948,7 @@
         ],
         [
           "Cantuccini",
-          "W1"
+          "B6"
         ]
       ]
     },
@@ -1259,15 +998,15 @@
       "zutaten": [
         [
           "Pasta",
-          "W1"
+          "T1"
         ],
         [
           "Bohnen",
-          "W1"
+          "T4"
         ],
         [
           "Passata",
-          "W1"
+          "T3"
         ],
         [
           "Zwiebel & Karotte",
@@ -1275,7 +1014,7 @@
         ],
         [
           "Olivenöl",
-          "B2"
+          "B1"
         ]
       ],
       "ergaenzung": []
@@ -1290,11 +1029,11 @@
       "zutaten": [
         [
           "Udon-Nudeln",
-          "W2"
+          "T5"
         ],
         [
           "Sojasauce",
-          "W2"
+          "T5"
         ],
         [
           "Pak Choi",
@@ -1306,7 +1045,7 @@
         ],
         [
           "Sesam",
-          "W2"
+          "T5"
         ]
       ],
       "ergaenzung": [
@@ -1326,11 +1065,11 @@
       "zutaten": [
         [
           "Ramen-Nudeln",
-          "W2"
+          "T5"
         ],
         [
           "Miso-Paste",
-          "W2"
+          "T5"
         ],
         [
           "Eier",
@@ -1362,7 +1101,7 @@
       "zutaten": [
         [
           "Reis",
-          "B1"
+          "T2"
         ],
         [
           "TK-Gemüse",
@@ -1374,7 +1113,7 @@
         ],
         [
           "Sojasauce",
-          "W2"
+          "T5"
         ]
       ],
       "ergaenzung": []
@@ -1389,7 +1128,7 @@
       "zutaten": [
         [
           "Tortillas",
-          "W3"
+          "T6"
         ],
         [
           "Käse",
@@ -1401,7 +1140,7 @@
         ],
         [
           "Bohnen",
-          "W3"
+          "T4"
         ]
       ],
       "ergaenzung": [
@@ -1421,7 +1160,7 @@
       "zutaten": [
         [
           "Taco-Shells",
-          "W3"
+          "T6"
         ],
         [
           "Avocados",
@@ -1442,8 +1181,12 @@
       ],
       "ergaenzung": [
         [
-          "Nachos & Salsa",
-          "W3"
+          "Salsa",
+          "T6"
+        ],
+        [
+          "Tortilla Chips",
+          "B7"
         ],
         [
           "Bier alkoholfrei",
@@ -1461,15 +1204,15 @@
       "zutaten": [
         [
           "Kidneybohnen",
-          "W3"
+          "T4"
         ],
         [
           "Mais",
-          "W3"
+          "T4"
         ],
         [
           "Tomaten (Dose)",
-          "W3"
+          "T3"
         ],
         [
           "Zwiebeln",
@@ -1477,11 +1220,11 @@
         ],
         [
           "Gewürze",
-          "B3"
+          "B2"
         ],
         [
           "Reis",
-          "B1"
+          "T2"
         ]
       ],
       "ergaenzung": []
@@ -1724,7 +1467,7 @@
     }
   ],
   "draufsicht": {
-    "titel": "One Hour Kitchen – Food-Store mit Kochwelten & Showküche",
+    "titel": "One Hour Kitchen – Food-Store mit Rezept-Matrix & Showküche",
     "untertitel": "Draufsicht · Verkaufsraum 15,8 × 12 m ≈ 190 m² · L-Lager hinten/rechts"
   },
   "personen": [
@@ -1765,7 +1508,7 @@
       ],
       "haltung": "arbeiten",
       "personal": true,
-      "_wer": "Kursleitung an der Küchenzeile"
+      "_wer": "Köchin an der Küchenzeile"
     },
     {
       "pos": [
@@ -1802,7 +1545,7 @@
         -1
       ],
       "haltung": "stoebern",
-      "_wer": "Pasta-Koje"
+      "_wer": "Nudelregal"
     },
     {
       "pos": [
@@ -1885,7 +1628,7 @@
           0.6
         ]
       },
-      "entscheidung": "Fantasiefenster „Kochwelt des Monats“ links; Eingang (1,8 m) und Ausgang (1,4 m) getrennt, die Kasse sitzt direkt vor dem Ausgang.",
+      "entscheidung": "Fantasiefenster „Rezepte des Monats“ links; Eingang (1,8 m) und Ausgang (1,4 m) getrennt, die Kasse sitzt direkt vor dem Ausgang.",
       "begruendung": "Das Fenster zeigt der Laufkundschaft vom Campus schon draußen, was es heute zu kochen gibt. Getrennte Türen geben eine klare Laufrichtung vor: rein links, raus rechts an der Kasse vorbei.",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 303–306 (Fensterarten) ✓; S. 297–302 (Eingang, Kasse, Wege anordnen) ✓",
       "annahme": "Ein monatlicher Wechsel des Fensters ist personell leistbar; ein zweiter Türausschnitt ist im Mietobjekt möglich.",
@@ -1915,7 +1658,7 @@
           3.2
         ]
       },
-      "entscheidung": "Ca. 3 m hinter dem Eingang steht das Dashboard: Küche (Spalten) × Anlass (Zeilen) = genau ein Rezept. Rückseite: Kursprogramm. Es steht links der Blickachse, damit der Blick zur Showküche frei bleibt.",
+      "entscheidung": "Ca. 3 m hinter dem Eingang steht das Dashboard: Küche (Spalten) × Anlass (Zeilen) = genau ein Rezept. Rückseite: Live-Cooking-Plan der Woche. Es steht links der Blickachse, damit der Blick zur Showküche frei bleibt.",
       "begruendung": "Die Kundin hat eine Kaufabsicht („heute kochen“), offen ist nur das Gericht. Das Dashboard macht aus neun Rezepten zwei einfache Fragen und gibt Orientierung, bevor der Einkauf beginnt. Je länger Kunden im Laden sind, desto zielgerichteter werden sie – Inspiration gehört deshalb an den Anfang des Weges.",
       "quelle": "Seminarskript HD25A23: Leitdifferenz kaufrelevant (in Anlehnung an Luhmann 1984, S. 63) ✓; Hui/Bradlow/Fader 2009, J. of Consumer Research 36(3) ✓; Scheuch 2001, der markt 40(2–3), S. 90 u. 92 (Cognitive Maps) ◐",
       "annahme": "Dass die Wahl dadurch schneller fällt, ist nicht belegt.",
@@ -1959,7 +1702,7 @@
     },
     {
       "nr": 4,
-      "titel": "Kochwelten als Kojen (quer)",
+      "titel": "Trockensortiment in Quer-Gondeln",
       "bezug": "M4–M6 · Z3",
       "objekte": [
         "M4",
@@ -1979,22 +1722,21 @@
           8.2
         ]
       },
-      "entscheidung": "Drei querstehende Gondeln bilden die Kojen Pasta, Asian und Mexican mit je 1,5 m Gang. Innerhalb jeder Koje ist das Regal klassisch nach Warengruppen sortiert (Nudeln bei Nudeln, Saucen bei Saucen), gegenüber „Ergänzen“: Drink und Dessert derselben Kochwelt. Am Regalkopf zum Gang: Rezeptkarten der drei Rezepte.",
-      "begruendung": "Querplatzierung bremst und schafft neue Kaufrelevanz: Wer nur seine Zutaten holen wollte, entdeckt Getränk und Dessert daneben. Die Kochwelt bündelt, was zusammen gekocht wird; die Rezeptkarte führt über den Fachcode (W1–W3) in die richtige Koje, dort hilft die gewohnte Ordnung nach Warengruppen.",
-      "quelle": "Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3 ✓; Seminarskript: Querplatzierung → „neue Kaufrelevanz“ ✓; Larson/Bradlow/Fader 2005, IJRM 22(4), S. 395–414 (Laufwege, Gänge) ◐",
-      "annahme": "Zusätzliche Käufe sind beabsichtigt, nicht belegt.",
-      "skizze": "Skizze: drei Themenwelten mit ca. 0,7 m Abstand. Neu: 1,4–1,5 m Gänge (Einkaufswagen + Gegenverkehr) und ein Gang an der linken Wand.",
+      "entscheidung": "Drei querstehende Gondeln mit 1,4–1,5 m Gängen, klassisch nach Warengruppen wie in jedem Supermarkt: Reis | Nudeln, Tomaten & Pastasaucen | Konserven, Internationale Küche (Asien | Mexiko). Nudeln und Saucen stehen sich im selben Gang gegenüber. Am Regalkopf: „Angebot der Woche“ als Zweitplatzierung.",
+      "begruendung": "Die Kundin findet die Zutaten ihrer Rezeptkarte dort, wo sie sie aus jedem Supermarkt kennt: Fachcode T1 → Gondel Nudeln. Die Querstellung bricht den Lauf in kurze Gänge, Regalköpfe und Gegenüber (Nudeln ↔ Saucen) schaffen Verbundkäufe ohne eigene Rezept-Regale.",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3 (Querplatzierung) ✓; S. 303 (Produktblock, Herstellerblock) ✓; Larson/Bradlow/Fader 2005, IJRM 22(4), S. 395–414 (Laufwege, Gänge) ◐",
+      "annahme": "Zusätzliche Käufe durch das Gegenüber und den Regalkopf sind beabsichtigt, nicht belegt.",
+      "skizze": "Skizze: drei Gondeln mit ca. 0,7 m Abstand. Neu: 1,4–1,5 m Gänge (Einkaufswagen + Gegenverkehr) und ein Gang an der linken Wand.",
       "ebenen": {
         "zonen": true,
-        "wege": false,
-        "regalzonen": false
+        "wege": false
       },
-      "notizen": "Die drei Kochwelten stehen quer als Kojen: Pasta, Asian, Mexican. Innen sind sie klassisch nach Warengruppen sortiert, gegenüber stehen die Ergänzungen – Drinks und Dessert. Gänge 1,4 bis 1,5 Meter."
+      "notizen": "Die drei Gondeln stehen quer, sind aber ganz klassisch nach Warengruppen sortiert – kein Rezept-Regal, keine fertigen Pakete. Reis und Nudeln, gegenüber die Saucen, dann Konserven, dann Internationale Küche. Die Rezeptkarte führt über den Fachcode T1 bis T6 zur richtigen Gondel."
     },
     {
       "nr": 5,
-      "titel": "Regalbild Pasta Night",
-      "bezug": "M4 (Rückseite)",
+      "titel": "Regalbild Nudeln",
+      "bezug": "M4 · Rückseite · T1",
       "objekte": [
         "M4"
       ],
@@ -2010,10 +1752,10 @@
           5.55
         ]
       },
-      "entscheidung": "Das Regal ist aufgebaut wie im klassischen Supermarkt: senkrechte Produktblöcke (Nudeln · Tomaten & Saucen · Bohnen, Brühe & Gewürze), waagerecht die Regalzonen: Schild mit Fachcode oben, Standardgrößen in Sicht- und Greifzone, Großpackungen unten. Fertige Pakete gibt es nicht.",
-      "begruendung": "Die Kundin kennt diese Ordnung aus jedem Supermarkt und findet die Zutaten von ihrer Rezeptkarte schnell: Fachcode W1 → Koje Pasta → Block „Nudeln“. Das Blockschild nennt zusätzlich die Rezepte, die daraus kochen. Die Kühlware des Rezepts steht nach der Parmesan-Regel im Kühlregal.",
-      "quelle": "Ahlert/Kenning/Brock 2020, S. 302–303 (Regalzonen, Produktblock) ✓; Chandon et al. 2009, J. of Marketing 73(6), S. 1–17 (Facings & Regalhöhe → Aufmerksamkeit) ✓",
-      "annahme": "Blockreihenfolge und Belegung sind Fallannahme; die Wirkung im eigenen Store ist nicht gemessen.",
+      "entscheidung": "Das Nudelregal ist aufgebaut wie im Vollsortimenter: senkrechte Herstellerblöcke (Premiummarken, Eigenmarke, Bio), innerhalb jeder Marke die Sorten untereinander. Waagerecht die Regalzonen: Warengruppenschild oben, Standardgrößen in Sicht- und Greifzone, Großpackungen in der Bückzone. Jede Sorte steht genau einmal, mit mehreren Facings.",
+      "begruendung": "Die Kundin sucht „Pasta“ von ihrer Rezeptkarte und findet die vertraute Ordnung: erst Marke, dann Sorte. Mehr Facings in Augenhöhe erhöhen die Aufmerksamkeit; die preiswerte Eigenmarke und Großpackungen stehen unten.",
+      "quelle": "Ahlert/Kenning/Brock 2020, S. 302–303 (Regalzonen, Hersteller- und Produktblock) ✓; Chandon et al. 2009, J. of Marketing 73(6), S. 1–17 (Facings & Regalhöhe → Aufmerksamkeit) ✓",
+      "annahme": "Sortiment und Blockreihenfolge sind Fallannahme; die Wirkung im eigenen Store ist nicht gemessen.",
       "skizze": "Neu ausgearbeitet (in der Skizze nicht enthalten).",
       "ebenen": {
         "zonen": false,
@@ -2021,7 +1763,7 @@
         "regalzonen": true
       },
       "regalbild": "M4",
-      "notizen": "Das Regal der Pasta Night: Nudeln bei Nudeln, Saucen bei Saucen, Bohnen und Brühe daneben, jeweils als senkrechter Produktblock. Die Regalzonen sind eingeblendet: Standardgrößen in Sicht- und Greifzone, Großpackungen unten. Die Kundin sammelt nach ihrer Karte, das Blockschild nennt die Rezepte."
+      "notizen": "Das Nudelregal wie im echten Supermarkt: Marken als senkrechte Blöcke, innerhalb der Marke Spaghetti, Penne, Fusilli untereinander. Sichtzone: Markenartikel, Bückzone: Großpackungen und Eigenmarke. Die Regalzonen sind eingeblendet."
     },
     {
       "nr": 6,
@@ -2052,12 +1794,12 @@
         "zonen": false,
         "wege": true
       },
-      "notizen": "Kühlung an der Rückwand, von hinten aus der Kühlzelle befüllt. Hier liegen alle kühlpflichtigen Zutaten mit Fachcodes K1 bis K6 – das ist die Parmesan-Regel."
+      "notizen": "Kühlung an der Rückwand, von hinten aus der Kühlzelle befüllt. Alle kühlpflichtigen Zutaten stehen hier in ihren Warengruppen K1 bis K6 – Parmesan zum Beispiel bei Käse in K2."
     },
     {
       "nr": 7,
       "titel": "Showküche",
-      "bezug": "M12–M15 · Z4",
+      "bezug": "M12–M15 · M19 · Z4",
       "objekte": [
         "M12",
         "M13",
@@ -2078,17 +1820,17 @@
           7.0
         ]
       },
-      "entscheidung": "Showküche (ca. 18 m² inkl. Zuschauer) in der Raummitte als visueller Anker: Kochtresen zum Eingang, dahinter der Kurstisch mit 8 Plätzen und die Küchenzeile. Die Zuschauer stehen vorn in der Übergangszone, nicht in den Regalgängen.",
-      "begruendung": "Die Blickachse vom Eingang endet auf dem Kochtresen (Arena-Prinzip). Andere Kunden ziehen Aufmerksamkeit auf eine Zone, senken dort aber die Einkaufsneigung – deshalb liegt der Zuschauerbereich außerhalb der Warenzonen.",
+      "entscheidung": "Showküche (ca. 18 m² inkl. Zuschauer) in der Raummitte als visueller Anker: Kochtresen zum Eingang, dahinter Probiertheke und Küchenzeile, an drei Seiten eine Glaswand. Live-Cooking zweimal täglich, Probierportionen kostenlos – Kochkurse bieten wir nicht an.",
+      "begruendung": "Die Blickachse vom Eingang endet auf dem Kochtresen (Arena-Prinzip). Das Live-Cooking zeigt ein Rezept der Matrix und macht es probierbar. Die Glaswand hält Geruch und Lärm von den Regalen fern, lässt aber den Blick frei. Zuschauer stehen vorn in der Übergangszone, nicht in den Regalgängen.",
       "quelle": "Seminarskript (Arena-Prinzip, Blickachse mit visuellem Anker) ✓; Ahlert/Kenning/Brock 2020, S. 297–302 ✓; Hui/Bradlow/Fader 2009 (Einfluss anderer Kunden) ✓; Gröppel 1991 (Erlebnisstrategien) ◐",
-      "annahme": "Wirtschaftlich ab ca. 2,7 Kursbelegungen pro Woche (siehe Folie Wirtschaftlichkeit).",
+      "annahme": "Wirtschaftlich, wenn der Ø-Bon um ca. 4 € steigt (Folie Wirtschaftlichkeit).",
       "skizze": "Skizze: Zuschauer-Hocker an der Rückseite der Küche. Neu: Zuschauer vorn – der hintere Gang bleibt frei für den Rezeptweg.",
       "ebenen": {
         "zonen": false,
         "wege": false,
         "blickachse": true
       },
-      "notizen": "Die Showküche ist der visuelle Anker am Ende der Blickachse. Zuschauer stehen vorn in der Übergangszone, nicht im Gang. Mittags Live-Cooking, abends Kurse mit acht Plätzen."
+      "notizen": "Die Showküche ist der visuelle Anker am Ende der Blickachse. Zweimal täglich Live-Cooking mit einem Rezept der Matrix, Probieren ist kostenlos. Kurse gibt es bewusst nicht. Die Glaswand an drei Seiten hält Geruch fern, vorn bleibt sie für die Zuschauer offen."
     },
     {
       "nr": 8,
@@ -2143,7 +1885,7 @@
           9.5
         ]
       },
-      "entscheidung": "Basis (B1–B7) längs: Wandregal plus eine Gondel mit 1,75 m Gang – das ist der Schnellweg vom Eingang zur Kasse.",
+      "entscheidung": "Basis (B1–B7) längs: Wandregal (Öl & Essig, Gewürze, Backen) plus eine Gondel (Frühstück, Kaffee & Tee, Süßwaren, Knabberartikel) mit 1,75 m Gang – das ist der Schnellweg vom Eingang zur Kasse.",
       "begruendung": "Längsplatzierung unterstützt bestehende Kaufabsichten: Wer gezielt Olivenöl sucht, erkennt die Warengruppe im Vorbeigehen, vergleicht und greift. Das Basissortiment sichert die Grundfrequenz (Lehre aus dem Kochhaus).",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3 ✓; Seminarskript: Längsplatzierung → „bestehende Kaufrelevanz“ ✓; Meyer, Tagesspiegel 28.03.2019 (Kochhaus) ✓",
       "annahme": "Schnellkauf ≤ 15 Minuten ist ein Zielwert.",
@@ -2176,7 +1918,7 @@
           1.6
         ]
       },
-      "entscheidung": "Eine Bedienkasse mit Band und zwei SB-Kassen direkt vor dem Ausgang. Dazu ein Impulsregal „Ergänzen“ (Kräuter, Schokolade, Rezeptkarten) an der Warteschlange.",
+      "entscheidung": "Eine Bedienkasse mit Band und zwei SB-Kassen direkt vor dem Ausgang. Dazu ein Impulsregal (Kräuter, Schokolade, Riegel) an der Warteschlange.",
       "begruendung": "Die Kasse liegt am Ende beider Wege. SB-Kassen fangen die Spitzen nach Vorlesung und Feierabend ab (Checkliste K8: Wartezeit). Ob SB-Technik angenommen wird, hängt laut Studien vom wahrgenommenen Nutzen ab – deshalb gibt es weiter eine Bedienkasse.",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 297–302 ✓; Inman/Nikolova 2017, J. of Retailing 93(1), S. 7–28 ◐; Seminar-Checkliste K8 ✓",
       "annahme": "Spitzenlast ca. 25 Kunden pro Stunde (Fallannahme).",
@@ -2240,7 +1982,7 @@
           9.0
         ]
       },
-      "entscheidung": "Warmes Licht (2.900–3.000 K) über Kochwelten und Küche, neutral-helles (4.000 K) in Basis und Kühlung. Kochduft nur zu festen Zeiten mit Dunstabzug, Holz in den Warenträgern, Edelstahl in der Küche, leise Musik.",
+      "entscheidung": "Warmes Licht (2.900–3.000 K) über Gondeln und Küche, neutral-helles (3.600–4.000 K) in Basis und Kühlung. Kochduft nur zu festen Zeiten mit Dunstabzug und Glaswand, Eiche und Schwarzstahl im Ladenbau, Terrazzo und Edelstahl in der Küche, leise Musik.",
       "begruendung": "Stimmung dort, wo inspiriert werden soll, Klarheit dort, wo schnell gekauft wird. Studien zeigen: Mehr Licht an Displays führt dazu, dass mehr Artikel angefasst werden. Duft wirkt auf die Wahrnehmung von Umfeld und Ware, wenn er zum Sortiment passt.",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 303–306 ✓; Summers/Hebert 2001, JBR 54(2), S. 145–150 ◐; Chebat/Michon 2003, JBR 56(7), S. 529–539 ◐; Spence et al. 2014, Psychology & Marketing 31(7), S. 472–488 ◐; Baker et al. 2002, J. of Marketing 66(2), S. 120–141 ◐",
       "annahme": "Die Wirkungen sind im eigenen Store nicht gemessen; die Lautstärke ist ein Zielwert.",
@@ -2249,7 +1991,7 @@
         "zonen": false,
         "wege": false
       },
-      "notizen": "Atmosphäre: warmes Licht über Kochwelten und Küche, hell-neutrales Licht in der Basis, Holz und Edelstahl, leise Musik. Dosierter Kochgeruch zu festen Zeiten."
+      "notizen": "Atmosphäre: warmes Licht über den Gondeln und der Küche, hell-neutrales Licht in der Basis, Eiche und Schwarzstahl, leise Musik. Dosierter Kochgeruch zu festen Zeiten, die Glaswand hält ihn von den Regalen fern."
     }
   ],
   "praesentation": {
@@ -2368,7 +2110,7 @@
       "titel": {
         "typ": "einleitung",
         "titel": "One Hour Kitchen",
-        "untertitel": "Shop. Cook. Enjoy. – Food-Store mit Kochwelten, Rezept-Matrix und Showküche",
+        "untertitel": "Shop. Cook. Enjoy. – Food-Store mit Rezept-Matrix, klassischem Sortiment und Showküche",
         "zeile": "Store-Konzept · Kurs HD25A23 · DHBW Heilbronn · Prüfung 19.10.2026",
         "team": "Gruppe: Name 1 · Name 2 · Name 3",
         "fragestellung": "Wie entscheidet man auf 190 m² in wenigen Minuten, was man heute Abend kocht – und findet alles dafür?",
@@ -2411,12 +2153,12 @@
           {
             "nr": "2",
             "titel": "Rezeptkarte",
-            "text": "Fachcodes zeigen jede Zutat"
+            "text": "Fachcodes zeigen, in welchem Regal jede Zutat steht"
           },
           {
             "nr": "3",
             "titel": "Showküche",
-            "text": "Live-Cooking mittags, Kurse abends"
+            "text": "Live-Cooking zweimal täglich zum Probieren"
           }
         ],
         "kpisTitel": "Das „One Hour“-Versprechen",
@@ -2452,7 +2194,7 @@
             3.2
           ]
         },
-        "notizen": "Unsere Kundin kommt mit einem klaren Vorhaben: Heute Abend wird gekocht, und es soll schnell gehen. Offen ist nur das Gericht. Deshalb steht am Eingang das Matrix-Dashboard: Sie entscheidet erst die Küche, dann den Anlass, und hat damit ihr Rezept. One Hour heißt: maximal 15 Minuten Einkauf und maximal 45 Minuten Kochzeit.",
+        "notizen": "Unsere Kundin kommt mit einem klaren Vorhaben: Heute Abend wird gekocht, und es soll schnell gehen. Offen ist nur das Gericht. Am Eingang entscheidet sie am Matrix-Dashboard Küche und Anlass und hat ihr Rezept. Die Zutaten findet sie dann im ganz normal sortierten Laden über die Fachcodes. One Hour heißt: maximal 15 Minuten Einkauf und maximal 45 Minuten Kochzeit.",
         "zitat": "Was kochen wir heute Abend?",
         "zitatOben": true
       },
@@ -2465,14 +2207,12 @@
             "",
             "heute spontan entscheiden",
             "Rezept + Zutaten an einem Ort",
-            "live probieren",
-            "gemeinsam kochen"
+            "live probieren"
           ],
           "zeilen": [
             [
               "Supermarkt",
               "✓",
-              "–",
               "–",
               "–"
             ],
@@ -2480,28 +2220,24 @@
               "Kochbox (z. B. HelloFresh)",
               "– Tage vorher",
               "✓ per Lieferung",
-              "–",
               "–"
             ],
             [
               "Kochschule",
               "– fester Termin",
               "–",
-              "✓",
               "✓"
             ],
             [
               "Kochhaus (2010–2019)",
               "✓",
-              "✓",
-              "–",
-              "✓ Kurse"
+              "✓ nach Rezepten sortiert",
+              "–"
             ],
             [
               "One Hour Kitchen",
               "✓",
-              "✓",
-              "✓",
+              "✓ Karte + klassisches Regal",
               "✓"
             ]
           ]
@@ -2517,7 +2253,7 @@
           },
           {
             "titel": "Unsere Lehre",
-            "text": "Basissortiment · 9 statt 20 Rezepte · sichtbare Küche",
+            "text": "Klassisch sortiertes Vollsortiment statt Rezept-Regale · 9 Rezepte · sichtbare Küche",
             "tag": [
               "A",
               "eigene Einschätzung"
@@ -2536,7 +2272,7 @@
             3.0
           ]
         },
-        "notizen": "Erste naheliegende Frage: Gab es das nicht schon? Ja, das Kochhaus hat ab 2010 nach Rezepten sortiert und ist 2019 insolvent gegangen; laut Tagesspiegel war es zuletzt nicht profitabel und stand unter Druck durch Online-Kochboxen. Daraus lernen wir: Grundfrequenz durch das Basissortiment, neun Rezepte statt achtzehn bis zwanzig, sichtbare Küche."
+        "notizen": "Erste naheliegende Frage: Gab es das nicht schon? Ja, das Kochhaus hat ab 2010 nach Rezepten sortiert und ist 2019 insolvent gegangen. Unsere Lehre: Wir sortieren das Regal ganz klassisch nach Warengruppen und verbinden es nur über Rezeptkarte und Fachcodes mit den Rezepten – so funktioniert der Laden auch für den normalen Einkauf."
       },
       "rahmen": {
         "typ": "folie",
@@ -2545,7 +2281,7 @@
         "felder": [
           [
             "Store",
-            "3 Kochwelten, Rezept-Matrix, Showküche (8 Plätze)",
+            "Food-Store mit Rezept-Matrix, klassisch sortiertem Sortiment und Showküche (Live-Cooking)",
             "A"
           ],
           [
@@ -2560,7 +2296,7 @@
           ],
           [
             "Sortiment",
-            "ca. 800 Artikel, 9 Rezepte",
+            "ca. 800 Artikel nach Warengruppen, 9 Matrix-Rezepte",
             "A"
           ],
           [
@@ -2570,7 +2306,7 @@
           ],
           [
             "Öffnung",
-            "Mo–Sa 10–21 Uhr",
+            "Mo–Sa 8–21 Uhr; Live-Cooking 12–13:30 und 17:30–19 Uhr",
             "A"
           ]
         ],
@@ -2587,60 +2323,65 @@
           ]
         },
         "fuss": "Alle Rahmendaten sind Fallannahmen. Vergleich Kochhaus Berlin: 150 m², 600 Artikel ◐.",
-        "notizen": "Der Standort begründet Zielgruppe und Öffnungszeiten: Studierende und Berufstätige kommen mittags und nach Feierabend vorbei. Daraus folgen Live-Cooking in der Mittagspause und Kurse am Abend. Der Verkaufsraum hat rund 190 m²; dazu kommt ein L-förmiges Lager hinten und rechts, aus dem die Kühlung von hinten befüllt wird."
+        "notizen": "Der Standort begründet Zielgruppe und Öffnungszeiten: Studierende und Berufstätige kommen mittags und nach Feierabend vorbei – genau dann läuft das Live-Cooking. Kurse bieten wir nicht an. Der Verkaufsraum hat rund 190 m², dazu ein L-förmiges Lager hinten und rechts."
       },
       "wirtschaft": {
         "typ": "folie",
         "kicker": "2 · Rahmen · Wirtschaftliche Größe",
-        "titel": "Showküche: ab rund 3 Belegungen pro Woche trägt sie sich.",
+        "titel": "Showküche: trägt sich, wenn der Ø-Bon um rund 4 € steigt.",
         "rechnung": [
           [
             "Umsatz Verkauf",
-            "140 × 24 € × 300 Tage",
+            "140 Kunden × 24 € × 300 Tage",
             "1.008.000 €"
           ],
           [
-            "Flächenleistung",
-            "÷ 172 m²",
-            "5.860 €/m²"
-          ],
-          [
-            "Rohertrag auf 18 m²",
-            "18 m² × 5.860 € × 30 %",
+            "Rohertrag auf 18 m² Regal",
+            "18 m² × 5.860 €/m² × 30 %",
             "31.600 €"
           ],
           [
-            "DB Showküche",
-            "6 Kurse/Woche × 7 × 59 € × 48 × 60 %",
-            "71.400 €"
+            "Kosten Live-Cooking",
+            "Personal 2 h/Tag + Probierware",
+            "18.000 €"
+          ],
+          [
+            "Nötiger Mehr-Rohertrag",
+            "31.600 € + 18.000 €",
+            "49.600 €"
+          ],
+          [
+            "Break-even Ø-Bon",
+            "49.600 € ÷ (140 × 300 × 30 %)",
+            "+3,94 €"
           ]
         ],
         "rechts": {
           "balken": {
-            "titel": "Vergleich pro Jahr",
+            "titel": "Pro Jahr",
             "einheit": "Tsd. €",
             "werte": [
               [
-                "Rohertrag, wenn die 18 m² Regalfläche wären",
-                31.6,
+                "Benötigt: Rohertrag Regal + Kosten Küche",
+                49.6,
                 "#9a958e"
               ],
               [
-                "Deckungsbeitrag Showküche (6 Belegungen)",
-                71.4,
+                "Rohertrag bei +4 € Ø-Bon (24 → 28 €)",
+                50.4,
                 "#d64527"
               ]
             ]
           },
           "merke": [
             "Break-even",
-            "≈ 2,7 Kurse pro Woche – geplant sind ≥ 4."
+            "≈ +4 € Ø-Bon oder ≈ 23 Kunden mehr pro Tag. Zum Vergleich Kochhaus Berlin: 250 Kunden/Tag ◐."
           ]
         },
         "tags": [
           [
             "A",
-            "Alle Werte angenommen; ohne Investition, Personal, Energie"
+            "Frequenz, Warenkorb, Rohertragsquote, Personalkosten (2 h × 25 €), Probierware (10 €/Tag) angenommen; ohne Investition Küche"
           ]
         ],
         "kamera": {
@@ -2655,7 +2396,7 @@
             7.2
           ]
         },
-        "notizen": "Als wirtschaftliche Größe wählen wir die Kapazität der Showküche, weil sie unseren größten Zielkonflikt beantwortet: Fläche für Erlebnis statt für Ware. Wir vergleichen nicht Umsatz mit Umsatz, sondern Rohertrag der Ware mit dem Deckungsbeitrag der Kurse. Die Showküche belegt rund 18 von 190 m², also knapp ein Zehntel. Aussagegrenze: Investition und weitere Kosten sind nicht enthalten, alle Werte sind Annahmen."
+        "notizen": "Weil wir keine Kurse anbieten, muss sich die Showküche über den Verkauf tragen. Sie kostet 18 m² Regalfläche, also rund 31.600 Euro Rohertrag, dazu ca. 18.000 Euro für Personal und Probierware. Das sind knapp 50.000 Euro. Die holen wir rein, wenn der Durchschnittsbon um rund 4 Euro steigt – etwa durch Wein und Dessert zum Rezept – oder wenn täglich rund 23 Kunden mehr kommen. Aussagegrenze: Die Investition ist nicht enthalten, alle Werte sind Annahmen."
       },
       "grundriss": {
         "typ": "folie",
@@ -2697,7 +2438,7 @@
         },
         "ansicht": "draufsicht",
         "panel": "seite",
-        "notizen": "Den Plan von unten nach oben lesen. Wir betreten den Laden links durch den Eingang; nach etwa drei Metern steht das Matrix-Dashboard, leicht links, damit die Blickachse zur Showküche frei bleibt. Der Rezeptweg (rot) führt am schrägen Obst-und-Gemüse-Stand vorbei in den Rundlauf links, entlang der Kojen zur Kühlung an der Rückwand, weiter zu Dessert und Wein, durch das Basissortiment und zur Kasse direkt vor dem Ausgang. Der Schnellweg (grün gestrichelt) geht direkt ins Basissortiment. Das L-Lager liegt hinten und rechts: Anlieferung per Rolltor, die Kühlung wird von hinten befüllt. Der Notausgang liegt links und bleibt frei von Waren."
+        "notizen": "Den Plan von unten nach oben lesen. Wir betreten den Laden links durch den Eingang; nach etwa drei Metern steht das Matrix-Dashboard, leicht links, damit die Blickachse zur Showküche frei bleibt. Der Rezeptweg (rot) führt am schrägen Obst-und-Gemüse-Stand vorbei in den Rundlauf links, entlang der Gondeln zur Kühlung an der Rückwand, weiter zu Dessert und Wein, durch das Basissortiment und zur Kasse direkt vor dem Ausgang. Der Schnellweg (grün gestrichelt) geht direkt ins Basissortiment. Das L-Lager liegt hinten und rechts: Anlieferung per Rolltor, die Kühlung wird von hinten befüllt. Der Notausgang liegt links und bleibt frei von Waren."
       },
       "optimierung": {
         "typ": "folie",
@@ -2791,7 +2532,7 @@
         },
         "merke": [
           "Kundenfläche ≈ 70 %",
-          "Übergangszone, Zuschauerbereich und breite Gänge gehören zum Konzept."
+          "Übergangszone mit Dashboard, Zuschauerbereich vor der Showküche und 1,4–1,75 m breite Gänge gehören zum Konzept."
         ],
         "fuss": "Live aus dem Grundriss berechnet. Flächenarten: Ahlert/Kenning/Brock 2020, S. 297–302 ✓",
         "notizen": "Links die Flächenbilanz des Verkaufsraums nach den Flächenarten aus dem Seminar: Kundenfläche rund 133 m², Stellfläche der Warenträger rund 32 m², Showküche rund 18 m², Kassen und Dashboard rund 7 m². Rechts die Raumzuteilung innerhalb der Warenfläche. Die Werte rechnet das Modell direkt aus dem Grundriss. Vorbereitete Antwort: Die Kundenfläche ist bewusst groß, weil Übergangszone, Zuschauerbereich und breite Gänge zum Konzept gehören.",
@@ -2805,12 +2546,12 @@
           {
             "nr": "!",
             "titel": "Showküche braucht Fläche",
-            "text": "18 m², Break-even bei 2,7 Kursen/Woche"
+            "text": "18 m²; trägt sich ab ca. +4 € Ø-Bon"
           },
           {
             "nr": "!",
             "titel": "Leerlauf am Vormittag",
-            "text": "Mittags Live-Cooking, vormittags Vorbereitung"
+            "text": "Live-Cooking zu festen Zeiten, vormittags Vorbereitung"
           },
           {
             "nr": "!",
@@ -2820,7 +2561,7 @@
           {
             "nr": "!",
             "titel": "Wechselnde Rezepte",
-            "text": "Nur die Felder wechseln, das System bleibt"
+            "text": "Nur Rezepte und Karten wechseln, die Regale bleiben"
           },
           {
             "nr": "!",
@@ -2846,25 +2587,25 @@
             7.0
           ]
         },
-        "notizen": "Hier nehmen wir die typischen Rückfragen vorweg. Wer nur Milch kauft: Eingang, rechts ins Basissortiment, Kühlung hinten, Kasse – rund 25 Meter Weg. Was passiert am Dienstagvormittag: Kursvorbereitung und ab 12 Uhr Live-Cooking für die Mittagspause."
+        "notizen": "Typische Rückfragen: Wer nur Milch kauft, geht rechts durch die Basis zur Kühlung und zur Kasse – rund 25 Meter. Am Vormittag bereitet das Team das Live-Cooking vor, ab 12 Uhr wird gekocht. Und weil das Sortiment klassisch sortiert ist, ändert ein neues Rezept nur die Karte, nicht das Regal."
       },
       "fazit": {
         "typ": "folie",
         "kicker": "Fazit",
         "gross": true,
-        "titel": "Orientieren und irritieren in einem Store.",
+        "titel": "Orientieren, entdecken, verführen – in einem Store.",
         "karten": [
           {
             "titel": "Orientieren",
-            "text": "Matrix-Dashboard, Basissortiment längs, Schnellweg"
+            "text": "Matrix-Dashboard, Fachcodes, klassische Warengruppen, Basis längs"
           },
           {
-            "titel": "Irritieren",
-            "text": "Kochwelten quer, Ergänzungen in den Kojen"
+            "titel": "Entdecken",
+            "text": "Quer-Gondeln im Rundlauf, Nudeln ↔ Saucen, Angebot der Woche"
           },
           {
             "titel": "Verführen",
-            "text": "Showküche als Anker, Rezeptkarte, Dessert & Wein nach der Frische"
+            "text": "Showküche mit Live-Cooking, Dessert & Wein nach der Frische"
           }
         ],
         "zitat": "Zwei Entscheidungen am Eingang, ein Rezept für heute Abend. Der Händler erzeugt keinen Kauf, aber er macht die Entscheidung leichter.",
@@ -2881,7 +2622,7 @@
             9.0
           ]
         },
-        "notizen": "Rückgriff auf das Seminarfazit: Ein Store muss orientieren, ohne zu langweilen, und irritieren, ohne zu verwirren. Bei uns orientiert zuerst das Dashboard, dann irritieren die Kojen mit Ergänzungen, und die Showküche verführt. Offene Annahmen (Frequenz, Warenkorb, Auslastung) prüfen wir nach der Eröffnung mit einer Kundenlaufstudie."
+        "notizen": "Ein Store muss orientieren, ohne zu langweilen, und irritieren, ohne zu verwirren. Bei uns orientieren Dashboard, Fachcodes und das vertraute Sortiment, die Quer-Gondeln lassen entdecken, und die Showküche verführt. Offene Annahmen (Frequenz, Warenkorb, Wirkung des Live-Cookings) prüfen wir nach der Eröffnung."
       },
       "quellen": {
         "typ": "quellen",
@@ -3010,11 +2751,11 @@
           },
           {
             "nr": "2",
-            "titel": "Kochwelten quer als Kojen",
-            "text": "Drei Gondeln, innen nach Warengruppen",
+            "titel": "Trockensortiment in Quer-Gondeln",
+            "text": "Klassisch nach Warengruppen; Nudeln und Saucen im selben Gang gegenüber",
             "tag": [
               "Q",
-              "Querplatzierung, S. 300–301, Abb. 10.3 ✓"
+              "Querplatzierung, S. 300–301 ✓; Produktblock, S. 303 ✓"
             ]
           },
           {
@@ -3075,22 +2816,22 @@
       "querlaengs": {
         "typ": "folie",
         "kicker": "5 · Regalzuteilung",
-        "titel": "Zwei Wege, zwei Anordnungen: quer irritieren, längs orientieren.",
+        "titel": "Zwei Wege, zwei Anordnungen: quer entdecken, längs schnell finden.",
         "karten": [
           {
-            "titel": "Kochwelten: Querplatzierung",
+            "titel": "Trockensortiment: Querplatzierung",
             "zeilen": [
               [
                 "Kunde",
-                "neue Kaufrelevanz: Drink & Dessert entdecken"
+                "neue Kaufrelevanz: im kurzen Gang Sauce zur Nudel entdecken"
               ],
               [
                 "Händler",
-                "Zusatzkäufe durch Kojen und Regalköpfe"
+                "Verbundkäufe durch Gegenüber und Regalkopf"
               ],
               [
                 "Bei uns",
-                "3 Gondeln quer, je eine Kochwelt"
+                "3 Gondeln quer, klassisch nach Warengruppen"
               ]
             ],
             "tag": [
@@ -3137,7 +2878,7 @@
             8.2
           ]
         },
-        "notizen": "Hier verbinden wir die Seminarunterscheidung mit unserem Konzept. Kundenperspektive: kaufrelevant oder nicht; Händlerperspektive: kaufwahrscheinlich oder nicht. Die Kochwelten sollen neue Kaufrelevanz schaffen, das Basissortiment bestehende bedienen. Genau deshalb gibt es zwei Wege."
+        "notizen": "Kundenperspektive: kaufrelevant oder nicht; Händlerperspektive: kaufwahrscheinlich oder nicht. Die Quer-Gondeln im Rundlauf schaffen neue Kaufrelevanz – Nudeln und Saucen stehen sich gegenüber, am Regalkopf steht das Angebot der Woche. Das Basissortiment längs bedient die bestehende Kaufrelevanz. Beide sind klassisch nach Warengruppen sortiert."
       },
       "matrix": {
         "typ": "folie",
@@ -3206,21 +2947,21 @@
           [
             "05",
             "Abschluss",
-            "Kasse / Kurs buchen"
+            "Kasse / Live-Cooking"
           ]
         ],
         "karten": [
           {
             "titel": "Wegweiser",
-            "text": "Jede Zutat mit Fundort"
+            "text": "Jede Zutat mit Fachcode des Regals"
           },
           {
             "titel": "Gleiche Zeichen",
-            "text": "Nr. und Symbol auf Dashboard, Karte, Regal"
+            "text": "Nummer und Symbol auf Dashboard und Karte"
           },
           {
             "titel": "Brücke zur Küche",
-            "text": "QR-Code: Kurs buchen"
+            "text": "Rezept im Live-Cooking probieren"
           }
         ],
         "fuss": "Eigene Gestaltung (A). Im Modell ausprobieren: Einkaufs-Spiel (G).",
@@ -3236,7 +2977,7 @@
             3.2
           ]
         },
-        "notizen": "Die Rezeptkarte nimmt die Entscheidung vom Dashboard mit in den Laden. Es gibt keine fertigen Pakete: Die Kundin sammelt die Zutaten selbst. Fachcodes zeigen den Fundort jeder Zutat, auch in der Kühlung. Damit setzen wir die Parmesan-Regel um und machen den Kundenweg planbar. Die Karte verbindet außerdem Einkauf und Showküche über den QR-Code."
+        "notizen": "Die Rezeptkarte nimmt die Entscheidung vom Dashboard mit in den Laden. Es gibt keine fertigen Pakete und keine Rezept-Regale: Die Kundin sammelt die Zutaten selbst im klassisch sortierten Laden. Die Fachcodes zeigen den Fundort jeder Zutat – T für die Gondeln im Trockensortiment, K für die Kühlung, B für die Basis."
       },
       "warenpraesentation": {
         "typ": "folie",
@@ -3290,21 +3031,21 @@
             "Rezept #01 · Creamy Tomato Pasta",
             "Rezept #02 · Tagliatelle al Limone"
           ],
-          "nach": "Hauptplatzierung: Parmesan im Kühlregal Frische, Fach K2, Produktblock Käse",
+          "nach": "Ein Platz: Parmesan im Kühlregal, Fach K2, Warengruppe Käse",
           "hinweis": "Beide Karten verweisen auf „K2“"
         },
         "karten": [
           {
             "nr": "1",
-            "text": "Eine Hauptplatzierung je Artikel"
+            "text": "Jeder Artikel steht in seiner Warengruppe"
           },
           {
             "nr": "2",
-            "text": "Ungekühlt: Zweitplatzierung erlaubt"
+            "text": "Mehrere Rezepte → ein Fachcode"
           },
           {
             "nr": "3",
-            "text": "Gekühlt: nie in der Kochwelt"
+            "text": "Kühlware immer in der Kühlung"
           }
         ],
         "tags": [
@@ -3329,12 +3070,12 @@
             11.8
           ]
         },
-        "notizen": "Diese Frage wird oft gestellt: Wo steht ein Produkt, das in mehreren Rezepten vorkommt? Unsere Antwort ist eine feste Regel. Hauptplatzierung im Produktblock, Zweitplatzierung nur für ungekühlte Ware. Parmesan steht deshalb im Kühlregal im Fach K2 bei Käse, beide Rezeptkarten verweisen dorthin. So bleibt die Kühlkette gesichert, und die Bestände sind an einem Ort gebündelt."
+        "notizen": "Wo steht ein Produkt, das in mehreren Rezepten vorkommt? Ganz einfach: an seinem normalen Platz in der Warengruppe. Parmesan steht bei Käse in K2, beide Rezeptkarten verweisen dorthin. Es gibt keine Doppelplatzierung nach Rezepten – das hält die Bestände an einem Ort und die Kühlkette sicher."
       },
       "atmosphaere": {
         "typ": "folie",
         "kicker": "7 · Atmosphäre",
-        "titel": "Stimmung in Kochwelten, Klarheit in der Basis.",
+        "titel": "Stimmung an Gondeln und Küche, Klarheit in der Basis.",
         "tabelle": {
           "kopf": [
             "Merkmal",
@@ -3344,12 +3085,12 @@
           "zeilen": [
             [
               "Licht warm / neutral",
-              "Verweilen in Kochwelten, Finden in der Basis",
+              "Verweilen an Gondeln und Küche, Finden in der Basis",
               "Verweildauer nicht belegt"
             ],
             [
               "Kochgeruch, dosiert",
-              "Anlass erlebbar machen",
+              "Live-Cooking erlebbar, Glaswand hält Geruch fern",
               "Wirkung auf Kauf nicht belegt"
             ],
             [
@@ -3359,7 +3100,7 @@
             ],
             [
               "Musik leise",
-              "Kurse und Einkauf stören sich nicht",
+              "ruhiger Einkauf neben dem Live-Cooking",
               "Zielwert, nicht gemessen"
             ]
           ]
@@ -3410,7 +3151,7 @@
           },
           {
             "titel": "Regal",
-            "text": "Produktblöcke, quer vs. längs, Regalzonen",
+            "text": "Warengruppen, quer vs. längs, Regalzonen",
             "tag": [
               "Q",
               "S. 300–303; Chandon 2009"
@@ -3465,7 +3206,7 @@
           "zeilen": [
             [
               "Gab es das nicht schon?",
-              "Ja, das Kochhaus. Wir haben 9 Rezepte statt 20, Basissortiment und sichtbare Küche.",
+              "Ja, das Kochhaus – nach Rezepten sortiert. Wir sortieren klassisch und verbinden über Karte und Fachcode.",
               "Wettbewerb"
             ],
             [
@@ -3480,13 +3221,13 @@
             ],
             [
               "Parmesan in zwei Rezepten?",
-              "Hauptplatzierung K2 (Käse) im Kühlregal, beide Karten verweisen darauf.",
+              "Ein Platz bei Käse (K2), beide Karten verweisen darauf.",
               "Parmesan-Regel"
             ],
             [
-              "Was passiert am Dienstagvormittag?",
-              "Kursvorbereitung, ab 12 Uhr Live-Cooking.",
-              "Zielkonflikte"
+              "Warum keine Kochkurse?",
+              "Fokus auf den Einkauf; Live-Cooking zeigt die Rezepte ohne Kursbetrieb und Raumbedarf.",
+              "Wirtschaftlichkeit"
             ],
             [
               "Ich will nur Milch.",
@@ -3494,8 +3235,8 @@
               "Grundriss"
             ],
             [
-              "Warum 190 m²?",
-              "Kleiner würde die Showküche (18 m²) die Verkaufsfläche zu stark belasten.",
+              "Rechnet sich die Showküche?",
+              "Ab ca. +4 € Ø-Bon oder ca. 23 Kunden mehr pro Tag.",
               "Wirtschaftlichkeit"
             ],
             [
@@ -3602,7 +3343,7 @@
               1.9,
               8.35
             ],
-            "text": "Kurzer Abstecher in die Asian-Koje: Sojasauce (W2) aus der Matrix – direkt vor ihr das Feld „€ günstig“",
+            "text": "Gondel „Internationale Küche“ (T5): Sojasauce – Herstellerblöcke, Fachcode von der Karte",
             "dauer": 3,
             "blick": [
               1.9,
@@ -3668,7 +3409,7 @@
               14.4,
               8.4
             ],
-            "text": "Basis: Reis aus B1 – Längsplatzierung, findet ihn im Vorbeigehen",
+            "text": "Gondel Reis (T2): Jasmin-Reis – der Reis steht wie im Supermarkt bei den anderen Reissorten",
             "dauer": 2.5,
             "blick": [
               15.3,
@@ -3773,7 +3514,7 @@
               14.35,
               6.0
             ],
-            "text": "Basis-Wandregal B2: Olivenöl – Warengruppe im Vorbeigehen erkennbar",
+            "text": "Basis-Wandregal B1: Olivenöl – Warengruppe im Vorbeigehen erkennbar",
             "dauer": 2.4,
             "blick": [
               15.3,
@@ -3815,7 +3556,7 @@
               12.1,
               7.6
             ],
-            "text": "Gondel B4: Tomatensauce – dahinter sieht er durchs Glas die Kursvorbereitung",
+            "text": "Basis-Gondel B4: Frühstück – dahinter sieht er durchs Glas das Live-Cooking",
             "dauer": 2.4,
             "blick": [
               12.7,
@@ -3918,13 +3659,14 @@
         "y": 1.75,
         "breite": 1.1,
         "hoehe": 0.85,
-        "titel": "KURSE DIESE WOCHE",
+        "titel": "LIVE-COOKING DIESE WOCHE",
         "zeilen": [
-          "Mo  Pasta Basics · 18:30",
-          "Mi  Ramen-Abend · 18:30",
-          "Do  Taco Night · 18:30",
-          "Fr  Firmen-Event",
-          "Sa  Live-Cooking 12–13:30"
+          "Mo  #01 Creamy Tomato Pasta",
+          "Di  #04 Gebratene Udon",
+          "Mi  #07 Quesadillas",
+          "Do  #03 Pasta e Fagioli",
+          "Fr  #08 Taco-Abend",
+          "Sa  #05 Ramen-Abend"
         ]
       },
       {
@@ -4009,8 +3751,8 @@
       },
       {
         "typ": "schrift",
-        "text": "Kochwelten",
-        "sub": "Pasta · Asian · Mexican",
+        "text": "Rund ums Kochen",
+        "sub": "Nudeln · Reis · Saucen · Internationales",
         "pos": [
           0.03,
           7.3
@@ -4067,13 +3809,13 @@
       "w": 1.7
     },
     {
-      "text": "KOCHWELTEN",
+      "text": "NUDELN · SAUCEN · INTERNATIONAL",
       "pos": [
         3.9,
         8.35
       ],
-      "farbe": "#b9763a",
-      "w": 1.6,
+      "farbe": "#b39b6b",
+      "w": 2.2,
       "richtung": [
         1,
         0

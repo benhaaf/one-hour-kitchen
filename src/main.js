@@ -131,9 +131,21 @@ function applyTopVisibility(top) {
   if (duct) duct.visible = !top;
   zones.userData.labels.visible = !top;
   shelfZones.visible = !top && shelfZonesOn;
+  if (zoneLegend) syncZoneLegend();
   scene.background = top ? PLAN_BG : SKY;
 }
 let shelfZonesOn = false;
+// Legende der Regalzonen (erscheint, sobald die Regalzonen eingeblendet sind)
+app.insertAdjacentHTML(
+  'beforeend',
+  `<aside id="zone-legend" hidden><h4>Regalzonen</h4>${layout.regalzonen.zonen
+    .map((z) => `<div><i style="background:${z.farbe}"></i><b>${z.name}</b><span>${z.von === 0 ? `unter ${String(z.bis).replace('.', ',')}` : z.bis >= 2.2 ? `über ${String(z.von).replace('.', ',')}` : `${String(z.von).replace('.', ',')}–${String(z.bis).replace('.', ',')}`} m</span><small>${z.inhalt}</small></div>`)
+    .join('')}<p>Ahlert/Kenning/Brock 2020, S. 302–303 ✓ · an allen Regalen</p></aside>`,
+);
+var zoneLegend = app.querySelector('#zone-legend'); // var: wird schon in applyTopVisibility abgefragt
+function syncZoneLegend() {
+  zoneLegend.hidden = !(shelfZonesOn && view === 'ego');
+}
 
 function updateReserve() {
   // Platz für die Touch-Buttons am rechten Rand und unten freihalten
@@ -187,6 +199,7 @@ toggle('zonen', 'Zonen & Beschriftungen', () => zones.visible, (v) => {
 toggle('regalzonen', 'Regalzonen', () => shelfZonesOn, (v) => {
   shelfZonesOn = v;
   shelfZones.visible = v && view === 'ego';
+  syncZoneLegend();
   if (v && view === 'top') hud.toast('Regalzonen sind in der Ego-Perspektive an allen Regalen zu sehen', 2500);
   // Offene Infokarte um die Regalzonen-Tabelle ergänzen bzw. kürzen
   if (panels.cardVisible && panels.cardStation) panels.showCard(panels.cardStation, stationCount, { regalzonen: v });
@@ -229,6 +242,7 @@ function setLayers(e = {}) {
   topView.showPaths = paths.group.visible;
   shelfZonesOn = !!e.regalzonen;
   shelfZones.visible = shelfZonesOn && view === 'ego';
+  syncZoneLegend();
   for (const [a, v] of [['zonen', zones.visible], ['hauptweg', paths.group.visible], ['regalzonen', shelfZonesOn]]) touch.setActive(a, v);
 }
 presentation.onStation = (slide, i) => {

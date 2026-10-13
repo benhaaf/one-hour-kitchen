@@ -2,14 +2,24 @@
 // Alle Artikel gleicher Form werden als eine InstancedMesh gezeichnet; pro Instanz wählt ein Attribut die Atlas-Kachel.
 import * as THREE from 'three';
 
-const GRID = 16;
-const TILE = 176;
+// Atlas-Raster wächst mit dem Sortiment (ca. 500 Artikel → 23 × 23 Kacheln)
+const TILE = 144;
 const PAD = 4;
+const PTILE = 64; // Preisschild-Atlas: kleinere Kacheln
+const PPAD = 2;
 const SANS = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 const SERIF = 'Georgia, "Times New Roman", serif';
 
-import { CATALOG, BRANDS } from './catalog.js';
+import { CATALOG, BRANDS, AKTION, planFace } from './catalog.js';
 export { CATALOG };
+const COUNT = Object.values(CATALOG).reduce((n, l) => n + l.length, 0) + 4;
+const GRID = Math.ceil(Math.sqrt(COUNT));
+// Hat die Warengruppe Großpackungen, bekommt der unterste Boden nur diese; sonst gehören alle Böden den Normalgrößen
+export function planShelf(code, nLevels) {
+  const hasBulk = (CATALOG[code] || []).some((p) => p.g);
+  const plan = planFace(code, hasBulk ? nLevels - 1 : nLevels);
+  return plan;
+}
 
 // ---------- Etiketten zeichnen: Markenstil + Produktfenster (zeigt, was drin ist) ----------
 const VISUALS = [
@@ -311,6 +321,22 @@ const STYLES = {
     g.fillRect(9, 98, L - 18, 13);
     center(g, p.s, 104.5, 96, 500, 9, SANS, isLight(p.a) ? '#2a2420' : '#f6f0e2');
   },
+  // Zweite Premium-Pasta (à la De Cecco): hellgelb, blaues Band, Wappen-Medaillon
+  molino(g, p) {
+    g.fillStyle = p.c;
+    g.fillRect(0, 0, L, L);
+    g.fillStyle = p.a;
+    g.fillRect(0, 0, L, 26);
+    center(g, p.b, 14, 100, 'italic 400', 13, SERIF, '#efe1b8');
+    g.fillStyle = '#c9a227';
+    g.fillRect(0, 26, L, 2);
+    dot(g, L / 2, 46, 13, p.a);
+    dot(g, L / 2, 46, 10, '#efe1b8');
+    center(g, 'M', 47, 20, 400, 13, SERIF, p.a);
+    center(g, p.n, 70, 104, 700, 16, SERIF, p.a);
+    window_(g, 24, 80, 72, 22, p, { r: 3, bg: '#f6ecd0' });
+    center(g, p.s, 111, 100, 500, 9, SANS, p.a);
+  },
   // Klassische Marke (à la Mutti rot / Ritter Sport): Vollfarbe, großer Schriftzug, Bildband
   klassik(g, p) {
     g.fillStyle = p.c;
@@ -454,7 +480,7 @@ const STYLES = {
     center(g, p.s, 84, 76, 'italic 400', 8, SERIF, fg);
   },
 };
-const BRAND_STYLE = { premium: 'premium', feinkost: 'feinkost', klassik: 'klassik', eigen: 'eigen', bio: 'bio', gewuerz: 'gewuerz', asia: 'asia', mex: 'mex', regional: 'regional', drink: 'drink', wein: 'wein' };
+const BRAND_STYLE = { molino: 'molino', premium: 'premium', feinkost: 'feinkost', klassik: 'klassik', eigen: 'eigen', bio: 'bio', gewuerz: 'gewuerz', asia: 'asia', mex: 'mex', regional: 'regional', drink: 'drink', wein: 'wein' };
 
 function drawLabel(g, s, p) {
   const br = BRANDS[p.b] || { st: 'klassik' };
@@ -597,7 +623,7 @@ export class Products {
     const tg = tmp.getContext('2d');
     // zweiter Atlas mit gleicher Kachelaufteilung: Preisschilder (2:1, gestaucht gezeichnet)
     const pc = document.createElement('canvas');
-    pc.width = pc.height = GRID * TILE;
+    pc.width = pc.height = GRID * PTILE;
     const pg = pc.getContext('2d');
     const ptmp = document.createElement('canvas');
     ptmp.width = 256;
@@ -621,8 +647,10 @@ export class Products {
         g.fillStyle = baseOf(p);
         g.fillRect(x + TILE / 2, y, TILE / 2, PAD + sh);
         drawPrice(ptg, 256, 128, p);
-        pg.drawImage(ptmp, x, y, TILE, TILE);
-        pg.drawImage(ptmp, x + PAD, y + PAD, TILE - 2 * PAD, TILE - 2 * PAD);
+        const px0 = (i % GRID) * PTILE;
+        const py0 = Math.floor(i / GRID) * PTILE;
+        pg.drawImage(ptmp, px0, py0, PTILE, PTILE);
+        pg.drawImage(ptmp, px0 + PPAD, py0 + PPAD, PTILE - 2 * PPAD, PTILE - 2 * PPAD);
         const kind = { p, tile: [i % GRID, Math.floor(i / GRID)] };
         this.kinds.push(kind);
         this.byCode[code].push(kind);
@@ -651,9 +679,7 @@ export class Products {
       wg.textBaseline = 'middle';
       fit(wg, t1, 96, 52, 170, 800, 50);
       fit(wg, t2, 96, 96, 170, 500, 22);
-      const x = (i % GRID) * TILE;
-      const y = Math.floor(i / GRID) * TILE;
-      pg.drawImage(wt, x, y, TILE, TILE);
+      pg.drawImage(wt, (i % GRID) * PTILE, Math.floor(i / GRID) * PTILE, PTILE, PTILE);
       this.wobbler[key] = [i % GRID, Math.floor(i / GRID)];
       i++;
     }
@@ -667,7 +693,7 @@ export class Products {
     ptex.anisotropy = 8;
     ptex.flipY = false;
     this.mats = {
-      preis: atlasMaterial(ptex, 0.55, 0, THREE.DoubleSide),
+      preis: atlasMaterial(ptex, 0.55, 0, THREE.FrontSide, PTILE, PPAD),
       matt: atlasMaterial(tex, 0.75, 0),
       glanz: atlasMaterial(tex, 0.3, 0.05),
       metall: atlasMaterial(tex, 0.35, 0.55),
@@ -715,11 +741,18 @@ export class Products {
   addWobbler(tile, x, y, z, dir) {
     const o = new THREE.Object3D();
     o.position.set(x, y, -z);
-    o.rotation.set(0, dir[1] !== 0 ? Math.PI / 2 : 0, 0);
-    o.scale.set(0.12, 0.08, 1);
-    o.updateMatrix();
+    // zwei Flächen Rücken an Rücken, damit die Schrift von beiden Seiten lesbar ist
     if (!this.items.has('tag')) this.items.set('tag', []);
-    this.items.get('tag').push({ m: o.matrix.clone(), tile });
+    for (const flip of [0, Math.PI]) {
+      o.rotation.set(0, (dir[1] !== 0 ? Math.PI / 2 : 0) + flip, 0);
+      o.scale.set(0.12, 0.08, 1);
+      o.updateMatrix();
+      const off = new THREE.Vector3(0, 0, flip ? -0.001 : 0.001).applyEuler(o.rotation);
+      const mm = o.matrix.clone();
+      mm.elements[12] += off.x;
+      mm.elements[14] += off.z;
+      this.items.get('tag').push({ m: mm, tile });
+    }
   }
 
   wobblerFor(p) {
@@ -799,6 +832,59 @@ export class Products {
     }
   }
 
+  // Ganze Regalfront nach Planogramm bestücken (keine Wiederholungen: jede Sorte steht genau einmal, mit Facings).
+  // levels: Böden von oben nach unten [{ y, maxH, depth }]; der unterste Boden nimmt Großpackungen auf, falls vorhanden.
+  placeFace(code, { along, from, to, front, dir, levels, tagOut = 0.008, tagDy = -0.045, gap = 0.005, rows = 3 }) {
+    const plan = planShelf(code, levels.length);
+    const W = to - from;
+    const kindOf = new Map((this.byCode[code] || []).map((k) => [k.p, k]));
+    const row = (items, a1, a2, lv) => {
+      if (!items.length) return;
+      const slot = (a2 - a1) / items.length;
+      items.forEach((p, i) => {
+        const k = kindOf.get(p);
+        if (!k) return;
+        const s1 = a1 + i * slot;
+        const sc = Math.min(1, lv.maxH / p.m[1], (slot - 0.01) / p.m[0]);
+        const w = p.m[0] * sc;
+        const d = p.m[2] * sc;
+        const n = Math.max(1, Math.min(6, Math.floor((slot - 0.01) / (w + gap))));
+        const used = n * w + (n - 1) * gap;
+        let pos = s1 + (slot - used) / 2;
+        for (let f = 0; f < n; f++) {
+          const c = pos + w / 2;
+          for (let r = 0; r < rows; r++) {
+            const inset = 0.012 + d / 2 + r * (d + 0.004);
+            if (inset + d / 2 > lv.depth) break;
+            const fr = lv.front ?? front;
+            if (along === 'x') this.add(k, c, lv.y, fr - dir[1] * inset, dir, { scale: sc });
+            else this.add(k, fr - dir[0] * inset, lv.y, c, dir, { scale: sc });
+          }
+          pos += w + gap;
+        }
+        const tx = s1 + Math.min(0.04, slot / 2);
+        const fr0 = lv.front ?? front;
+        if (along === 'x') this.addTag(k, tx, lv.y + tagDy, fr0 + dir[1] * tagOut, dir);
+        else this.addTag(k, fr0 + dir[0] * tagOut, lv.y + tagDy, tx, dir);
+        const wob = lv.y > 0.7 && lv.y < 1.6 && this.wobblerFor(p);
+        if (wob) {
+          const out = tagOut + 0.065;
+          if (along === 'x') this.addWobbler(wob, s1 + 0.004, lv.y + tagDy + 0.035, fr0 + dir[1] * out, dir);
+          else this.addWobbler(wob, fr0 + dir[0] * out, lv.y + tagDy + 0.035, s1 + 0.004, dir);
+        }
+      });
+    };
+    // Herstellerblöcke nebeneinander, Sorten je Block auf die Böden verteilt
+    let a = from;
+    for (const bl of plan.blocks) {
+      const a2 = a + bl.w * W;
+      bl.levels.forEach((items, li) => row(items, a + 0.005, a2 - 0.005, levels[li]));
+      a = a2;
+    }
+    if (plan.bulk.length) row(plan.bulk, from, to, levels[levels.length - 1]);
+    return plan;
+  }
+
   build() {
     const group = new THREE.Group();
     group.name = 'Produkte';
@@ -822,7 +908,7 @@ export class Products {
   }
 }
 
-function atlasMaterial(map, roughness, metalness, side = THREE.FrontSide) {
+function atlasMaterial(map, roughness, metalness, side = THREE.FrontSide, TILE = 144, PAD = 4) {
   const mat = new THREE.MeshStandardMaterial({ map, roughness, metalness, side });
   const scale = (TILE - 2 * PAD) / (TILE * GRID);
   mat.onBeforeCompile = (shader) => {
@@ -834,7 +920,7 @@ function atlasMaterial(map, roughness, metalness, side = THREE.FrontSide) {
         `vMapUv = ( mapTransform * vec3( (labelTile * ${TILE}.0 + ${PAD}.0) / ${TILE * GRID}.0 + clamp(MAP_UV, 0.0, 1.0) * ${scale.toFixed(6)}, 1 ) ).xy;`,
       );
   };
-  mat.customProgramCacheKey = () => 'labelTile';
+  mat.customProgramCacheKey = () => `labelTile-${TILE}`;
   return mat;
 }
 

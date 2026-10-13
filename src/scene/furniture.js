@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { Builder, yawFacing, rng } from './builder.js';
 import { signMesh } from './labels.js';
+import { CATALOG } from './catalog.js';
 import { AccessoryKit, canvasTex, fitText } from './accessories.js';
 import { Decor } from './decor.js';
 import { addStaticPerson, randomLook } from './people.js';
@@ -384,37 +385,35 @@ const TEX = {
       g.textBaseline = 'middle';
       g.fillStyle = '#b39b6b';
       g.font = `600 22px ${SANS}`;
-      g.fillText('SHOWKÜCHE · KURSPROGRAMM', 70, 90);
+      g.fillText('SHOWKÜCHE · LIVE-COOKING', 70, 90);
       g.fillStyle = '#f4f1ec';
       g.font = `400 80px ${SERIF}`;
-      g.fillText('Kochen lernen bei uns', 70, 170);
-      const rows = [['Mo', '18:30', 'Pasta Basics', '59 €'], ['Mi', '18:30', 'Ramen-Abend', '59 €'], ['Do', '18:30', 'Taco Night', '59 €'], ['Fr', '', 'Firmen-Events', 'auf Anfrage'], ['täglich', '12–13:30', 'Live-Cooking zum Probieren', 'gratis']];
-      rows.forEach(([d, t, n, p], i) => {
-        const y = 290 + i * 104;
+      g.fillText('Heute probieren', 70, 170);
+      g.fillStyle = '#c9c4bc';
+      g.font = `500 30px ${SANS}`;
+      g.fillText('täglich 12:00–13:30 und 17:30–19:00 · Probierportionen kostenlos', 70, 240);
+      const rows = [['Mo', '#01 Creamy Tomato Pasta'], ['Di', '#04 Gebratene Udon'], ['Mi', '#07 Quesadillas'], ['Do', '#03 Pasta e Fagioli'], ['Fr', '#08 Taco-Abend mit Guacamole'], ['Sa', '#05 Ramen-Abend']];
+      rows.forEach(([d, n], i) => {
+        const y = 330 + i * 92;
         g.fillStyle = 'rgba(255,255,255,0.08)';
-        g.fillRect(70, y + 46, 900, 1);
+        g.fillRect(70, y + 42, 1000, 1);
         g.fillStyle = '#b39b6b';
         g.font = `600 30px ${SANS}`;
         g.fillText(d, 70, y);
-        g.fillStyle = '#c9c4bc';
-        g.fillText(t, 220, y);
         g.fillStyle = '#f4f1ec';
         g.font = `400 38px ${SERIF}`;
-        g.fillText(n, 400, y);
-        g.font = `500 28px ${SANS}`;
-        g.textAlign = 'right';
-        g.fillText(p, 970, y);
-        g.textAlign = 'left';
+        g.fillText(n, 180, y);
       });
-      g.fillStyle = '#f4f1ec';
-      rr(g, W - 450, H - 470, 340, 340, 24);
-      g.fill();
-      g.fillStyle = '#1f2120';
-      for (let i = 0; i < 15; i++) for (let j = 0; j < 15; j++) if ((i * 7 + j * 13 + i * j) % 3 === 0) g.fillRect(W - 425 + i * 19.5, H - 445 + j * 19.5, 19.5, 19.5);
       g.fillStyle = '#c9c4bc';
       g.font = `500 26px ${SANS}`;
-      g.textAlign = 'center';
-      g.fillText('Kurs buchen', W - 280, H - 90);
+      g.textAlign = 'right';
+      g.fillText('Rezeptkarte vorne am Dashboard', W - 70, H - 70);
+      g.save();
+      g.beginPath();
+      g.arc(1310, 520, 230, 0, Math.PI * 2);
+      g.clip();
+      drawPlate(g, 1310, 520, 190, { nr: '#01', titel: 'Creamy Tomato Pasta', welt: 'Pasta Night' });
+      g.restore();
       g.textAlign = 'left';
     }),
   plakat: (titel, zeilen, farbe = '#2b2e2c') =>
@@ -426,7 +425,7 @@ const TEX = {
       g.fillStyle = '#fff';
       g.textBaseline = 'middle';
       g.font = `600 28px ${SANS}`;
-      g.fillText('KOCHWELT DES MONATS', 30, 50);
+      g.fillText('REZEPTE DES MONATS', 30, 50);
       g.font = `800 70px ${SANS}`;
       fitText(g, titel, 30, 135, W - 60, 800, 70);
       g.fillStyle = '#1c1c1f';
@@ -557,7 +556,7 @@ const BUILDERS = {
     const cx = x1 + 0.55;
     const zc = (z1 + z2) / 2;
     b.box('holzDunkel', [cx - 0.02, cx + 0.02, zc, zc + 0.04], top, top + 1.05);
-    plane(ctx.extra, lit(TEX.plakat(m.schild, ['#01 Creamy Tomato Pasta', '#02 Tagliatelle al Limone', '#03 Pasta e Fagioli', 'Rezeptkarten gratis – drinnen'])), 0.62, 0.87, cx, top + 0.62, zc - 0.03, [0, -1], -0.08);
+    plane(ctx.extra, lit(TEX.plakat(m.schild, ['#01 Creamy Tomato Pasta', '#04 Gebratene Udon', '#07 Quesadillas', 'Rezeptkarte nehmen – Zutaten im Laden'])), 0.62, 0.87, cx, top + 0.62, zc - 0.03, [0, -1], -0.08);
     // Kiste mit Tomaten, Pasta-Gläser, Olivenöl
     const P = ctx.products;
     b.box('kiste', [x1 + 1.05, x1 + 1.5, z1 + 0.08, z1 + 0.42], top, top + 0.16);
@@ -672,72 +671,67 @@ const BUILDERS = {
     }
   },
 
-  'kochwelt-gondel'(b, m, ctx) {
+  // Gondel im Trockensortiment: je Seite eine Warengruppe (klassisch wie im Supermarkt), Herstellerblöcke senkrecht
+  gondel(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
     const H = m.hoehe;
     const zc = (z1 + z2) / 2;
-    const col = m.farbe;
-    if (!b.materials[`welt-${m.id}`]) b.materials[`welt-${m.id}`] = std(new THREE.Color(col), 0.55);
-    const wm = `welt-${m.id}`;
-    // Korpus: Sockel, Mittelwand, Seitenteile
-    // Feinkost-Ladenbau: Rückwand Räuchereiche, Rahmen mattschwarz, Böden Eiche mit LED-Lichtleiste
     b.box('schwarzMatt', [x1 + 0.02, x2 - 0.02, z1 + 0.04, z2 - 0.04], 0, 0.1);
     b.box('eicheDunkel', [x1 + 0.03, x2 - 0.03, zc - 0.02, zc + 0.02], 0.1, H - 0.01);
     for (const x of [x1, x2 - 0.03]) b.box('schwarzMatt', [x, x + 0.03, z1, z2], 0, H);
     b.box('eicheDunkel', [x1, x2, z1 + 0.02, z2 - 0.02], H - 0.03, H);
-    const levels = [0.1, 0.45, 0.82, 1.22];
+    const ys = [0.1, 0.45, 0.8, 1.15, 1.48];
     for (const seite of ['vorne', 'hinten']) {
       const f = faceFrame(m.rechteck, seite);
-      for (const y of levels.slice(1)) {
+      for (const y of ys.slice(1)) {
         b.box('eiche', faceRect(f, x1 + 0.03, x2 - 0.03, 0, -0.25), y - 0.025, y);
         b.box('led', faceRect(f, x1 + 0.04, x2 - 0.04, -0.012, -0.022), y - 0.03, y - 0.025);
         ctx.priceRail(f, x1 + 0.03, x2 - 0.03, y - 0.065, y - 0.025, 'preisDunkel');
       }
       b.box('led', faceRect(f, x1 + 0.04, x2 - 0.04, -0.012, -0.022), H - 0.035, H - 0.03);
-      // zurückgesetzte Sockelblende und Eichen-Abschlusskante oben
       b.box('schwarzMatt', faceRect(f, x1 + 0.03, x2 - 0.03, -0.03, -0.05), 0.0, 0.1);
       b.box('eiche', faceRect(f, x1, x2, 0.02, -0.03), H - 0.04, H);
       ctx.priceRail(f, x1 + 0.03, x2 - 0.03, 0.06, 0.1, 'preisDunkel');
-      if (m.regal?.[seite]) this.blockFace(b, m, ctx, f, levels, m.regal[seite]);
-    }
-    // Stirnseite zum Rundlauf (−x): Räuchereiche mit Kreidetafel der Rezepte dieser Kochwelt
-    b.box('eicheDunkel', [x1 - 0.012, x1, z1 + 0.02, z2 - 0.02], 0.1, H - 0.03);
-    {
-      const rz = ctx.layout.rezepte.filter((r) => r.welt === m.welt);
-      sign(ctx.extra, m.welt, { w: 0.46, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: m.farbe, sub: `Rezepte ${rz.map((r) => r.nr).join(' · ')}` }, x1 - 0.016, 1.35, zc, [-1, 0]);
-      rz.forEach((r, k) => sign(ctx.extra, `${r.nr}  ${r.titel}`, { w: 0.46, h: 0.09, bg: '#2f3234', fg: '#e4dccb', font: '400', align: 'left' }, x1 - 0.016, 1.1 - k * 0.1, zc, [-1, 0]));
-    }
-    // Regalkopf zum Gang (+x): Kochwelt-Stele mit Rezeptkarten „» schnell“
-    const ex = x2 + 0.005;
-    b.box('schwarzMatt', [x2 - 0.03, ex + 0.02, z1, z2], 0, 0.1);
-    b.box(wm, [ex + 0.02, ex + 0.025, z1 + 0.02, z2 - 0.02], 0.02, 0.08); // Farbkante der Kochwelt am Sockel
-    for (const y of [0.45, 0.85, 1.25]) b.box('eiche', [x2, x2 + 0.16, z1 + 0.04, z2 - 0.04], y - 0.025, y);
-    const P = ctx.products;
-    const kopf = m.regal?.kopf || { gruppen: [] };
-    // Regalkopf: Rezeptkarten aller drei Rezepte dieser Kochwelt (oben), darunter Waren aus dem Kopf-Sortiment
-    if (kopf.gruppen[0]) P.shelf(kopf.gruppen[0], { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.85, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 2, tagOut: 0.014, tagDy: -0.013 });
-    if (kopf.gruppen[1]) P.shelf(kopf.gruppen[1], { along: 'z', from: z1 + 0.04, to: z2 - 0.04, front: x2 + 0.15, y: 0.45, depth: 0.14, dir: [1, 0], maxH: 0.36, rows: 1, facings: 2, tagOut: 0.014, tagDy: -0.013 });
-    const rez = ctx.layout.rezepte.filter((r) => r.welt === m.welt);
-    rez.forEach((r, k) => {
-      if (!ctx.cardMats[r.nr]) ctx.cardMats[r.nr] = lit(recipeCardTexture(r));
-      const dz = (k - 1) * 0.15;
-      b.geo('glas', G.box(0.03, 0.13, 0.11), x2 + 0.08, 1.31, zc + dz, Math.PI / 2, -0.2);
-      plane(ctx.extra, ctx.cardMats[r.nr], 0.095, 0.13, x2 + 0.09, 1.33, zc + dz, [1, 0], -0.2);
-    });
-    if (kopf.titel) sign(ctx.extra, kopf.titel, { w: 0.52, h: 0.12, bg: '#25282a', fg: '#efe7d6', font: '500', brass: true }, x2 + 0.165, 1.08, zc, [1, 0]);
-    // Stele mit Kochwelt-Namen (Reckzone)
-    b.box('schwarzMatt', [x2 - 0.02, x2 + 0.03, zc - 0.03, zc + 0.03], H, H + 0.45);
-    sign(ctx.extra, m.welt, { w: 0.5, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: col, sub: 'Kochwelt' }, x2 + 0.035, H + 0.22, zc, [1, 0]);
-    // Kopfschild über die ganze Gondel (beidseitig)
-    b.box('schwarzMatt', [(x1 + x2) / 2 - 0.01, (x1 + x2) / 2 + 0.01, zc - 0.01, zc + 0.01], H, H + 0.18);
-    // Kopfschild je Seite: jede Seite gehört zu „ihrer“ Koje
-    for (const [seite, d] of [['vorne', [0, -1]], ['hinten', [0, 1]]]) {
       const face = m.regal?.[seite];
       if (!face) continue;
-      const wc = face.titel.startsWith('PASTA') ? '#a8432c' : face.titel.startsWith('ASIAN') ? '#b08a34' : '#3f6e4a';
-      const [t1, ...rest] = face.titel.split(' · ');
-      const nice = t1.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
-      sign(ctx.extra, nice, { w: 2.8, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: wc, sub: rest.join(' · ') }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
+      // Planogramm: Böden von oben (Sichtzone) nach unten (Bückzone, Großpackungen)
+      ctx.products.placeFace(face.code, {
+        along: 'x', from: x1 + 0.04, to: x2 - 0.04, front: f.front, dir: f.dir,
+        levels: [{ y: 1.48, maxH: 0.29, depth: 0.24 }, { y: 1.15, maxH: 0.3, depth: 0.24 }, { y: 0.8, maxH: 0.32, depth: 0.24 }, { y: 0.45, maxH: 0.32, depth: 0.24 }, { y: 0.1, maxH: 0.32, depth: 0.24 }],
+      });
+      // Warengruppenschild über der Seite (Reckzone) mit Fachcode
+      const d = f.dir;
+      sign(ctx.extra, face.titel, { w: 2.6, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: `Fachcode ${face.code}${face.unter ? ` · ${face.unter}` : ''}` }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
+    }
+    // Kopfschild-Träger
+    b.box('schwarzMatt', [(x1 + x2) / 2 - 0.01, (x1 + x2) / 2 + 0.01, zc - 0.01, zc + 0.01], H, H + 0.18);
+    // Stirnseite zum Rundlauf (−x): Übersicht der beiden Warengruppen
+    b.box('eicheDunkel', [x1 - 0.012, x1, z1 + 0.02, z2 - 0.02], 0.1, H - 0.03);
+    const titles = ['vorne', 'hinten'].map((sd) => m.regal?.[sd]).filter(Boolean);
+    sign(ctx.extra, titles.map((t) => t.titel).join(' · '), { w: 0.46, h: 0.22, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: titles.map((t) => t.code).join(' · ') }, x1 - 0.016, 1.45, zc, [-1, 0]);
+    // Regalkopf zum Gang (+x): Zweitplatzierung „Angebot der Woche“
+    const ex = x2 + 0.005;
+    b.box('schwarzMatt', [x2 - 0.03, ex + 0.02, z1, z2], 0, 0.1);
+    for (const y of [0.45, 0.85, 1.25]) b.box('eiche', [x2, x2 + 0.16, z1 + 0.04, z2 - 0.04], y - 0.025, y);
+    const kopf = m.regal?.kopf;
+    if (kopf) {
+      const list = (CATALOG[kopf.code] || []).filter((p) => p.b === kopf.marke && !p.g).slice(0, 6);
+      const kinds = list.map((p) => ctx.products.byCode[kopf.code].find((k) => k.p === p));
+      [0.85, 0.45, 1.25].forEach((y, li) => {
+        const row = kinds.slice(li * 2, li * 2 + 2);
+        row.forEach((k, i) => {
+          if (!k) return;
+          const zA = z1 + 0.05 + (i * (z2 - z1 - 0.1)) / 2;
+          const zB = zA + (z2 - z1 - 0.1) / 2;
+          const sc = Math.min(1, 0.36 / k.p.m[1]);
+          const w = k.p.m[0] * sc;
+          const n = Math.max(1, Math.floor((zB - zA) / (w + 0.005)));
+          for (let q = 0; q < n; q++) ctx.products.add(k, x2 + 0.15 - (k.p.m[2] * sc) / 2 - 0.01, y, zA + (q + 0.5) * ((zB - zA) / n), [1, 0], { scale: sc });
+          ctx.products.addTag(k, x2 + 0.165, y - 0.013, zA + 0.04, [1, 0]);
+        });
+      });
+      sign(ctx.extra, 'Angebot der Woche', { w: 0.5, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: kopf.marke }, x2 + 0.035, H + 0.2, zc, [1, 0]);
+      b.box('schwarzMatt', [x2 - 0.02, x2 + 0.03, zc - 0.02, zc + 0.02], H, H + 0.3);
     }
   },
 
@@ -767,9 +761,10 @@ const BUILDERS = {
       const a2 = x1 + (i + 1) * L - 0.04;
       for (const [y, d] of levels) {
         const front = z2 - 0.06 - d;
-        ctx.products.shelf(fach.code, { along: 'x', from: a1, to: a2, front, y: y + 0.002, depth: d - 0.02, dir: [0, -1], maxH: 0.27, rows: 3, start: Math.round(y * 10), tagOut: 0.022, tagDy: -0.032 });
         ctx.priceRailAt([a1, a2, front - 0.015, front], y - 0.05, y - 0.01, [0, -1]);
       }
+      const lv = levels.slice().reverse().map(([y, d], k, arr) => ({ y: y + 0.002, depth: d - 0.02, front: z2 - 0.06 - d, maxH: k === 0 ? 0.3 : arr[k - 1][0] - y - 0.04 }));
+      ctx.products.placeFace(fach.code, { along: 'x', from: a1, to: a2, front: z2 - 0.06 - levels[0][1], dir: [0, -1], levels: lv, tagOut: 0.022, tagDy: -0.032 });
       sign(ctx.extra, fach.name, { w: L - 0.12, h: 0.16, bg: '#25282a', fg: '#efe7d6', font: '500', accent: '#46708f', sub: fach.code }, (a1 + a2) / 2, H - 0.11, z1 + 0.195, [0, -1]);
     });
     void f;
@@ -790,7 +785,7 @@ const BUILDERS = {
     m.faecher.forEach((fach, i) => {
       const a1 = x1 + i * L + 0.05;
       const a2 = x1 + (i + 1) * L - 0.05;
-      for (const y of levels) ctx.products.shelf(fach.code, { along: 'x', from: a1, to: a2, front: z1 + 0.14, y, depth: z2 - z1 - 0.22, dir: [0, -1], maxH: 0.3, rows: 3, start: Math.round(y * 10), tagOut: 0.024, tagDy: -0.014 });
+      ctx.products.placeFace(fach.code, { along: 'x', from: a1, to: a2, front: z1 + 0.14, dir: [0, -1], levels: levels.slice().reverse().map((y) => ({ y, maxH: 0.32, depth: z2 - z1 - 0.22 })), tagOut: 0.024, tagDy: -0.014 });
       sign(ctx.extra, fach.name, { w: L - 0.12, h: 0.16, bg: '#25282a', fg: '#efe7d6', font: '500', accent: '#6d4a63', sub: fach.code }, (a1 + a2) / 2, H - 0.12, z1 + 0.035, [0, -1]);
     });
     // Glastüren mit Griffen und LED-Kanten
@@ -826,7 +821,7 @@ const BUILDERS = {
     m.faecher.forEach((fach, i) => {
       const a1 = x1 + i * L + 0.04;
       const a2 = x1 + (i + 1) * L - 0.04;
-      for (const y of levels) ctx.products.shelf(fach.code, { along: 'x', from: a1, to: a2, front: z1 + 0.02, y, depth: z2 - z1 - 0.08, dir: [0, -1], maxH: 0.34, rows: 2, gap: 0.006, start: Math.round(y * 10), tagOut: 0.039, tagDy: -0.05 });
+      ctx.products.placeFace(fach.code, { along: 'x', from: a1, to: a2, front: z1 + 0.02, dir: [0, -1], levels: levels.slice().reverse().map((y) => ({ y, maxH: 0.34, depth: z2 - z1 - 0.08 })), rows: 2, tagOut: 0.039, tagDy: -0.05 });
       sign(ctx.extra, fach.name, { w: L - 0.14, h: 0.22, chalk: true, sub: `${fach.code} · passt zum Rezept` }, (a1 + a2) / 2, H + 0.15, z1 + 0.25, [0, -1]);
       b.box('holzDunkel', [(a1 + a2) / 2 - 0.01, (a1 + a2) / 2 + 0.01, z1 + 0.25, z1 + 0.27], H, H + 0.06);
     });
@@ -857,7 +852,7 @@ const BUILDERS = {
       secs.forEach((s, i) => {
         const a1 = z1 + i * L + 0.04;
         const a2 = z1 + (i + 1) * L - 0.04;
-        for (const y of levels) ctx.products.shelf(s.code, { along: 'z', from: a1, to: a2, front: f.front, y, depth, dir: f.dir, maxH: 0.32, rows: 2, start: Math.round(y * 10) + i, tagOut: 0.008 });
+        ctx.products.placeFace(s.code, { along: 'z', from: a1, to: a2, front: f.front, dir: f.dir, levels: levels.slice().reverse().map((y, k, arr) => ({ y, maxH: k === 0 ? 0.36 : arr[k - 1] - y - 0.04, depth })), rows: 2, tagOut: 0.008 });
         const [sx, sz] = f.at((a1 + a2) / 2, 0.02);
         const bs = { bg: '#25282a', fg: '#efe7d6', font: '500', accent: '#3f5873', sub: s.code };
         if (H > 1.8) sign(ctx.extra, s.name, { ...bs, w: Math.min(1.5, L - 0.2), h: 0.2 }, sx, H - 0.14, sz, f.dir);
@@ -915,27 +910,28 @@ const BUILDERS = {
     b.box('messing', [cx + 0.45, cx + 1.05, z2 - 0.03, z2 - 0.01], h + 0.3, h + 0.33);
     for (let i = 0; i < 5; i++) b.box(i % 2 ? 'schwarz' : 'edelstahl', [cx + 0.5 + i * 0.11, cx + 0.53 + i * 0.11, z2 - 0.03, z2 - 0.015], h + 0.1, h + 0.3);
     // Schild hängt zur Zuschauerseite
-    sign(ctx.extra, 'Showküche', { w: 1.6, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Live-Cooking 12–13:30 · Kurse ab 18:30' }, cx - 0.15, 2.45, z2 - 0.76, [0, -1]);
+    sign(ctx.extra, 'Showküche', { w: 1.6, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Live-Cooking täglich 12–13:30 · 17:30–19 Uhr' }, cx - 0.15, 2.45, z2 - 0.76, [0, -1]);
   },
 
-  kurstisch(b, m, ctx) {
+  // Probiertheke: Stehtisch aus Eiche mit Probierschälchen für das Live-Cooking (keine Kursplätze)
+  probiertheke(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
     const h = m.hoehe;
-    for (const x of [x1 + 0.08, x2 - 0.12]) for (const z of [z1 + 0.08, z2 - 0.12]) b.box('schwarzMatt', [x, x + 0.05, z, z + 0.05], 0, h - 0.05);
-    b.box('schwarzMatt', [x1 + 0.1, x2 - 0.1, z1 + 0.1, z2 - 0.1], h - 0.09, h - 0.05);
-    b.box('eiche', [x1, x2, z1, z2], h - 0.05, h);
-    for (const x of m.stuehle_x) {
-      for (const [i, z] of m.stuehle_z.entries()) {
-        const facing = i === 0 ? 1 : -1; // Stuhl blickt zum Tisch
-        b.box('eiche', [x - 0.2, x + 0.2, z - 0.2, z + 0.2], 0.44, 0.47);
-        for (const dx of [-0.17, 0.15]) for (const dz of [-0.17, 0.15]) b.box('schwarzMatt', [x + dx, x + dx + 0.02, z + dz, z + dz + 0.02], 0, 0.44);
-        const bz = z - facing * 0.19;
-        b.box('eiche', [x - 0.19, x + 0.19, bz - 0.015, bz + 0.015], 0.62, 0.86);
-        for (const dx of [-0.17, 0.15]) b.box('schwarzMatt', [x + dx, x + dx + 0.02, bz - 0.01, bz + 0.01], 0.47, 0.64);
-        b.geo('teller', G.disc(0.11, 0.015, 24), x, h + 0.008, z + facing * 0.38);
-        b.geo('glas', G.disc(0.035, 0.12, 16), x + 0.14, h + 0.06, z + facing * 0.3);
-      }
+    const xc = (x1 + x2) / 2;
+    const zc = (z1 + z2) / 2;
+    b.box('schwarzMatt', [xc - 0.35, xc + 0.35, zc - 0.25, zc + 0.25], 0, 0.04);
+    b.box('front', [xc - 0.3, xc + 0.3, zc - 0.2, zc + 0.2], 0.04, h - 0.05);
+    for (let x = xc - 0.28; x < xc + 0.28; x += 0.05) b.box('eiche', [x, x + 0.03, zc - 0.215, zc - 0.2], 0.08, h - 0.08);
+    b.box('eiche', [x1, x2, z1 + 0.15, z2 - 0.15], h - 0.05, h);
+    for (let i = 0; i < 8; i++) {
+      const x = x1 + 0.25 + (i % 4) * ((x2 - x1 - 0.5) / 3);
+      const z = i < 4 ? z1 + 0.32 : z2 - 0.32;
+      b.geo('teller', G.disc(0.045, 0.02, 16), x, h + 0.01, z);
+      b.geo('holz', G.box(0.004, 0.004, 0.09), x + 0.05, h + 0.004, z, 0.6);
     }
+    b.box('brett', [xc - 0.25, xc + 0.25, zc - 0.12, zc + 0.12], h, h + 0.025);
+    ctx.fresh.crate(b, xc, h + 0.025, zc, 0.36, 0.16, 'tomate', 0);
+    sign(ctx.extra, 'Probieren erwünscht', { w: 0.5, h: 0.12, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true }, xc, h + 0.1, z1 + 0.15, [0, -1]);
   },
 
   kuechenzeile(b, m, ctx) {
@@ -1032,8 +1028,9 @@ const BUILDERS = {
     for (const y of levels) {
       b.box('eiche', [x1 + 0.04, x2, z1 + 0.03, z2 - 0.03], y - 0.025, y);
       ctx.priceRailAt([x2, x2 + 0.012, z1 + 0.03, z2 - 0.03], y - 0.06, y - 0.025, [1, 0], 'preisDunkel');
-      ctx.products.shelf('IMPULS', { along: 'z', from: z1 + 0.03, to: z2 - 0.03, front: x2, y, depth: x2 - x1 - 0.06, dir: [1, 0], maxH: 0.3, rows: 2, start: Math.round(y * 10), tagOut: 0.019, tagDy: -0.043 });
+      void y;
     }
+    ctx.products.placeFace('IMPULS', { along: 'z', from: z1 + 0.03, to: z2 - 0.03, front: x2, dir: [1, 0], levels: levels.slice().reverse().map((y) => ({ y, maxH: 0.3, depth: x2 - x1 - 0.06 })), rows: 2, tagOut: 0.019, tagDy: -0.043 });
     b.box('akzent', [x1, x2, z1, z2], H - 0.02, H);
     b.box('anthrazit', [x1 + 0.01, x1 + 0.03, (z1 + z2) / 2 - 0.01, (z1 + z2) / 2 + 0.01], H, H + 0.25);
     sign(ctx.extra, 'Noch etwas dazu?', { w: 1.3, h: 0.28, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Kräuter · Schokolade · Riegel' }, x1 + 0.035, H + 0.33, (z1 + z2) / 2, [1, 0]);
@@ -1130,30 +1127,6 @@ const BUILDERS = {
   },
 };
 
-// Inhalte der Kochwelt-Gondeln: klassisch nach Warengruppen (Produktblöcke, Ahlert et al. 2020, S. 303).
-// Senkrechte Blöcke je Warengruppe; Sicht- und Greifzone Standardgrößen, Bückzone Großpackungen.
-// Die Rezeptkarte führt per Fachcode (W1–W3) in die Koje, das Blockschild nennt die Rezepte, die daraus kochen.
-BUILDERS['kochwelt-gondel'].blockFace = function (b, m, ctx, f, levels, face) {
-  const [x1, x2] = m.rechteck;
-  const P = ctx.products;
-  const n = face.bloecke.length;
-  const L = (x2 - x1 - 0.06) / n;
-  face.bloecke.forEach((bl, i) => {
-    const a1 = x1 + 0.03 + i * L;
-    const a2 = a1 + L;
-    if (i > 0) b.box('anthrazit', faceRect(f, a1 - 0.008, a1 + 0.008, 0.004, -0.25), 0.1, m.hoehe - 0.03);
-    const [g0, g1] = [bl.gruppen[0], bl.gruppen[1] || bl.gruppen[0]];
-    const span = { along: 'x', from: a1, to: a2, front: f.front, depth: 0.24, dir: f.dir, rows: 2 };
-    P.shelf(g0, { ...span, y: levels[3], maxH: 0.33, start: 0, tagOut: 0.008 });
-    P.shelf(g0, { ...span, y: levels[2], maxH: 0.36, start: 3, tagOut: 0.008 });
-    P.shelf(g1, { ...span, y: levels[1], maxH: 0.34, start: 0, tagOut: 0.008 });
-    P.shelf(g1, { ...span, y: levels[0], maxH: 0.34, start: 1, tagOut: 0.008 });
-    // Blockschild (Reckzone): Fachcode, Warengruppe und die Rezepte, die daraus kochen
-    const rez = ctx.layout.rezepte.filter((r) => r.zutaten.some(([nm, c]) => c === bl.code && (bl.artikel || []).includes(nm))).map((r) => r.nr);
-    const [sx, sz] = f.at((a1 + a2) / 2, 0.01);
-    sign(ctx.extra, bl.name, { w: Math.min(1.6, L - 0.2), h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '500', accent: m.farbe, sub: `${bl.code}${rez.length ? ` · für Rezept ${rez.join(' ')}` : ''}` }, sx, m.hoehe - 0.13, sz, f.dir);
-  });
-};
 
 // ---------- Obst/Gemüse: Kugeln, Ovale, Stangen in einer Kiste ----------
 class Fresh {

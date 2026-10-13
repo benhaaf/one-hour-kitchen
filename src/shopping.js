@@ -6,8 +6,7 @@ import { textSprite } from './scene/labels.js';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const REACH = 1.7;
-const PREISE = { O1: 0.99, W1: 1.49, W2: 1.89, W3: 1.69, K1: 1.19, K2: 2.49, K3: 2.29, K4: 4.99, K5: 2.19, K6: 1.79, D1: 3.49, D2: 2.29, D3: 2.49, G1: 6.99, G2: 6.49, G3: 1.29, B1: 1.59, B2: 4.99, B3: 1.39, B4: 0.99, B5: 1.09, B6: 2.49, B7: 1.79 };
-const WELT_CODE = { W1: 'Pasta Night', W2: 'Asian Night', W3: 'Mexican Night' };
+const PREISE = { O1: 0.99, T1: 1.79, T2: 2.49, T3: 2.29, T4: 0.99, T5: 2.79, T6: 2.29, K1: 1.19, K2: 2.49, K3: 2.29, K4: 4.99, K5: 2.19, K6: 1.79, D1: 3.49, D2: 2.29, D3: 2.49, G1: 6.99, G2: 6.49, G3: 1.29, B1: 4.99, B2: 1.79, B3: 1.09, B4: 2.49, B5: 4.49, B6: 2.49, B7: 1.79 };
 const ANLASS = { schnell: '» schnell', besonders: '★ besonders', günstig: '€ günstig' };
 
 // Wo liegt ein Fachcode? → Punkt vor der Regalfront (Kunde steht dort) + Blickziel
@@ -32,20 +31,12 @@ export function codeLocations(layout) {
         list.forEach((f, i) => (loc[f.code] = { ...front(m, seite, z1 + (i + 0.5) * L), moebel: m.id }));
       }
     }
-    if (m.typ === 'kochwelt-gondel' && m.regal) {
-      // Produktblöcke: Zutat → Block (über Fachcode + Artikelname); Fachcode allein → erster Block der Kochwelt
-      for (const seite of ['hinten', 'vorne']) {
+    if (m.typ === 'gondel' && m.regal) {
+      // je Gondelseite eine Warengruppe (Fachcode)
+      for (const seite of ['vorne', 'hinten']) {
         const face = m.regal[seite];
-        if (!face) continue;
-        const L = (x2 - x1) / face.bloecke.length;
-        face.bloecke.forEach((bl, i) => {
-          const spot = { ...front(m, seite, x1 + (i + 0.5) * L), moebel: m.id };
-          for (const a of bl.artikel || []) loc[`${bl.code}:${a}`] = spot;
-          if (seite === 'hinten' && !loc[bl.code]) loc[bl.code] = spot;
-        });
+        if (face) loc[face.code] = { ...front(m, seite, (x1 + x2) / 2), moebel: m.id };
       }
-      const k = m.regal.kopf;
-      if (k?.artikel) for (const a of k.artikel) loc[`${k.code}:${a}`] = { ...front(m, 'rechts', (z1 + z2) / 2, 0.6), moebel: m.id };
     }
     if (m.typ === 'obst-stand') {
       const n = [m.richtung[1], -m.richtung[0]];
@@ -193,7 +184,7 @@ export class Shopping {
     this.listEl.innerHTML = `
       <header><span class="nr">${esc(r.nr)}</span><div><h2>${esc(r.titel)}</h2><small>${esc(ANLASS[r.anlass])} · ${esc(r.welt)} · Kochzeit ${esc(r.zeit)}</small></div></header>
       <ol>${rows}</ol>
-      <footer><span>⏱ ${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}</span><span>Fachcodes: O Obst · W Kochwelt · K Kühlung · B Basis · D Dessert · G Getränke</span></footer>`;
+      <footer><span>⏱ ${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}</span><span>Fachcodes: O Obst · T Trocken · K Kühlung · B Basis · D Dessert · G Getränke</span></footer>`;
     this.listEl.hidden = false;
   }
 

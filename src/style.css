@@ -721,3 +721,16 @@ body.presenting #infocard { background: linear-gradient(160deg, rgba(30, 31, 33,
 body.presenting #infocard h2 { font-size: 22px; }
 body.referent #slide.sl-frame { aspect-ratio: auto; left: 8px; top: 8px; right: 8px; bottom: 8px; width: auto; height: auto; transform: none; animation: none; }
 #slide.sl-side { background: linear-gradient(160deg, rgba(30, 31, 33, 0.95), rgba(18, 18, 20, 0.96)); border: 1px solid rgba(255, 255, 255, 0.09); border-top: 5px solid var(--akzent); border-left: 1px solid rgba(255, 255, 255, 0.09); border-radius: 14px; backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+/* Legende der Regalzonen */
+#zone-legend { position: fixed; z-index: 26; right: calc(14px + var(--safe-r)); top: calc(56px + var(--safe-t)); width: 250px; background: linear-gradient(160deg, rgba(30, 31, 33, 0.95), rgba(18, 18, 20, 0.96)); border: 1px solid rgba(255, 255, 255, 0.09); border-top: 4px solid #b39b6b; border-radius: 12px; padding: 12px 14px 10px; color: #f4f1ec; font-size: 13px; }
+#zone-legend[hidden] { display: none; }
+#zone-legend h4 { margin: 0 0 8px; font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 18px; }
+#zone-legend div { display: grid; grid-template-columns: 14px 1fr auto; gap: 1px 8px; align-items: center; margin-bottom: 7px; }
+#zone-legend i { width: 14px; height: 14px; border-radius: 3px; grid-row: span 2; align-self: start; margin-top: 2px; }
+#zone-legend b { font-weight: 700; }
+#zone-legend span { color: #c9c4bc; font-variant-numeric: tabular-nums; }
+#zone-legend small { grid-column: 2 / 4; color: #9a958e; font-size: 11.5px; }
+#zone-legend p { margin: 6px 0 0; font-size: 11px; color: #8d8880; }
+body.presenting #zone-legend { top: auto; bottom: calc(62px + var(--safe-b)); }
+#slide.sl-frame[hidden], #slide.sl-side[hidden] { display: none; }

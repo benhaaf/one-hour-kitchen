@@ -1,7 +1,7 @@
 // Baut die App als EINE HTML-Datei (läuft per Doppelklick, offline, ohne Server):
 //   bun scripts/build.mjs            → dist/index.html  (+ Kopie dist/one-hour-kitchen.html)
 // three.js liegt lokal in vendor/three (kein npm nötig).
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const root = resolve(import.meta.dir, '..');
@@ -38,4 +38,9 @@ writeFileSync(join(root, 'dist/one-hour-kitchen.html'), html);
 // Variante ohne Dokument-Gerüst (für die Veröffentlichung als Artifact)
 const frag = `<title>One Hour Kitchen</title>\n<style>${css}</style>\n<div id="app"></div>\n<script type="module">${js}</script>\n`;
 writeFileSync(join(root, 'dist/artifact.html'), frag);
+// Präsentation (PowerPoint + PDF) mit veröffentlichen, damit das Team sie über einen Link laden kann
+for (const f of ['One_Hour_Kitchen_Praesentation.pptx', 'One_Hour_Kitchen_Praesentation.pdf']) {
+  const src = join(root, 'praesentation', f);
+  if (existsSync(src)) copyFileSync(src, join(root, 'dist', f));
+}
 console.log(`dist/index.html geschrieben (${Math.round(html.length / 1024)} KB)`);

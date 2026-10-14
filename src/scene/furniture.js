@@ -699,8 +699,10 @@ const BUILDERS = {
       const tex = canvasTex(256, 256, (g) => drawPlate(g, 128, 128, 100, rez));
       // Tellerständer aus feinem Messingdraht (kein dunkles Bauteil im Fenster)
       b.geo('messing', G.box(0.16, 0.006, 0.006), cx, top + 0.27, z1 + 0.46);
-      b.geo('messing', G.box(0.006, 0.17, 0.006), cx, top + 0.34, z1 + 0.55, 0, -0.25);
-      const pl = plane(ctx.extra, lit(tex, { transparent: true }), 0.36, 0.36, cx, top + 0.26 + 0.185, z1 + 0.5, dir, -0.25);
+      const pz = z1 + 0.5;
+      const py = top + 0.26 + 0.185;
+      b.geo('teller', G.disc(0.178, 0.014, 40), cx, py, pz + 0.009, 0, Math.PI / 2 - 0.25);
+      const pl = plane(ctx.extra, lit(tex, { transparent: true }), 0.36, 0.36, cx, py + 0.0004, pz - 0.0, dir, -0.25);
       pl.material.alphaTest = 0.5;
       // Zutaten auf der oberen Stufe
       for (let k = 0; k < 4; k++) {
@@ -740,6 +742,7 @@ const BUILDERS = {
         g.fillText('Rezept aufs Handy', 402, 190);
       });
       plane(ctx.extra, lit(card), 0.42, 0.19, cx, top + 0.06, z1 + 0.055, dir, -0.5);
+      b.geo("eiche", G.box(0.42, 0.19, 0.008), cx, top + 0.06 - 0.002, z1 + 0.062, 0, -0.5);
       // Spot über dem Podest
       b.box('metall', [cx - 0.004, cx + 0.004, z1 + 0.35 - 0.004, z1 + 0.35 + 0.004], 2.45, 3.2);
       b.geo('schwarzMatt', new THREE.CylinderGeometry(0.05, 0.08, 0.16, 18, 1, true), cx, 2.4, z1 + 0.35);
@@ -1191,22 +1194,28 @@ const BUILDERS = {
     b.box('polster', [x1 + 0.04, bx2, z1 + 0.02, z2 - 0.02], 0.4, 0.47);
     b.box('polster', [x1, x1 + 0.1, z1 + 0.02, z2 - 0.02], 0.47, 0.95);
     for (let z = z1 + 0.45; z < z2 - 0.2; z += 0.45) b.box('akzent', [x1 + 0.1, x1 + 0.105, z - 0.002, z + 0.002], 0.5, 0.92);
-    // Bistrotische (rund) mit je zwei Stühlen gegenüber
-    const tx = bx2 + 0.36;
-    for (const tz of [z1 + 0.8, z2 - 0.6]) {
-      b.geo('schwarzMatt', G.disc(0.22, 0.02, 24), tx, 0.01, tz);
-      b.geo('schwarzMatt', G.disc(0.025, 0.72, 10), tx, 0.37, tz);
-      b.geo('terrazzo', G.disc(0.32, 0.03, 32), tx, 0.74, tz);
-      b.geo('teller', G.disc(0.09, 0.015, 20), tx - 0.1, 0.76, tz - 0.08);
-      b.geo('teller', G.disc(0.09, 0.015, 20), tx + 0.08, 0.76, tz + 0.1);
-      b.geo('glas', G.disc(0.03, 0.11, 12), tx + 0.12, 0.81, tz - 0.12);
-      for (const dz of [-0.24, 0.24]) {
-        const cx = tx + 0.46;
-        const cz = tz + dz;
-        for (const [ox, oz] of [[-0.17, -0.17], [0.17, -0.17], [-0.17, 0.17], [0.17, 0.17]]) b.box('schwarzMatt', [cx + ox - 0.012, cx + ox + 0.012, cz + oz - 0.012, cz + oz + 0.012], 0, 0.45);
-        b.box('eiche', [cx - 0.2, cx + 0.2, cz - 0.2, cz + 0.2], 0.45, 0.48);
-        b.box('eiche', [cx + 0.17, cx + 0.2, cz - 0.19, cz + 0.19], 0.48, 0.85);
-      }
+    // Ein durchgehender Tisch entlang der Bank, gegenüber vier Stühle
+    const tx1 = bx2 + 0.08;
+    const tx2 = bx2 + 0.62;
+    const tz1 = z1 + 0.25;
+    const tz2 = z2 - 0.2;
+    for (const z of [tz1 + 0.12, tz2 - 0.12]) {
+      b.box('schwarzMatt', [(tx1 + tx2) / 2 - 0.2, (tx1 + tx2) / 2 + 0.2, z - 0.03, z + 0.03], 0, 0.02);
+      b.box('schwarzMatt', [(tx1 + tx2) / 2 - 0.025, (tx1 + tx2) / 2 + 0.025, z - 0.025, z + 0.025], 0.02, 0.71);
+    }
+    b.box('schwarzMatt', [(tx1 + tx2) / 2 - 0.02, (tx1 + tx2) / 2 + 0.02, tz1 + 0.12, tz2 - 0.12], 0.66, 0.7);
+    b.box('eiche', [tx1, tx2, tz1, tz2], 0.71, 0.75);
+    const L2 = tz2 - tz1;
+    for (let k = 0; k < 4; k++) {
+      const tz = tz1 + (k + 0.5) * (L2 / 4);
+      b.geo('teller', G.disc(0.085, 0.015, 20), tx1 + 0.17, 0.76, tz);
+      b.geo('teller', G.disc(0.085, 0.015, 20), tx2 - 0.17, 0.76, tz + 0.05);
+      if (k % 2) b.geo('glas', G.disc(0.03, 0.11, 12), (tx1 + tx2) / 2, 0.81, tz + 0.15);
+      const cx = tx2 + 0.26;
+      const cz = tz;
+      for (const [ox, oz] of [[-0.17, -0.17], [0.17, -0.17], [-0.17, 0.17], [0.17, 0.17]]) b.box('schwarzMatt', [cx + ox - 0.012, cx + ox + 0.012, cz + oz - 0.012, cz + oz + 0.012], 0, 0.45);
+      b.box('eiche', [cx - 0.2, cx + 0.2, cz - 0.2, cz + 0.2], 0.45, 0.48);
+      b.box('eiche', [cx + 0.17, cx + 0.2, cz - 0.19, cz + 0.19], 0.48, 0.85);
     }
     sign(ctx.extra, 'Platz nehmen & probieren', { w: 0.62, h: 0.13, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true }, x1 + 0.025, 1.25, (z1 + z2) / 2, [1, 0]);
   },

@@ -855,7 +855,7 @@
     },
     {
       "id": "M13",
-      "name": "Sitzbank & Bistrotische Showküche",
+      "name": "Sitzbank & Tisch Showküche",
       "typ": "sitzecke",
       "rechteck": [
         8.05,
@@ -864,7 +864,7 @@
         8.65
       ],
       "hoehe": 0.75,
-      "_hinweis": "Gepolsterte Bank an der Glaswand, zwei Bistrotische mit Stühlen – Blick auf den Kochtresen"
+      "_hinweis": "Gepolsterte Bank an der Glaswand, ein durchgehender Tisch mit vier Stühlen – Blick auf den Kochtresen"
     },
     {
       "id": "M20",
@@ -1912,7 +1912,7 @@
           7.0
         ]
       },
-      "entscheidung": "Showküche (ca. 18 m²) in der Raummitte als visueller Anker: Kochtresen mit vier Barhockern zum Eingang, darüber eine Dunstabzugshaube (Inselesse mit Kamin), links an der Glaswand eine Polsterbank mit zwei Bistrotischen zum Probieren, hinten die Küchenzeile. Glaswand an drei Seiten. Live-Cooking zweimal täglich, Probierportionen kostenlos – Kochkurse bieten wir nicht an.",
+      "entscheidung": "Showküche (ca. 18 m²) in der Raummitte als visueller Anker: Kochtresen mit vier Barhockern zum Eingang, darüber eine Dunstabzugshaube (Inselesse mit Kamin), links an der Glaswand eine Polsterbank mit einem durchgehenden Tisch zum Probieren, hinten die Küchenzeile. Glaswand an drei Seiten. Live-Cooking zweimal täglich, Probierportionen kostenlos – Kochkurse bieten wir nicht an.",
       "begruendung": "Die Blickachse vom Eingang endet auf dem Kochtresen (Arena-Prinzip). Das Live-Cooking zeigt ein Rezept der Matrix und macht es probierbar. Die Haube zieht Dunst direkt am Kochfeld ab, die Glaswand hält Geruch und Lärm von den Regalen fern. Statt eines Stehtischs in der Mitte gibt es Sitzplätze: Wer sitzt, probiert in Ruhe und bleibt länger; die Mitte bleibt für den Koch frei.",
       "quelle": "Seminarskript (Arena-Prinzip, Blickachse mit visuellem Anker) ✓; Ahlert/Kenning/Brock 2020, S. 297–302 ✓; Hui/Bradlow/Fader 2009 (Einfluss anderer Kunden) ✓; Gröppel 1991 (Erlebnisstrategien) ◐",
       "annahme": "Wirtschaftlich, wenn der Ø-Bon um ca. 4 € steigt (Folie Wirtschaftlichkeit).",
@@ -1922,7 +1922,7 @@
         "wege": false,
         "blickachse": true
       },
-      "notizen": "Die Showküche ist der visuelle Anker am Ende der Blickachse. Über dem Kochfeld hängt jetzt eine richtige Dunstabzugshaube. Den Stehtisch in der Mitte haben wir entfernt: Dafür gibt es vier Barhocker am Tresen und eine Sitzbank mit zwei Bistrotischen an der Glaswand. Zweimal täglich Live-Cooking, Probieren ist kostenlos, Kurse gibt es bewusst nicht."
+      "notizen": "Die Showküche ist der visuelle Anker am Ende der Blickachse. Über dem Kochfeld hängt jetzt eine richtige Dunstabzugshaube. Den Stehtisch in der Mitte haben wir entfernt: Dafür gibt es vier Barhocker am Tresen und eine Sitzbank mit einem durchgehenden Tisch an der Glaswand. Zweimal täglich Live-Cooking, Probieren ist kostenlos, Kurse gibt es bewusst nicht."
     },
     {
       "nr": 9,

@@ -697,8 +697,9 @@ const BUILDERS = {
       b.box('terrazzo', [cx - W / 2 + 0.12, cx + W / 2 - 0.12, z1 + 0.06, z1 + 0.28], top, top + 0.1);
       // Teller mit dem Gericht auf Aufsteller (Blick zur Straße)
       const tex = canvasTex(256, 256, (g) => drawPlate(g, 128, 128, 100, rez));
-      b.geo('holzDunkel', G.box(0.02, 0.3, 0.02), cx, top + 0.26 + 0.15, z1 + 0.5, 0, -0.25);
-      const pl = plane(ctx.extra, lit(tex, { transparent: true }), 0.36, 0.36, cx, top + 0.26 + 0.22, z1 + 0.46, dir, -0.25);
+      b.geo('schwarzMatt', G.box(0.2, 0.012, 0.1), cx, top + 0.266, z1 + 0.5);
+      b.geo('schwarzMatt', G.box(0.012, 0.2, 0.012), cx, top + 0.36, z1 + 0.56, 0, -0.25);
+      const pl = plane(ctx.extra, lit(tex, { transparent: true }), 0.36, 0.36, cx, top + 0.26 + 0.185, z1 + 0.5, dir, -0.25);
       pl.material.alphaTest = 0.5;
       // Zutaten auf der oberen Stufe
       for (let k = 0; k < 4; k++) {
@@ -897,10 +898,6 @@ const BUILDERS = {
       ctx.fresh.crate(b, x, 0.96, z, L / 5 - 0.1, 0.24, top[i], yaw);
     }
     // Schilder an beiden Enden + Preisstecker
-    for (const s of [-1, 1]) {
-      const [x, z] = at(s * (L / 2 - 0.1), 0);
-      b.geo('metall', G.box(0.02, 0.6, 0.02), x, 1.25, z, yaw);
-    }
     const [sx, sz] = at(0, 0);
     b.geo('metall', G.box(0.02, 0.5, 0.02), sx, 1.25, sz, yaw);
     for (const d of [n, [-n[0], -n[1]]]) {
@@ -947,7 +944,10 @@ const BUILDERS = {
       });
       // Schild über der Seite: Kochwelt groß, darunter Warengruppen + Fachcode
       const d = f.dir;
-      sign(ctx.extra, welt || face.titel, { w: 2.6, h: 0.32, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, accent: wfarbe, sub: `${face.titel} · Fachcode ${face.code}` }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
+      const sz = zc + d[1] * 0.012;
+      const sy = 2.3;
+      sign(ctx.extra, welt || face.titel, { w: 2.6, h: 0.32, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, accent: wfarbe, sub: `${face.titel} · Fachcode ${face.code}` }, (x1 + x2) / 2, sy, sz, d);
+      for (const ox of [-1.15, 1.15]) b.box('metall', [(x1 + x2) / 2 + ox - 0.004, (x1 + x2) / 2 + ox + 0.004, sz - d[1] * 0.006 - 0.004, sz - d[1] * 0.006 + 0.004], sy + 0.16, 3.2);
       // Warengruppen-Leiste über der Ware: zeigt die senkrechten Blöcke des Kreuzblocks
       if (plan) {
         let a = x1 + 0.04;
@@ -956,14 +956,12 @@ const BUILDERS = {
           const w = bl.w * W;
           if (w > 0.35 && bl.wg) {
             const [px, pz] = f.at(a + w / 2, 0.026);
-            sign(ctx.extra, bl.wg, { w: Math.min(w - 0.06, 1.2), h: 0.075, bg: '#25282a', fg: '#efe7d6', font: '500' }, px, H + 0.06, pz, d);
+            sign(ctx.extra, bl.wg, { w: Math.min(w - 0.06, 1.2), h: 0.075, bg: '#25282a', fg: '#efe7d6', font: '500' }, px, H + 0.04, pz, d);
           }
           a += w;
         }
       }
     }
-    // Kopfschild-Träger
-    b.box('schwarzMatt', [(x1 + x2) / 2 - 0.01, (x1 + x2) / 2 + 0.01, zc - 0.01, zc + 0.01], H, H + 0.18);
     // Stirnseite zum Rundlauf (−x): Kochwelt mit beiden Warengruppen
     b.box('eicheDunkel', [x1 - 0.012, x1, z1 + 0.02, z2 - 0.02], 0.1, H - 0.03);
     const titles = ['vorne', 'hinten'].map((sd) => m.regal?.[sd]).filter((t) => t && t.code);
@@ -1157,8 +1155,6 @@ const BUILDERS = {
       b.geo('led', new THREE.CircleGeometry(0.1, 20), cx + dx, 1.83, z1 + 0.2, 0, Math.PI / 2);
     }
     // Messer- und Utensilienleiste
-    b.box('messing', [cx + 0.45, cx + 1.0, z2 - 0.03, z2 - 0.01], h + 0.3, h + 0.33);
-    for (let i = 0; i < 5; i++) b.box(i % 2 ? 'schwarz' : 'edelstahl', [cx + 0.5 + i * 0.1, cx + 0.53 + i * 0.1, z2 - 0.03, z2 - 0.015], h + 0.1, h + 0.3);
     // Schild hängt zur Zuschauerseite
     sign(ctx.extra, 'Showküche', { w: 1.6, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Live-Cooking täglich 12–13:30 · 17:30–19 Uhr' }, cx - 0.15, 2.45, z2 - 0.76, [0, -1]);
   },
@@ -1575,6 +1571,7 @@ export function buildFurniture(layout) {
   // Menschen: Personal und Kundschaft
   const staffLook = { top: '#1c1c1f', bag: false, apron: true, jacket: null, skirt: false, sleeves: 'kurz' };
   for (const p of layout.personen || []) {
+    if (!p.personal) continue; // Kundschaft: bewegliche Figuren aus crowd.js
     const [x, z] = p.pos;
     const kunde = { basket: p.korb ?? p.haltung === 'stoebern', ...(p.haltung === 'stoebern' ? { bag: false } : {}) };
     addStaticPerson(b, randomLook(rand, p.personal ? staffLook : kunde), x, z, yawFacing(...p.blick), p.haltung || 'stehen');

@@ -342,7 +342,7 @@ bus.on('referent', () => {
   if (!presentation.active) startPresentation(0);
   deck.openReferent();
 });
-bus.on('leertaste', () => presentation.active && !deck.overviewOpen && presentation.next());
+bus.on('leertaste', () => (sim.active ? sim.skip(1) : presentation.active && !deck.overviewOpen && presentation.next()));
 bus.on('anfang', () => presentation.active && presentation.go(0));
 bus.on('ende', () => presentation.active && presentation.go(presentation.total - 1));
 bus.on('beenden', () => {
@@ -360,8 +360,33 @@ renderer.domElement.addEventListener('click', () => {
 
 // ---------- Kundensimulation ----------
 const sim = new Simulation(layout, scene, camera);
-app.insertAdjacentHTML('beforeend', '<div id="sim-caption" hidden><span class="sim-who"></span><p></p><small>Weiter/Zurück: nächster Halt · Sim.: beenden</small></div>');
+app.insertAdjacentHTML(
+  'beforeend',
+  '<div id="sim-caption" hidden><span class="sim-who"></span><p></p><div class="sim-ctl"><button data-s="auto" title="Automatisch abspielen an/aus (A)">▶ Automatisch</button><button data-s="next" title="Weiter zum nächsten Halt (→ / Leertaste)">Weiter ›</button><button data-s="end" title="Simulation beenden (K)">✕</button></div><small class="sim-hint"></small></div>',
+);
 const simCaption = app.querySelector('#sim-caption');
+const simAutoBtn = simCaption.querySelector('[data-s="auto"]');
+function syncSimMode() {
+  simAutoBtn.classList.toggle('on', sim.auto);
+  simAutoBtn.textContent = sim.auto ? '⏸ Automatisch' : '▶ Automatisch';
+  simCaption.querySelector('.sim-hint').textContent = sim.auto ? 'Läuft automatisch durch alle Halte' : 'Wartet an jedem Halt – „Weiter“, wenn du fertig mit Reden bist';
+}
+simCaption.addEventListener('pointerdown', (e) => e.stopPropagation());
+simCaption.addEventListener('click', (e) => {
+  const c = e.target.closest('[data-s]')?.dataset.s;
+  e.target.closest('button')?.blur();
+  if (c === 'auto') {
+    sim.setAuto(!sim.auto);
+    syncSimMode();
+  } else if (c === 'next') sim.skip(1);
+  else if (c === 'end') stopSimulation();
+});
+window.addEventListener('keydown', (e) => {
+  if (sim.active && (e.key === 'a' || e.key === 'A')) {
+    sim.setAuto(!sim.auto);
+    syncSimMode();
+  }
+});
 let simSaved = null;
 sim.onCaption = (text, n, total) => {
   simCaption.hidden = false;
@@ -376,6 +401,7 @@ function startSimulation() {
   if (exportDialog.visible) exportDialog.hide();
   simSaved = { x: player.x, z: player.z, yaw: player.yaw, pitch: player.pitch };
   const k = sim.start();
+  syncSimMode();
   document.body.classList.add('simulating');
   touch.setActive('simulation', true);
   panels.setIndicator('Simulation');
@@ -396,6 +422,25 @@ sim.onEnd = () => {
 };
 bus.on('simulation', () => (sim.active ? stopSimulation() : startSimulation()));
 
+// ---------- Außenansicht: vor den Laden auf den Gehweg und wieder hinein ----------
+let insidePos = null;
+bus.on('aussen', () => {
+  if (presentation.active) stopPresentation();
+  if (sim.active) stopSimulation();
+  if (view === 'top') setView('ego');
+  if (player.z > 0) {
+    insidePos = { x: player.x, z: player.z, yaw: player.yaw, pitch: player.pitch };
+    Object.assign(player, { x: 3.6, z: -3.7, yaw: 0.25, pitch: -0.04 });
+    hud.toast('Außenansicht: Schaufenster und Eingang – durch die Tür geht es hinein (U: zurück)', 2600);
+  } else {
+    const st = layout.start;
+    Object.assign(player, insidePos || { x: st.position[0], z: st.position[1], yaw: ((st.blickrichtung_grad || 0) * Math.PI) / 180, pitch: 0 });
+    insidePos = null;
+  }
+  player.apply();
+  touch.setActive('aussen', player.z < 0);
+});
+
 // ---------- Kundenbetrieb: viele Kunden gleichzeitig (läuft auch während der Präsentation) ----------
 const crowd = new Crowd(layout, scene, [...room.colliders, ...furniture.colliders]);
 function toggleCrowd(on = !crowd.active) {
@@ -404,7 +449,7 @@ function toggleCrowd(on = !crowd.active) {
   else crowd.stop();
   touch.setActive('kunden', on);
   deck.kundenBtn?.classList.toggle('on', on);
-  hud.toast(on ? 'Kundenbetrieb gestartet – Kunden kaufen wie im echten Laden ein (L: stoppen)' : 'Kundenbetrieb gestoppt', 2200);
+  hud.toast(on ? 'Die Kunden im Laden kaufen jetzt ein (L: anhalten)' : 'Kunden angehalten', 2200);
 }
 bus.on('kunden', () => toggleCrowd());
 deck.onKunden = () => toggleCrowd();

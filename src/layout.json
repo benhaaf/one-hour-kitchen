@@ -873,8 +873,8 @@
       "rechteck": [
         0,
         0.5,
-        1.35,
-        4.75
+        0.95,
+        4.35
       ],
       "hoehe": 2.0,
       "seiten": {
@@ -1776,9 +1776,9 @@
         ],
         "hoehe": 2.3,
         "ziel": [
-          2.2,
+          2.0,
           0.9,
-          1.9
+          1.6
         ]
       },
       "entscheidung": "Direkt links hinter dem Eingang stehen Rollkörbe (Korb mit Rollen und Teleskopgriff) statt Einkaufswagen. An der linken Wand steht ein Vorspeisen-Regal mit drei Fächern – je Kochwelt eines: V1 Antipasti, V2 Asia-Vorspeisen, V3 Nachos & Dips –, darüber hängt das Banner „Vorspeisen“.",
@@ -3534,13 +3534,13 @@
           {
             "p": [
               1.0,
-              3.05
+              2.65
             ],
             "text": "Vorspeisen-Regal (V2): geröstete Edamame als Vorspeise – passt zur Asian Night",
             "dauer": 2.6,
             "blick": [
               0.3,
-              3.05
+              2.65
             ]
           },
           {
@@ -3894,13 +3894,6 @@
         ]
       },
       {
-        "typ": "pflanze",
-        "pos": [
-          15.35,
-          10.9
-        ]
-      },
-      {
         "typ": "schrift",
         "text": "Vorratskammer",
         "sub": "Basissortiment",
@@ -3978,7 +3971,7 @@
       "text": "Vorspeisen",
       "pos": [
         0.9,
-        3.05
+        2.65
       ],
       "farbe": "#8a5a32",
       "w": 1.7,

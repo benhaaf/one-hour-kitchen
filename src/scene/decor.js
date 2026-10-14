@@ -1,3 +1,26 @@
+// Schmales, spitz zulaufendes Blatt (Länge 1, Basis bei y = 0), leicht nach außen gebogen und mit Mittelknick
+function leafGeometry() {
+  const segs = 8;
+  const pos = [];
+  const idx = [];
+  for (let i = 0; i <= segs; i++) {
+    const t = i / segs;
+    const w = 0.055 * Math.sin(Math.PI * Math.min(1, t * 1.15)) * (1 - t * 0.35);
+    const bend = 0.28 * t * t; // Bogen nach außen
+    pos.push(-w, t, bend, 0, t, bend - 0.012, w, t, bend);
+  }
+  for (let i = 0; i < segs; i++) {
+    const a = i * 3;
+    const c = a + 3;
+    idx.push(a, c, a + 1, a + 1, c, c + 1, a + 1, c + 1, a + 2, a + 2, c + 1, c + 2);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return g;
+}
+
 // Detailreichere Einrichtung: Bar, Wanddeko (Poster, Neon, Tafeln, Pflanze) und Zusatzdetails an den Möbeln.
 // Stil wie beim Zubehör: einfache Formen + selbst gezeichnete Canvas-Texturen, viel instanziert.
 import * as THREE from 'three';
@@ -330,7 +353,7 @@ export class Decor {
       cyl: new THREE.CylinderGeometry(1, 1, 1, 32),
       glas: new THREE.CylinderGeometry(0.034, 0.028, 0.14, 28, 1, true),
       sphere: new THREE.SphereGeometry(1, 10, 8),
-      leaf: new THREE.PlaneGeometry(0.16, 0.5),
+      leaf: leafGeometry(),
     };
     this.coasterMat = lit(TEX.untersetzer(), { roughness: 1 });
     this.fridgeMat = new THREE.MeshBasicMaterial({ map: TEX.kuehlschrank() });
@@ -664,22 +687,23 @@ export class Decor {
     return colliders;
   }
 
-  // Topfpflanze: Topf + Blätter (s = Größenfaktor)
+  // Topfpflanze: Keramiktopf mit Erde, schmale gebogene Blätter wachsen aus der Mitte (s = Größenfaktor)
   plant(b, x, y, z, s = 1) {
-    b.geo('korpus', new THREE.CylinderGeometry(0.2 * s, 0.15 * s, 0.4 * s, 32), x, y + 0.2 * s, z);
-    b.instance('erde', this.geo.cyl, MAT.erde, { x, y: y + 0.39 * s, z, scale: [0.18 * s, 0.02, 0.18 * s] });
-    const n = 24;
+    b.geo('anthrazit' in b.materials ? 'anthrazit' : 'korpus', new THREE.CylinderGeometry(0.19 * s, 0.15 * s, 0.38 * s, 32), x, y + 0.19 * s, z);
+    b.instance('erde', this.geo.cyl, MAT.erde, { x, y: y + 0.35 * s, z, scale: [0.175 * s, 0.02, 0.175 * s] });
+    const n = 22;
     for (let i = 0; i < n; i++) {
-      const a = i * 2.399 + (i % 3) * 0.2; // goldener Winkel → gleichmäßig verteilt
-      const tilt = 0.35 + (i % 5) * 0.16; // Blätter fächern nach außen
-      const len = (0.55 + (i % 6) * 0.09) * s;
+      const a = i * 2.399; // goldener Winkel → gleichmäßig verteilt
+      const tilt = 0.15 + (i % 5) * 0.14; // innen steil, außen flacher
+      const len = (0.5 + (i % 4) * 0.12) * s;
+      // Blatt-Geometrie beginnt am Stiel (y = 0) – Ursprung sitzt in der Topfmitte
       b.instance(i % 2 ? 'blatt' : 'blatt2', this.geo.leaf, i % 2 ? MAT.blatt : MAT.blattHell, {
-        x: x + Math.sin(a) * (0.05 + len * 0.3 * Math.sin(tilt)) * s,
-        y: y + 0.4 * s + len * 0.38 * Math.cos(tilt),
-        z: z - Math.cos(a) * (0.05 + len * 0.3 * Math.sin(tilt)) * s, // Store-z ist Three-(-z): Versatz in Neigungsrichtung
+        x: x + Math.sin(a) * 0.03 * s,
+        y: y + 0.36 * s,
+        z: z - Math.cos(a) * 0.03 * s,
         yaw: a,
         pitch: tilt,
-        scale: [s * 0.55, len * 1.5, 1],
+        scale: [s, len, s],
       });
     }
   }

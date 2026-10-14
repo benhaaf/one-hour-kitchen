@@ -4,6 +4,7 @@ import config from '../config.js';
 // Buchstaben nach e.key (Beschriftung), damit Z auf QWERTZ und QWERTY stimmt.
 const KEYS = {
   t: 'ansicht',
+  u: 'aussen', // Außenansicht (vor den Laden und zurück)
   h: 'hauptweg',
   z: 'zonen',
   e: 'info',

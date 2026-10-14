@@ -96,7 +96,20 @@ export function buildRoom(layout) {
   wallWithOpenings(group, { axis: 'z', from: 0, to: D, a: -t, b: 0, height: H, openings: byWall('links') }, mat.wand);
   wallWithOpenings(group, { axis: 'z', from: 0, to: D, a: W, b: W + t, height: H, openings: byWall('rechts') }, mat.wand);
   // Kollision: Außenwände komplett (man verlässt den Laden nicht durch Tür oder Notausgang)
-  colliders.push([-t - 1, W + t + 1, -t - 1, 0], [-t - 1, W + t + 1, D, D + t + 1], [-t - 1, 0, -t, D + t], [W, W + t + 1, -t, D + t]);
+  colliders.push([-t - 1, W + t + 1, D, D + t + 1], [-t - 1, 0, -t, D + t], [W, W + t + 1, -t, D + t]);
+  // Frontwand mit Durchgang in der Mitte jeder Tür (halb geöffnete Schiebetüren) → man kann raus auf den Gehweg
+  {
+    const doors = byWall('front').filter((o) => o.typ === 'tuer').sort((a, b) => a.von - b.von);
+    let a = -t - 1;
+    for (const d of doors) {
+      const half = (d.bis - d.von) / 2;
+      colliders.push([a, d.von + half * 0.45, -t - 0.02, 0]);
+      a = d.bis - half * 0.45;
+    }
+    colliders.push([a, W + t + 1, -t - 0.02, 0]);
+    // Gehweg: Bordstein, seitliche Grenzen
+    colliders.push([-40, 60, -30, -4.3], [-40, -8, -4.3, -t], [W + 8, 60, -4.3, -t]);
+  }
 
   // Decke (Böden kommen aus surfaces.js)
   const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(W, D), mat.decke);

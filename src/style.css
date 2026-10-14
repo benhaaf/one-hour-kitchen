@@ -761,3 +761,9 @@ body.mobile-rezept #app { position: static; height: auto; }
 #mr .mr-3d { display: block; margin-top: 18px; text-align: center; padding: 12px; border-radius: 10px; background: #1f2120; color: #efe7d6; text-decoration: none; }
 html:has(body.mobile-rezept) { overflow: auto; height: auto; }
 body.mobile-rezept { touch-action: auto; -webkit-user-select: text; user-select: text; overscroll-behavior: auto; }
+#sim-caption .sim-ctl { display: flex; gap: 6px; margin: 8px 0 4px; pointer-events: auto; }
+#sim-caption .sim-ctl button { background: rgba(255, 255, 255, 0.1); color: #f4f1ec; border: 0; border-radius: 8px; padding: 6px 12px; font: 600 13px system-ui, sans-serif; cursor: pointer; }
+#sim-caption .sim-ctl button:hover { background: rgba(214, 69, 39, 0.5); }
+#sim-caption .sim-ctl button.on { background: #4f7f5a; }
+#sim-caption .sim-ctl [data-s="next"] { background: #d64527; }
+#sim-caption .sim-ctl { justify-content: center; }

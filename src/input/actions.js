@@ -1,6 +1,7 @@
 // Alle Funktionen aus SPEC Kap. 10 – eine gemeinsame Liste für Controller, Tastatur und Touch.
 export const ACTIONS = {
   ansicht: { label: 'Ego ↔ Draufsicht', kurz: 'Ansicht', icon: '⬒', etappe: 4 },
+  aussen: { label: 'Außenansicht: vor den Laden / zurück hinein', kurz: 'Außen', icon: '⌂', etappe: 4 },
   hauptweg: { label: 'Hauptweg ein/aus', kurz: 'Weg', icon: '➜', etappe: 4 },
   zonen: { label: 'Zonen & Beschriftungen', kurz: 'Zonen', icon: '▦', etappe: 2 },
   info: { label: 'Infokarte zum Objekt', kurz: 'Info', icon: 'ⓘ', etappe: 5 },

@@ -45,7 +45,8 @@ const G = {
   basketHandle: new THREE.TorusGeometry(0.13, 0.01, 5, 16, Math.PI),
   hairLong: new THREE.CylinderGeometry(0.11, 0.12, 0.26, 18, 1, true, Math.PI * 0.2, Math.PI * 1.6),
   bun: new THREE.SphereGeometry(0.05, 12, 10),
-  beard: new THREE.SphereGeometry(1, 16, 10, 0, Math.PI * 2, Math.PI * 0.45, Math.PI * 0.4),
+  // Bart nur vorn um Kinn und Wangen (phi 0…π = vordere Hälfte), unterhalb der Nase
+  beard: new THREE.SphereGeometry(1, 16, 10, Math.PI * 0.08, Math.PI * 0.84, Math.PI * 0.56, Math.PI * 0.3),
   lens: new THREE.TorusGeometry(0.022, 0.004, 6, 16),
   bridge: new THREE.BoxGeometry(0.022, 0.004, 0.004),
   apron: new THREE.BoxGeometry(0.3, 0.62, 0.012),
@@ -162,7 +163,7 @@ export function buildPerson(look) {
     mesh(head, G.brow, look.hair, [s * 0.034, 0.128, 0.094], 0.9, [1.1, 1.4, 1], [0, 0, s * -0.12]);
   }
   mesh(head, G.lip, '#a0605a', [0, 0.052, 0.094], 0.6, null, [0, 0, Math.PI / 2]);
-  if (look.beard) mesh(head, G.beard, look.hair, [0, 0.085, 0.006], 0.95, [0.094, 0.112, 0.104]);
+  if (look.beard) mesh(head, G.beard, look.hair, [0, 0.09, 0.012], 0.95, [0.092, 0.112, 0.1]);
   if (look.glasses) {
     for (const s of [-1, 1]) mesh(head, G.lens, '#2a2a2e', [s * 0.034, 0.108, 0.104], 0.3);
     mesh(head, G.bridge, '#2a2a2e', [0, 0.11, 0.106], 0.3);

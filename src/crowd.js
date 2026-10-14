@@ -1,4 +1,4 @@
-// Kundenbetrieb: mehrere Kunden laufen gleichzeitig durch den Laden und verhalten sich wie normale Kunden –
+// Kundenbetrieb: Die Kunden, die im Laden stehen, setzen sich in Bewegung und verhalten sich wie normale Kunden –
 // rein durch den Eingang, Rollkorb nehmen, am Dashboard ein Rezept wählen, die Zutaten über die Fachcodes holen,
 // an der Kasse zahlen und durch den Ausgang gehen. Läuft im Hintergrund weiter, auch während der Präsentation.
 // Wege werden auf einem Raster um alle Möbel herum geplant (A* + Glättung), damit niemand durch Regale läuft.
@@ -9,7 +9,6 @@ import { codeLocations } from './shopping.js';
 
 const CELL = 0.15;
 const CLEAR = 0.27; // Abstand der Körpermitte zu Möbeln
-const MAX = 9; // gleichzeitig im Laden
 
 export class Crowd {
   constructor(layout, scene, colliders) {
@@ -38,6 +37,22 @@ export class Crowd {
     this.korb = korb ? { p: [(korb.rechteck[0] + korb.rechteck[1]) / 2, korb.rechteck[3] + 0.45], ziel: [(korb.rechteck[0] + korb.rechteck[1]) / 2, korb.rechteck[3]] } : null;
     const tresen = layout.moebel.find((m) => m.typ === 'kochtresen');
     this.kueche = tresen ? { p: [(tresen.rechteck[0] + tresen.rechteck[1]) / 2, tresen.rechteck[2] - 0.95], ziel: [(tresen.rechteck[0] + tresen.rechteck[1]) / 2, tresen.rechteck[2] + 0.3] } : null;
+    // Die Kundschaft aus layout.personen steht von Anfang an im Laden (eigene, bewegliche Figuren)
+    for (const p of layout.personen || []) {
+      if (p.personal) continue;
+      const look = randomLook(this.rand, { basket: p.korb ?? p.haltung === 'stoebern', bag: p.haltung === 'stoebern' ? false : this.rand() < 0.3 });
+      const w = new Walker(look, { ring: false });
+      const a = { w, home: p, pos: new THREE.Vector2(p.pos[0], p.pos[1]), heading: Math.atan2(p.blick[0], -p.blick[1]), stop: 0, stops: [], route: [], ri: 0, wait: 0, speed: 0.95 + this.rand() * 0.3, stuck: 0 };
+      applyPose(w.J, p.haltung || 'stehen');
+      this.place(a);
+      scene.add(w.group);
+      this.agents.push(a);
+    }
+  }
+
+  place(a) {
+    a.w.group.position.set(a.pos.x, 0, -a.pos.y);
+    a.w.group.rotation.y = a.heading;
   }
 
   // ---------- Navigationsraster ----------
@@ -202,17 +217,20 @@ export class Crowd {
   }
 
   // ---------- Kunden ----------
-  plan(agent) {
+  // inside = Kunde ist schon im Laden (Start des Betriebs): direkt mit dem Einkauf weitermachen
+  plan(agent, inside = false) {
     const R = this.rand;
     const L = this.layout;
     const rez = L.rezepte[Math.floor(R() * L.rezepte.length)];
     const stops = [];
-    const side = R() < 0.5 ? -1 : 1;
-    stops.push({ p: [this.einX - 2.5 + side * 5 + R(), -2.6] }); // auf dem Gehweg
-    stops.push({ p: [this.einX + (R() - 0.5) * 0.6, -0.9] });
-    stops.push({ p: [this.einX + (R() - 0.5) * 0.4, 0.7] });
-    if (this.korb && R() < 0.75) stops.push({ ...this.korb, wait: 1.2 });
-    if (this.dash && R() < 0.85) stops.push({ p: [this.dash.p[0] + (R() - 0.5) * 1.4, this.dash.p[1]], ziel: this.dash.ziel, wait: 3 + R() * 3, pose: 'lesen' });
+    if (inside) stops.push({ p: [agent.pos.x, agent.pos.y] });
+    else {
+      stops.push({ p: [agent.pos.x, agent.pos.y] }); // auf dem Gehweg
+      stops.push({ p: [this.einX + (R() - 0.5) * 0.6, -0.9] });
+      stops.push({ p: [this.einX + (R() - 0.5) * 0.4, 0.7] });
+      if (this.korb && R() < 0.75) stops.push({ ...this.korb, wait: 1.2 });
+    }
+    if (this.dash && R() < (inside ? 0.2 : 0.85)) stops.push({ p: [this.dash.p[0] + (R() - 0.5) * 1.4, this.dash.p[1]], ziel: this.dash.ziel, wait: 3 + R() * 3, pose: 'lesen' });
     if (this.kueche && R() < 0.35) stops.push({ p: [this.kueche.p[0] + (R() - 0.5) * 1.6, this.kueche.p[1] + (R() - 0.5) * 0.3], ziel: this.kueche.ziel, wait: 5 + R() * 6 });
     // Zutaten des Rezepts (nicht jede Ergänzung), Reihenfolge: jeweils der nächste Platz
     const codes = [...new Set([...rez.zutaten.map((z) => z[1]), ...(rez.ergaenzung || []).filter(() => R() < 0.5).map((z) => z[1])])];
@@ -242,60 +260,53 @@ export class Crowd {
     stops.push({ p: [this.ausX + (R() < 0.5 ? -1 : 1) * (5 + R() * 2), -2.7], end: true });
     agent.rez = rez;
     agent.stops = stops;
-  }
-
-  spawn(midway = false) {
-    const R = this.rand;
-    const look = randomLook(R, { basket: true, bag: R() < 0.25 });
-    const w = new Walker(look, { ring: false });
-    const agent = { w, stop: 0, route: [], wait: 0, speed: 0.95 + R() * 0.3, heading: 0, stuck: 0 };
-    this.plan(agent);
-    // beim Start schon mitten im Einkauf
-    if (midway) agent.stop = 3 + Math.floor(R() * Math.max(1, agent.stops.length - 6));
-    const p0 = agent.stops[agent.stop].p;
-    agent.pos = new THREE.Vector2(p0[0], p0[1]);
-    if (midway) {
-      const [i, j] = this.nearestFree(...this.cellOf(p0[0], p0[1]));
-      agent.pos.set(this.x0 + (i + 0.5) * CELL, this.z0 + (j + 0.5) * CELL);
-    }
+    agent.stop = 0;
     this.nextLeg(agent);
-    this.scene.add(w.group);
-    this.agents.push(agent);
   }
 
   nextLeg(a) {
     a.stop++;
     if (a.stop >= a.stops.length) {
-      a.done = true;
+      this.plan(a, false); // draußen angekommen: neuer Einkauf, wieder rein in den Laden
       return;
     }
     a.route = this.path([a.pos.x, a.pos.y], a.stops[a.stop].p);
     a.ri = 0;
   }
 
+  // Start: alle Kunden laufen los – leicht versetzt, damit nicht alle gleichzeitig starten
   start() {
     this.active = true;
-    this.spawnIn = 0;
-    for (let i = 0; i < 6; i++) this.spawn(true);
+    this.agents.forEach((a, i) => {
+      this.plan(a, true);
+      a.wait = i * 0.6;
+      a.delay = i > 0;
+    });
   }
 
+  // Stopp: alle bleiben dort stehen, wo sie gerade sind
   stop() {
     this.active = false;
-    for (const a of this.agents) this.scene.remove(a.w.group);
-    this.agents = [];
+    for (const a of this.agents) {
+      a.w.animate(1, 0);
+      applyPose(a.w.J, 'stehen');
+      a.w.J.body.position.y = 0;
+    }
+  }
+
+  // Zurück auf die Ausgangsplätze (z. B. wenn die Präsentation an einer Station steht)
+  reset() {
+    for (const a of this.agents) {
+      a.pos.set(a.home.pos[0], a.home.pos[1]);
+      a.heading = Math.atan2(a.home.blick[0], -a.home.blick[1]);
+      applyPose(a.w.J, a.home.haltung || 'stehen');
+      this.place(a);
+    }
   }
 
   update(dt) {
     if (!this.active) return;
-    this.spawnIn -= dt;
-    if (this.spawnIn <= 0 && this.agents.length < MAX) {
-      this.spawn(false);
-      this.spawnIn = 4 + this.rand() * 5;
-    }
     for (const a of this.agents) this.step(a, dt);
-    const gone = this.agents.filter((a) => a.done);
-    for (const a of gone) this.scene.remove(a.w.group);
-    if (gone.length) this.agents = this.agents.filter((a) => !a.done);
   }
 
   step(a, dt) {
@@ -308,12 +319,18 @@ export class Crowd {
     const st = a.stops[a.stop];
     if (a.wait > 0) {
       a.wait -= dt;
-      if (st?.ziel) turn(Math.atan2(st.ziel[0] - a.pos.x, -(st.ziel[1] - a.pos.y)), 5);
-      a.w.animate(dt, 0);
-      if (st?.pose && a.wait > 0.4) applyPose(a.w.J, st.pose);
+      if (a.delay) {
+        // wartet noch auf den versetzten Start: Haltung vom Ausgangsplatz beibehalten
+        a.wait -= 0;
+      } else {
+        if (st?.ziel) turn(Math.atan2(st.ziel[0] - a.pos.x, -(st.ziel[1] - a.pos.y)), 5);
+        a.w.animate(dt, 0);
+        if (st?.pose && a.wait > 0.4) applyPose(a.w.J, st.pose);
+      }
       if (a.wait <= 0) {
         applyPose(a.w.J, 'stehen');
-        this.nextLeg(a);
+        if (a.delay) a.delay = false; // Startverzögerung: Route ist schon geplant
+        else this.nextLeg(a);
       }
     } else if (a.ri < a.route.length) {
       const [tx, tz] = a.route[a.ri];
@@ -348,13 +365,12 @@ export class Crowd {
     } else {
       // Ziel erreicht
       if (st?.end) {
-        a.done = true;
+        this.nextLeg(a);
         return;
       }
       a.wait = st?.wait || 0.01;
       a.w.animate(dt, 0);
     }
-    a.w.group.position.set(a.pos.x, 0, -a.pos.y);
-    a.w.group.rotation.y = a.heading;
+    this.place(a);
   }
 }

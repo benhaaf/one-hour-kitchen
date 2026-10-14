@@ -15,6 +15,7 @@ export class Simulation {
     this.scene = scene;
     this.camera = camera;
     this.active = false;
+    this.auto = false; // false = an jedem Halt warten, bis „Weiter“ gedrückt wird; true = läuft von allein durch
     this.next = 0; // welche Kundengruppe als Nächstes
     this.onCaption = () => {};
     this.onEnd = () => {};
@@ -57,6 +58,12 @@ export class Simulation {
     this.active = false;
   }
 
+  setAuto(on) {
+    this.auto = on;
+    // aktuellen Halt im Auto-Modus nach kurzer Zeit verlassen
+    if (on && this.wait === Infinity) this.wait = 1.5;
+  }
+
   stopCount() {
     return this.pts.filter((p) => p.text).length;
   }
@@ -67,6 +74,12 @@ export class Simulation {
 
   // Sprung zum nächsten / vorigen Halt (für die Präsentation)
   skip(dir) {
+    // Steht die Figur an einem Halt, geht es mit „Weiter“ zu Fuß zum nächsten Halt
+    if (dir > 0 && this.wait > 0) {
+      this.wait = 0;
+      this.onCaption('Unterwegs zum nächsten Halt …', this.stopIndex(), this.stopCount());
+      return;
+    }
     const stops = this.pts.map((p, i) => (p.text ? i : -1)).filter((i) => i >= 0);
     const target = dir > 0 ? stops.find((i) => i > this.i) : [...stops].reverse().find((i) => i < this.i - (this.wait > 0 ? 0 : 1));
     if (target === undefined) return;
@@ -79,7 +92,7 @@ export class Simulation {
   arrive() {
     const pt = this.pts[this.i];
     if (pt.text) {
-      this.wait = pt.dauer || 2;
+      this.wait = this.auto ? pt.dauer || 2 : Infinity;
       this.onCaption(pt.text, this.stopIndex(), this.stopCount());
     }
     if (this.i >= this.pts.length - 1) this.done = true;
@@ -109,12 +122,12 @@ export class Simulation {
       this.wait -= dt;
       const pt = this.pts[this.i];
       if (pt.blick) this.turnTowards(Simulation.yawOf(pt.blick[0] - this.pos.x, pt.blick[1] - this.pos.y), dt);
-      if (this.wait <= 0 && this.done) {
+      if (this.auto && this.wait <= 0 && this.done) {
         this.onEnd();
         return;
       }
     } else if (this.done) {
-      this.onEnd();
+      if (this.auto || this.wait === 0) this.onEnd();
       return;
     } else {
       const [tx, tz] = this.pts[this.i + 1].p;

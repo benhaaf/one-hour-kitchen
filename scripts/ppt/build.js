@@ -101,7 +101,11 @@ function image(s, i, x, y, w, h) {
     s.addShape(pres.shapes.RECTANGLE, { x, y, w, h, fill: { color: HEX.card }, line: { color: HEX.card } });
     return;
   }
-  s.addImage({ path: f, x, y, w, h, sizing: { type: 'cover', w, h }, objectName: on('modellbild') });
+  // Seitenverhältnis des Bildes bestimmen (PNG-Kopf), damit 'cover' zuschneidet statt zu verzerren
+  const buf = fs.readFileSync(f);
+  const iw = buf.readUInt32BE(16);
+  const ih = buf.readUInt32BE(20);
+  s.addImage({ path: f, x, y, w, h: (w * ih) / iw, sizing: { type: 'cover', w, h }, objectName: on('modellbild') });
 }
 function plan(s, name, x, y, w, h) {
   const f = path.join(SHOTS, `${name}_plan.png`);

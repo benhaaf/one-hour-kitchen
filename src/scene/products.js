@@ -3,7 +3,6 @@
 import * as THREE from 'three';
 
 // Atlas-Raster wächst mit dem Sortiment (ca. 500 Artikel → 23 × 23 Kacheln)
-const TILE = 144;
 const PAD = 4;
 const PTILE = 64; // Preisschild-Atlas: kleinere Kacheln
 const PPAD = 2;
@@ -14,6 +13,8 @@ import { CATALOG, BRANDS, AKTION, planFace } from './catalog.js';
 export { CATALOG };
 const COUNT = Object.values(CATALOG).reduce((n, l) => n + l.length, 0) + 4;
 const GRID = Math.ceil(Math.sqrt(COUNT));
+// Atlas bleibt unter 4096 px (maximale Texturgröße vieler GPUs)
+const TILE = Math.min(144, Math.floor(4096 / GRID));
 // Hat die Warengruppe Großpackungen, bekommt der unterste Boden nur diese; sonst gehören alle Böden den Normalgrößen
 export function planShelf(code, nLevels) {
   const hasBulk = (CATALOG[code] || []).some((p) => p.g);
@@ -760,7 +761,7 @@ export class Products {
     if (n >= 2) return null; // je Artikel höchstens zwei Stopper im ganzen Laden
     const h = (p.n.length * 31 + p.b.length * 7 + Math.round(p.pr * 100)) % 7;
     let key = null;
-    if (p.b === 'Grünwerk') key = 'bio';
+    if (p.b === 'Grünwerk' && h < 2) key = 'bio';
     else if (/Neckar/.test(p.b) && h < 4) key = 'regional';
     else if (p.b === 'Basis+' && h < 3) key = 'aktion';
     else if ((p.b === 'Nonna Lia' || p.b === 'Casa Verde' || p.b === 'Kaizen') && h === 1) key = 'neu';
@@ -840,15 +841,32 @@ export class Products {
     const kindOf = new Map((this.byCode[code] || []).map((k) => [k.p, k]));
     const row = (items, a1, a2, lv) => {
       if (!items.length) return;
-      const slot = (a2 - a1) / items.length;
+      // Facings verteilen: jede Sorte erst einmal, dann reihum die schmalsten Bestände auffüllen (max. 3),
+      // verbleibender Platz wird gleichmäßig als Luft zwischen die Sorten gelegt – keine Lücken-Inseln
+      const L = a2 - a1;
+      const raw = items.map((p) => p.m[0] * Math.min(1, lv.maxH / p.m[1]));
+      const sum0 = raw.reduce((s, x) => s + x + gap, 0);
+      const shrink = Math.min(1, L / sum0);
+      const ws = raw.map((x) => x * shrink);
+      const nf = items.map(() => 1);
+      const width = () => ws.reduce((s, x, i) => s + nf[i] * (x + gap), 0);
+      let used0 = width();
+      for (let pass = 0; pass < 2; pass++) {
+        const order = ws.map((x, i) => i).sort((a, b) => ws[a] - ws[b]);
+        for (const i of order) {
+          if (nf[i] < 3 && used0 + ws[i] + gap <= L) { nf[i]++; used0 += ws[i] + gap; }
+        }
+      }
+      const air = (L - used0) / items.length;
+      let s1 = a1;
       items.forEach((p, i) => {
+        const slot = nf[i] * (ws[i] + gap) + air;
         const k = kindOf.get(p);
-        if (!k) return;
-        const s1 = a1 + i * slot;
-        const sc = Math.min(1, lv.maxH / p.m[1], (slot - 0.01) / p.m[0]);
+        if (!k) { s1 += slot; return; }
+        const sc = Math.min(1, lv.maxH / p.m[1]) * shrink;
         const w = p.m[0] * sc;
         const d = p.m[2] * sc;
-        const n = Math.max(1, Math.min(6, Math.floor((slot - 0.01) / (w + gap))));
+        const n = nf[i];
         const used = n * w + (n - 1) * gap;
         let pos = s1 + (slot - used) / 2;
         for (let f = 0; f < n; f++) {
@@ -872,6 +890,7 @@ export class Products {
           if (along === 'x') this.addWobbler(wob, s1 + 0.004, lv.y + tagDy + 0.035, fr0 + dir[1] * out, dir);
           else this.addWobbler(wob, fr0 + dir[0] * out, lv.y + tagDy + 0.035, s1 + 0.004, dir);
         }
+        s1 += slot;
       });
     };
     // Herstellerblöcke nebeneinander, Sorten je Block auf die Böden verteilt
@@ -908,19 +927,19 @@ export class Products {
   }
 }
 
-function atlasMaterial(map, roughness, metalness, side = THREE.FrontSide, TILE = 144, PAD = 4) {
+function atlasMaterial(map, roughness, metalness, side = THREE.FrontSide, T = TILE, P = PAD) {
   const mat = new THREE.MeshStandardMaterial({ map, roughness, metalness, side });
-  const scale = (TILE - 2 * PAD) / (TILE * GRID);
+  const scale = (T - 2 * P) / (T * GRID);
   mat.onBeforeCompile = (shader) => {
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nattribute vec2 labelTile;')
       .replace('#include <uv_vertex>', THREE.ShaderChunk.uv_vertex)
       .replace(
         'vMapUv = ( mapTransform * vec3( MAP_UV, 1 ) ).xy;',
-        `vMapUv = ( mapTransform * vec3( (labelTile * ${TILE}.0 + ${PAD}.0) / ${TILE * GRID}.0 + clamp(MAP_UV, 0.0, 1.0) * ${scale.toFixed(6)}, 1 ) ).xy;`,
+        `vMapUv = ( mapTransform * vec3( (labelTile * ${T}.0 + ${P}.0) / ${T * GRID}.0 + clamp(MAP_UV, 0.0, 1.0) * ${scale.toFixed(6)}, 1 ) ).xy;`,
       );
   };
-  mat.customProgramCacheKey = () => `labelTile-${TILE}`;
+  mat.customProgramCacheKey = () => `labelTile-${T}`;
   return mat;
 }
 

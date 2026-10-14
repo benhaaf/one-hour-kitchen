@@ -38,6 +38,14 @@ export const BRANDS = {
   'Cantina Sole': { st: 'wein' },
   'Bodega Luz': { st: 'wein' },
   'Domaine Clair': { st: 'wein' },
+  'Trattoria Sole': { st: 'klassik' },
+  'Il Campo': { st: 'premium' },
+  Feldkorn: { st: 'klassik' },
+  Konservenhaus: { st: 'klassik' },
+  'Seoul Street': { st: 'asia' },
+  'Masala Haus': { st: 'asia' },
+  'El Sabor': { st: 'mex' },
+  Mittelmeer: { st: 'feinkost' },
 };
 
 const P = (form, m, c, a, b, n, s, pr, o = {}) => ({ form, m, c, a, b, n, s, pr, ...o });
@@ -277,6 +285,265 @@ export const CATALOG = {
   ],
 };
 
+// ---------- Sortimentstiefe wie im Vollsortimenter: weitere Sorten je Marke ----------
+// [Marke, Form, Maße, Grundfarbe, Akzentfarben (rotieren je Sorte), Sorten, Inhalt, Preis]
+const S = (b, form, m, c, accents, names, s, pr, o = {}) =>
+  names.map((n, i) => P(form, m, c, accents[i % accents.length], b, n, s, Math.round((pr + ((i * 37) % 5) * 0.1) * 100) / 100, o));
+const MEHR = {
+  T1: [
+    S('Nonna Lia', 'packung', NL, '#1e3d6e', ['#e3d3a4'], ['Spaghettoni', 'Capellini', 'Vermicelli', 'Linguine integrali'], 'n. 7 · 500 g', 1.79),
+    S('Nonna Lia', 'packung', NK, '#1e3d6e', ['#e3d3a4'], ['Penne lisce', 'Mezze penne', 'Sedanini', 'Conchiglie', 'Gnocchi sardi', 'Pipe rigate', 'Risoni', 'Stelline', 'Ditali rigati', 'Eliche'], '500 g', 1.79),
+    S("Molino d'Oro", 'packung', [0.11, 0.2, 0.06], '#efe1b8', ['#1f3a6a'], ['Casarecce', 'Trofie', 'Fusilli lunghi', 'Calamarata', 'Rigatoni', 'Farfalle'], 'Bronze · 500 g', 2.29),
+    S('Fratelli Verdi', 'packung', [0.13, 0.16, 0.07], '#2f4f3a', ['#e3d3a4'], ['Tagliolini', 'Cannelloni', 'Bandnudeln', 'Spätzle', 'Suppennudeln'], '250 g', 1.99),
+    S('Basis+', 'beutel', [0.14, 0.21, 0.06], '#f3f0e8', ['#b9472f'], ['Spirelli', 'Makkaroni', 'Bandnudeln', 'Muschelnudeln', 'Gabelspaghetti', 'Rigatoni', 'Tortiglioni', 'Sternchen'], '500 g', 0.79),
+    S('Grünwerk', 'packung', NK, '#d8c7a2', ['#3f6b3a'], ['Dinkel-Fusilli', 'Erbsen-Fusilli', 'Vollkorn-Fusilli', 'Dinkel-Penne', 'Glutenfrei Penne', 'Glutenfrei Fusilli'], 'Bio · 500 g', 2.19),
+    S('Grünwerk', 'packung', NL, '#d8c7a2', ['#3f6b3a'], ['Glutenfrei Spaghetti', 'Vollkorn-Linguine'], 'Bio · 500 g', 2.29),
+  ],
+  T2: [
+    S('Reisgarten', 'packung', [0.12, 0.18, 0.06], '#c8742e', ['#f3ead2'], ['Wildreis-Mix', 'Risotto Carnaroli', 'Sushi-Reis', 'Vollkornreis', 'Roter Reis', 'Paella-Reis', 'Langkorn & Wildreis'], '500 g', 2.49),
+    S('Reisgarten', 'packung', [0.12, 0.16, 0.05], '#c8742e', ['#f3ead2'], ['Jasmin', 'Vollkorn', 'Parboiled', 'Milchreis'], 'Kochbeutel · 4 × 125 g', 1.89),
+    S('Basis+', 'beutel', [0.13, 0.2, 0.06], '#f3f0e8', ['#3e6a96', '#c9a227', '#3f6b3a'], ['Milchreis', 'Polenta', 'Hartweizengrieß', 'Linsen braun', 'Linsen rot', 'Kichererbsen', 'Weiße Bohnen', 'Gelbe Erbsen', 'Perlgraupen', 'Jasmin-Reis'], '500 g', 0.99),
+    S('Grünwerk', 'beutel', [0.12, 0.18, 0.04], '#d8c7a2', ['#3f6b3a'], ['Gelbe Linsen', 'Tellerlinsen', 'Buchweizen', 'Amaranth', 'Couscous Vollkorn', 'Bulgur', 'Basmati', 'Grünkern'], 'Bio · 500 g', 2.39),
+    S('Kaizen', 'beutel', [0.13, 0.2, 0.06], '#f3f0e8', ['#b8322a'], ['Jasmin-Reis', 'Sushi-Reis', 'Klebreis'], '1 kg', 3.29),
+  ],
+  T3: [
+    S('Pomodoro Rossa', 'tetra', [0.065, 0.16, 0.05], '#9c2f27', ['#f1e7d0'], ['Passata rustica', 'Polpa Basilico', 'Polpa Knoblauch', 'Passata Datterini'], '500 g', 1.29),
+    S('Pomodoro Rossa', 'dose', DOSE, '#9c2f27', ['#e9d9a6'], ['Pelati Basilico', 'Datterini', 'Pomodori a pezzi', 'Polpa fine'], '400 g', 1.19),
+    S('Pomodoro Rossa', 'glas', GLAS, '#9c2f27', ['#f1e7d0'], ['Sugo Basilico', 'Sugo Peperoncino', 'Sugo Olive'], '400 g', 2.19),
+    S('Casa Verde', 'glas', GLAS, '#f1e7d0', ['#a8342b', '#7f2620', '#4c6b3a', '#8a5a32'], ['Sugo all’Amatriciana', 'Sugo ai Funghi Porcini', 'Sugo alla Norma', 'Sugo al Basilico', 'Sugo Olive e Capperi', 'Sugo Peperoni'], '400 g', 2.39),
+    S('Casa Verde', 'glas', GLAS_K, '#f1e7d0', ['#3d5e2e', '#7f2620', '#a5823f'], ['Pesto vegan', 'Pesto Rucola', 'Pesto Pistazie', 'Pesto Walnuss', 'Pesto Tomate-Ricotta'], '190 g', 2.89),
+    S('Cucina Bella', 'glas', [0.08, 0.13, 0.08], '#22324a', ['#c9a227', '#b8322a'], ['Arrabbiata', 'Basilico', 'Funghi', 'Vier Käse', 'Carbonara-Sauce', 'Spinat-Ricotta', 'Tomate-Paprika', 'Bolognese'], '400 g', 2.39),
+    S('Basis+', 'glas', [0.075, 0.13, 0.075], '#f3f0e8', ['#b9472f', '#3f6b3a', '#c9a227'], ['Napoli', 'Arrabbiata', 'Bolognese', 'Gemüse', 'Pilz', 'Pesto rosso', 'Vier Käse'], '500 g', 1.09),
+    S('Basis+', 'dose', DOSE, '#f3f0e8', ['#b9472f'], ['Tomaten geschält', 'Tomaten passiert', 'Tomaten mit Kräutern'], '400 g', 0.59),
+    S('Grünwerk', 'glas', GLAS, '#d8c7a2', ['#3f6b3a', '#a8342b'], ['Sugo Gemüse', 'Sugo Arrabbiata', 'Linsen-Bolognese', 'Pesto Genovese', 'Tomatenmark'], 'Bio · 350 g', 2.49),
+  ],
+  T4: [
+    S('Gartenglück', 'dose', DOSE, '#3d6b3a', ['#f3ead2'], ['Brechbohnen', 'Wachsbohnen', 'Mischgemüse', 'Erbsen fein', 'Karotten', 'Sauerkraut', 'Rotkohl', 'Spargel', 'Prinzessbohnen', 'Pfifferlinge'], '400 g', 1.29),
+    S('Gartenglück', 'glas', [0.085, 0.16, 0.085], '#3d6b3a', ['#f3ead2'], ['Gewürzgurken', 'Cornichons', 'Rote Bete', 'Mixed Pickles', 'Silberzwiebeln', 'Selleriesalat'], '720 ml', 1.79),
+    S('Nonna Lia', 'dose', DOSE, '#f1e7d0', ['#7c5a3a', '#3f6b3a'], ['Lenticchie', 'Fave', 'Fagioli rossi'], '400 g', 1.19),
+    S('Nordküste', 'dose', [0.085, 0.045, 0.085], '#f3f0e8', ['#3e6a96', '#2f5d6b'], ['Thunfisch in Öl', 'Thunfisch naturell', 'Sardinen in Öl', 'Makrelenfilets', 'Hering in Tomate', 'Lachs naturell'], '185 g', 2.29),
+    S('Basis+', 'dose', DOSE, '#f3f0e8', ['#3f6b3a', '#c9a227', '#b9472f'], ['Schwarze Bohnen', 'Linsen', 'Champignons', 'Mischgemüse', 'Brechbohnen', 'Sauerkraut', 'Rote Bohnen', 'Ravioli in Tomatensauce'], '400 g', 0.69),
+    S('Grünwerk', 'glas', [0.075, 0.13, 0.075], '#d8c7a2', ['#3f6b3a'], ['Weiße Bohnen', 'Linsen', 'Rote Bete', 'Sauerkraut'], 'Bio · Glas 350 g', 1.89),
+  ],
+  T5: [
+    S('Kaizen', 'flasche', [0.05, 0.16, 0.05], '#2a1a12', ['#f3f0e8'], ['Sojasauce süß', 'Ponzu', 'Tamari', 'Sushi-Essig'], '150 ml', 2.49, { cap: '#b8322a' }),
+    S('Umami Lab', 'flasche', [0.06, 0.19, 0.06], '#1f2120', ['#c9a227', '#b8322a'], ['Fischsauce', 'Chili-Knoblauch', 'Black Bean', 'Teriyaki', 'Yakitori', 'Pad Thai'], '250 ml', 2.69),
+    S('Lotus Garden', 'dose', [0.074, 0.12, 0.074], '#2f5d3a', ['#c9a227'], ['Bambussprossen', 'Wasserkastanien', 'Mungobohnensprossen', 'Jackfruit', 'Kokoscreme'], '400 g', 1.89),
+    S('Lotus Garden', 'glas', GLAS_K, '#2f5d3a', ['#c9a227', '#b8322a', '#5e8f3a'], ['Massaman-Curry', 'Panang-Curry', 'Tom-Yum-Paste', 'Satay-Sauce', 'Ingwerpaste', 'Zitronengras-Paste'], '110 g', 2.59),
+    S('Kaizen', 'packung', [0.11, 0.18, 0.05], '#f3f0e8', ['#b8322a', '#2a1a12'], ['Mie-Nudeln Ei', 'Udon frisch', 'Somen', 'Reisbandnudeln', 'Ramen Shoyu', 'Ramen Miso'], '250 g', 2.29),
+    S('Umami Lab', 'beutel', [0.13, 0.19, 0.05], '#1f2120', ['#c9a227', '#b8322a'], ['Instant-Nudeln Huhn', 'Instant-Nudeln Curry', 'Instant-Nudeln Gemüse', 'Glasnudeln', 'Reisnudeln breit'], '5 × 60 g', 1.99),
+    S('Kaizen', 'beutel', [0.1, 0.15, 0.04], '#f3f0e8', ['#b8322a', '#3f6b3a'], ['Wasabi-Pulver', 'Shiitake getrocknet', 'Wakame', 'Furikake', 'Sesam schwarz'], '50 g', 2.49),
+    S('Lotus Garden', 'beutel', [0.11, 0.15, 0.04], '#2f5d3a', ['#c9a227'], ['Krabbenchips', 'Reispapier', 'Frühlingsrollen-Teig', 'Tapioka-Perlen'], '200 g', 1.99),
+  ],
+  T6: [
+    S('La Milpa', 'beutel', [0.2, 0.22, 0.03], '#f3f0e8', ['#3f6b3a', '#a8342b'], ['Tortillas Chia', 'Tortillas Dinkel', 'Tortillas glutenfrei', 'Tortillas Spinat'], '6 Stück', 2.49),
+    S('La Milpa', 'packung', [0.16, 0.12, 0.08], '#d9873a', ['#2b2c30'], ['Enchilada Kit', 'Taco Kit', 'Tostadas', 'Soft Taco Kit'], 'für 4', 4.49),
+    S('La Milpa', 'glas', [0.08, 0.13, 0.08], '#f1e7d0', ['#a8342b', '#5d7f3a', '#d9873a'], ['Enchilada-Sauce', 'Taco-Sauce', 'Chipotle-Salsa', 'Mango-Salsa', 'Pico de Gallo'], '300 g', 2.59),
+    S('Sol & Maíz', 'dose', DOSE, '#a5823f', ['#2b2c30', '#7f2620'], ['Pinto-Bohnen', 'Schwarze Bohnen', 'Chipotle in Adobo', 'Grüne Chilis', 'Mais-Bohnen-Mix'], '400 g', 1.89),
+    S('Sol & Maíz', 'glas', [0.07, 0.12, 0.07], '#3f6b3a', ['#e7c45a', '#a8342b'], ['Jalapeños grün', 'Jalapeños rot', 'Peperoni', 'Habanero-Sauce'], '220 g', 2.09),
+    S('La Milpa', 'beutel', [0.09, 0.13, 0.02], '#a8342b', ['#e7c45a'], ['Burrito-Gewürz', 'Guacamole-Gewürz', 'Enchilada-Gewürz', 'Chili-con-Carne-Gewürz'], '30 g', 0.99),
+    S('Kochwerk', 'glas', GEW, '#2b2c30', ['#a8342b', '#a5823f', '#6b7a3a'], ['Chipotle gemahlen', 'Kreuzkümmel ganz', 'Oregano mexikanisch', 'Cayennepfeffer'], '40 g', 2.19),
+  ],
+  B1: [
+    S('Casa Verde', 'oel', [0.06, 0.26, 0.06], '#2e4a22', ['#e3d3a4'], ['Olivenöl Toscana', 'Olivenöl Sicilia', 'Olivenöl Zitrone', 'Olivenöl Chili', 'Olivenöl Basilikum'], '500 ml', 7.49),
+    S('Ölmühle Neckar', 'oel', [0.06, 0.26, 0.06], '#d9c26a', ['#3f6b3a'], ['Sonnenblumenöl nativ', 'Kürbiskernöl', 'Hanföl', 'Leindotteröl', 'Bratöl'], '500 ml', 4.99),
+    S('Basis+', 'oel', [0.075, 0.3, 0.075], '#d9b84a', ['#3f6b3a', '#c9a227'], ['Rapsöl kaltgepresst', 'Erdnussöl', 'Distelöl', 'Maiskeimöl'], '1 l', 2.49),
+    S('Grünwerk', 'oel', [0.06, 0.26, 0.06], '#3f5b2a', ['#d8c7a2'], ['Rapsöl', 'Sonnenblumenöl', 'Kokosöl', 'Sesamöl'], 'Bio · 500 ml', 4.49),
+    S('Casa Verde', 'flasche', [0.06, 0.24, 0.06], '#2b1a17', ['#e3d3a4', '#c9a227'], ['Balsamico bianco', 'Balsamico Feige', 'Rotweinessig', 'Weißweinessig'], '500 ml', 3.49),
+    S('Kochwerk', 'flasche', [0.06, 0.24, 0.06], '#e9e2c8', ['#3e6a96', '#3f6b3a'], ['Himbeeressig', 'Sherryessig', 'Branntweinessig', 'Essig-Essenz'], '500 ml', 1.99),
+  ],
+  B2: [
+    S('Kochwerk', 'glas', GEW, '#2b2c30', ['#a8342b', '#a5823f', '#6b7a3a', '#e0a52a', '#5b6b4a', '#8a5a32'], ['Kardamom', 'Koriander gemahlen', 'Ingwer gemahlen', 'Nelken', 'Lorbeer', 'Majoran', 'Dill', 'Petersilie', 'Schnittlauch', 'Salbei', 'Estragon', 'Kümmel', 'Fenchel', 'Senfsaat', 'Garam Masala', 'Ras el Hanout', 'Za’atar', 'Paprika geräuchert', 'Pfeffer weiß', 'Piment', 'Vanille gemahlen', 'Sumach'], '40 g', 2.19),
+    S('Würzhaus', 'packung', [0.06, 0.09, 0.03], '#7f2620', ['#e3d3a4'], ['Oregano', 'Basilikum', 'Thymian', 'Rosmarin', 'Knoblauch', 'Zwiebel granuliert', 'Chili gemahlen', 'Kurkuma', 'Zimt', 'Pizza-Gewürz', 'Grill-Gewürz', 'Hähnchen-Gewürz', 'Salatkräuter', 'Italienische Kräuter'], '30 g', 1.19),
+    S('Kochwerk', 'packung', [0.1, 0.11, 0.05], '#d9a93a', ['#2b2c30'], ['Rinderbrühe', 'Gemüsebrühe Bio', 'Fischfond', 'Pilzbrühe'], '8 Würfel', 1.49),
+    S('Basis+', 'packung', [0.08, 0.13, 0.05], '#f3f0e8', ['#3e6a96', '#b9472f'], ['Steinsalz', 'Kräutersalz', 'Fleur de Sel', 'Knoblauchsalz'], '250 g', 0.99),
+    S('Grünwerk', 'glas', GEW, '#d8c7a2', ['#3f6b3a'], ['Kurkuma', 'Paprika edelsüß', 'Curry', 'Pfeffer schwarz', 'Zimt Ceylon'], 'Bio · 40 g', 2.49),
+  ],
+  B3: [
+    S('Basis+', 'packung', [0.12, 0.19, 0.075], '#f3f0e8', ['#3e6a96', '#a5823f', '#b9472f'], ['Roggenmehl', 'Vollkornmehl', 'Brauner Zucker', 'Gelierzucker', 'Hagelzucker', 'Grieß'], '1 kg', 1.29),
+    S('Kochwerk', 'packung', [0.1, 0.12, 0.03], '#c9a227', ['#2b2c30'], ['Natron', 'Bourbon-Vanille', 'Zitronenschale', 'Vanillinzucker', 'Puddingpulver Vanille', 'Puddingpulver Schoko', 'Tortenguss', 'Gelatine'], '3 Stück', 0.89),
+    S('Kakaowerk', 'packung', [0.09, 0.14, 0.06], '#3a2216', ['#c9a227'], ['Kuvertüre Zartbitter', 'Kuvertüre Vollmilch', 'Schoko-Raspeln', 'Kakao-Nibs'], '200 g', 1.99),
+    S('Forno Lia', 'packung', [0.16, 0.22, 0.06], '#f3ead2', ['#7a3b1e', '#a8342b'], ['Marmorkuchen', 'Muffins', 'Pancakes', 'Waffeln', 'Brot-Backmischung'], 'Backmischung', 2.29),
+    S('Grünwerk', 'beutel', [0.12, 0.18, 0.04], '#d8c7a2', ['#3f6b3a'], ['Mandeln gemahlen', 'Haselnüsse gemahlen', 'Kokosraspeln', 'Rosinen', 'Leinsamen', 'Sonnenblumenkerne'], 'Bio · 200 g', 2.19),
+  ],
+  B4: [
+    S('Grünwerk', 'packung', [0.16, 0.24, 0.06], '#d8c7a2', ['#7a3b1e', '#a8342b', '#c9a227', '#3f6b3a'], ['Schoko-Müsli', 'Beeren-Müsli', 'Basis-Müsli', 'Crunchy Hafer', 'Dinkel-Flakes', 'Porridge Apfel'], 'Bio · 500 g', 3.49),
+    S('Basis+', 'packung', [0.17, 0.25, 0.06], '#f3f0e8', ['#c9a227', '#b9472f', '#3e6a96'], ['Schoko-Pops', 'Honey Rings', 'Multigrain', 'Knusper-Müsli', 'Früchte-Müsli'], '375 g', 1.59),
+    S('Hof Neckar', 'glas', [0.07, 0.11, 0.07], '#f3f0e8', ['#7a1f3d', '#b8322a', '#d9873a', '#3f6b3a', '#5d3a1a'], ['Himbeere', 'Johannisbeere', 'Orange', 'Stachelbeere', 'Pflaume', 'Waldhonig', 'Rapshonig'], '340 g', 2.59),
+    S('Kakaowerk', 'glas', [0.08, 0.11, 0.08], '#3a2216', ['#e3d3a4'], ['Nougatcreme dunkel', 'Mandelmus', 'Cashewmus', 'Schoko-Kokos-Creme'], '250 g', 3.29),
+    S('Forno Lia', 'packung', [0.11, 0.24, 0.05], '#efe4c6', ['#7a3b1e'], ['Knäckebrot Dinkel', 'Knäckebrot Sesam', 'Zwieback', 'Reiswaffeln'], '200 g', 1.49),
+  ],
+  B5: [
+    S('Rösterei Neckar', 'packung', [0.1, 0.17, 0.06], '#2b211c', ['#c9a227', '#b9472f', '#3e6a96'], ['Kaffee mild', 'Kaffee kräftig', 'Espresso Bar', 'Filterkaffee Bio', 'Kaffee Kolumbien', 'Kaffee Äthiopien'], '500 g', 7.49),
+    S('Basis+', 'packung', [0.1, 0.12, 0.08], '#2b211c', ['#b9472f'], ['Kaffeepads Classic', 'Kaffeepads Crema', 'Kapseln Lungo', 'Kapseln Espresso', 'Instant-Kaffee'], '16 Stück', 2.49),
+    S('Teekontor', 'packung', [0.12, 0.08, 0.07], '#2f4f3a', ['#e3d3a4'], ['Darjeeling', 'Assam', 'Chai', 'Ingwer-Zitrone', 'Fenchel-Anis', 'Hagebutte', 'Jasmintee', 'Sencha', 'Lavendel-Melisse'], '20 Beutel', 2.29, {}),
+    S('Grünwerk', 'packung', [0.12, 0.08, 0.07], '#d8c7a2', ['#3f6b3a'], ['Kräutertee', 'Grüner Tee', 'Rooibos Vanille', 'Pfefferminz'], 'Bio · 20 Beutel', 2.49),
+  ],
+  B6: [
+    S('Kakaowerk', 'tafel', TAFEL, '#3a2216', ['#c9a227', '#a8342b', '#3f6b3a', '#d9873a'], ['Nuss-Splitter', 'Rum-Trauben-Nuss', 'Joghurt', 'Marzipan', 'Erdbeer', 'Knusperflakes', 'Kokos', 'Pfefferminz', 'Zartbitter 85 %', 'Karamell-Salz'], '100 g', 1.69),
+    S('Cacao Fino', 'tafel', TAFEL, '#1f2120', ['#c9a227'], ['Mandel', 'Pistazie', 'Himbeere', 'Espresso'], '80 g', 2.99),
+    S('Knusperei', 'packung', [0.15, 0.06, 0.06], '#b8322a', ['#f3ead2'], ['Doppelkekse', 'Waffeln', 'Spekulatius', 'Zimtsterne', 'Kokosmakronen', 'Schoko-Cookies', 'Vollkornkekse'], '200 g', 1.69),
+    S('Basis+', 'beutel', [0.14, 0.2, 0.04], '#f3f0e8', ['#a8342b', '#3f6b3a', '#c9a227', '#1f2120'], ['Saure Würmer', 'Goldbärchen', 'Weingummi', 'Schaumzucker', 'Bonbons Zitrone', 'Karamellbonbons'], '200 g', 0.99),
+    S('Forno Lia', 'beutel', [0.13, 0.2, 0.05], '#e8dcbf', ['#7a3b1e', '#a8342b'], ['Biscotti Schoko', 'Ricciarelli', 'Baci di Dama', 'Panforte'], '200 g', 2.79),
+  ],
+  B7: [
+    S('Knusperei', 'beutel', [0.17, 0.25, 0.07], '#c9a227', ['#7f2620', '#3e6a96', '#3f6b3a', '#1f2120'], ['Chips Salt & Vinegar', 'Chips Chili', 'Chips Rosmarin', 'Chips Trüffel', 'Kesselchips', 'Wellenchips'], '150 g', 1.99),
+    S('Basis+', 'beutel', [0.15, 0.22, 0.06], '#f3f0e8', ['#3e6a96', '#a5823f', '#d9873a', '#a8342b'], ['Erdnussflips', 'Cracker', 'Cashews', 'Mandeln', 'Pistazien', 'Party-Mix', 'Kartoffelchips', 'Mais-Snack'], '200 g', 1.59),
+    S('La Milpa', 'beutel', [0.17, 0.25, 0.07], '#e7c45a', ['#3f6b3a', '#a8342b'], ['Tortilla Chips Käse', 'Tortilla Chips Limette', 'Nachos Bio'], '200 g', 1.89),
+    S('Grünwerk', 'beutel', [0.12, 0.17, 0.05], '#d8c7a2', ['#3f6b3a'], ['Linsenchips', 'Gemüsechips', 'Dinkelbrezeln', 'Nussmix'], 'Bio · 100 g', 2.29),
+  ],
+  K1: [
+    S('Alpenhof', 'becher', [0.075, 0.08, 0.075], '#f3f0e8', ['#3f6b3a', '#a8342b', '#7a1f3d', '#d9873a', '#5d3a1a'], ['Joghurt Erdbeere', 'Joghurt Himbeere', 'Joghurt Pfirsich', 'Joghurt Stracciatella', 'Joghurt Vanille', 'Joghurt Kirsche'], '150 g', 0.59),
+    S('Hof Neckar', 'tetra', [0.07, 0.2, 0.07], '#f3f0e8', ['#3e6a96', '#3f6b3a', '#c9a227'], ['Buttermilch', 'Kefir', 'Laktosefreie Milch', 'Kakao-Milch'], '1 l', 1.39),
+    S('Hof Neckar', 'becher', [0.1, 0.09, 0.1], '#f3f0e8', ['#3e6a96', '#c9a227'], ['Speisequark 20 %', 'Kräuterquark', 'Skyr', 'Hüttenkäse'], '250 g', 1.19),
+    S('Grünwerk', 'tetra', [0.07, 0.2, 0.07], '#d8c7a2', ['#3f6b3a', '#a5823f'], ['Mandeldrink', 'Sojadrink', 'Barista Hafer'], 'Bio · 1 l', 1.99),
+    S('Basis+', 'becher', [0.075, 0.07, 0.075], '#f3f0e8', ['#b9472f', '#3e6a96'], ['Kochsahne', 'Schlagsahne', 'Schmand', 'Crème fraîche'], '200 g', 0.69),
+  ],
+  K2: [
+    S('Alpenhof', 'schale', [0.14, 0.04, 0.1], '#e9c75a', ['#3e6a96', '#3f6b3a', '#7f2620'], ['Tilsiter', 'Butterkäse', 'Leerdamer-Art', 'Edamer', 'Maasdamer', 'Appenzeller-Art'], 'Scheiben · 150 g', 1.89),
+    S('Casa Verde', 'packung', [0.11, 0.05, 0.08], '#f3f0e8', ['#3f6b3a', '#3e6a96', '#a8342b'], ['Mascarpone', 'Gorgonzola', 'Taleggio', 'Mozzarella di Bufala', 'Scamorza'], '200 g', 2.79),
+    S('Hof Neckar', 'packung', [0.11, 0.05, 0.08], '#f3f0e8', ['#3e6a96', '#c9a227'], ['Frischkäse natur', 'Frischkäse Kräuter', 'Camembert', 'Brie', 'Hirtenkäse', 'Halloumi'], '200 g', 1.79),
+    S('Basis+', 'beutel', [0.12, 0.17, 0.03], '#f3f0e8', ['#b9472f', '#c9a227'], ['Gouda gerieben', 'Emmentaler gerieben', 'Mozzarella gerieben'], '200 g', 1.49),
+  ],
+  K3: [
+    S('Fratelli Verdi', 'schale', [0.18, 0.06, 0.12], '#2f4f3a', ['#e3d3a4'], ['Tortelloni Käse', 'Ravioli Spinat', 'Cappelletti', 'Pappardelle frisch', 'Lasagne frisch', 'Gnocchi Kartoffel'], '250 g', 2.79),
+    S('Forno Lia', 'packung', [0.07, 0.26, 0.07], '#efe4c6', ['#b9472f', '#c9a227', '#3f6b3a'], ['Flammkuchenteig', 'Quiche-Teig', 'Croissant-Teig', 'Strudelteig'], 'gekühlt', 1.69),
+    S('Basis+', 'schale', [0.18, 0.06, 0.12], '#f3f0e8', ['#b9472f'], ['Tortellini', 'Spätzle frisch', 'Schupfnudeln'], '400 g', 1.49),
+  ],
+  K4: [
+    S('Hof Neckar', 'schale', [0.2, 0.06, 0.14], '#f3f0e8', ['#a8342b', '#7f2620'], ['Hähnchenschenkel', 'Putenbrust', 'Schweinefilet', 'Rinderhüftsteak', 'Bratwurst', 'Hähnchen-Geschnetzeltes'], '400 g', 4.79),
+    S('Nordküste', 'schale', [0.2, 0.05, 0.14], '#f3f0e8', ['#3e6a96'], ['Räucherlachs', 'Kabeljau', 'Forelle geräuchert', 'Thunfischsteak'], '200 g', 4.99),
+    S('Casa Verde', 'packung', [0.14, 0.04, 0.1], '#7f2620', ['#e3d3a4'], ['Salami Milano', 'Coppa', 'Bresaola', 'Mortadella'], '80 g', 2.79),
+  ],
+  K5: [
+    S('Grünwerk', 'packung', [0.12, 0.05, 0.09], '#d8c7a2', ['#3f6b3a', '#a5823f'], ['Tofu Kräuter', 'Tofu geräuchert Mandel', 'Seitan', 'Lupinen-Filet'], 'Bio · 200 g', 2.59),
+    S('Grünwerk', 'schale', [0.16, 0.06, 0.12], '#3f6b3a', ['#f3f0e8'], ['Veggie-Burger', 'Veggie-Nuggets', 'Veggie-Bratwurst', 'Hummus natur', 'Hummus Paprika', 'Gemüse-Bällchen'], '200 g', 2.79),
+  ],
+  K6: [
+    S('Hof Neckar', 'becher', [0.1, 0.12, 0.1], '#3f6b3a', ['#f3f0e8'], ['Thymian', 'Rosmarin', 'Minze', 'Dill'], 'im Topf', 1.99),
+    S('Hof Neckar', 'beutel', [0.15, 0.2, 0.06], '#f3f0e8', ['#5d7f3a'], ['Eisbergsalat geschnitten', 'Rucola-Mix', 'Asia-Salat', 'Krautsalat'], '150 g', 1.59),
+  ],
+  D1: [
+    S('Gelato Lia', 'becher', [0.11, 0.09, 0.11], '#efe4c6', ['#5d3a1a', '#a8342b', '#c9a227', '#7a1f3d'], ['Gelato Cioccolato', 'Gelato Fragola', 'Gelato Vaniglia', 'Gelato Amarena', 'Gelato Caffè', 'Sorbetto Limone'], '500 ml', 4.49),
+    S('Basis+', 'packung', [0.16, 0.08, 0.1], '#f3f0e8', ['#3e6a96', '#5d3a1a'], ['Eis am Stiel Vanille', 'Eis am Stiel Schoko', 'Eis-Sandwich'], '6 Stück', 2.99),
+  ],
+  D2: [
+    S('Forno Lia', 'becher', [0.08, 0.07, 0.08], '#5d3a1a', ['#e3d3a4'], ['Tiramisu Pistazie', 'Cannolo-Creme', 'Zabaione'], '2 × 100 g', 2.69),
+    S('Hof Neckar', 'becher', [0.08, 0.07, 0.08], '#f3f0e8', ['#a8342b', '#c9a227', '#5d3a1a', '#3f6b3a'], ['Rote Grütze', 'Vanillepudding', 'Schokopudding', 'Quarkspeise Beere', 'Crème brûlée', 'Kokos-Pudding'], '200 g', 1.29),
+  ],
+  D3: [
+    S('Grünwerk', 'beutel', [0.18, 0.24, 0.05], '#2e4a22', ['#e7c45a', '#3f6b3a'], ['Spinat', 'Brokkoli', 'Kräuter-Mix', 'Beeren-Mix', 'Mango-Würfel'], 'TK · 450 g', 2.79),
+    S('Forno Lia', 'packung', [0.26, 0.04, 0.26], '#a8342b', ['#f3f0e8'], ['Pizza Diavola', 'Pizza Verdure', 'Flammkuchen'], 'TK · 350 g', 3.49),
+    S('Basis+', 'beutel', [0.18, 0.24, 0.05], '#3e6a96', ['#f3f0e8'], ['Pommes', 'Rösti', 'Gemüsepfanne', 'Kaiserschoten'], 'TK · 750 g', 1.99),
+  ],
+  G1: [
+    S('Weingut Neckar', 'wein', WEIN, '#2b2116', ['#efe8d8', '#d8c9a8'], ['Dornfelder', 'Schwarzriesling', 'Samtrot', 'Cuvée Rot'], 'Württemberg', 7.2),
+    S('Cantina Sole', 'wein', WEIN, '#1f2a1f', ['#efe8d8', '#7f2620'], ['Nero d’Avola', 'Valpolicella', 'Barbera', 'Sangiovese', 'Negroamaro'], 'Italien', 7.9),
+    S('Bodega Luz', 'wein', WEIN, '#2b2116', ['#c9a227', '#efe8d8'], ['Garnacha', 'Monastrell', 'Rioja Reserva'], 'Spanien', 8.5),
+    S('Domaine Clair', 'wein', WEIN, '#1f1a17', ['#efe8d8'], ['Bordeaux', 'Beaujolais', 'Cabernet Sauvignon', 'Pinot Noir'], 'Frankreich', 8.9),
+  ],
+  G2: [
+    S('Weingut Neckar', 'wein', WEIN, '#8a9a5b', ['#efe8d8', '#3e6a96'], ['Weißburgunder', 'Kerner', 'Silvaner', 'Sekt Riesling', 'Rosé Trollinger'], 'Württemberg', 7.5),
+    S('Cantina Sole', 'wein', WEIN, '#7d8a52', ['#efe8d8', '#c9a227'], ['Soave', 'Vermentino', 'Lugana', 'Frizzante'], 'Italien', 7.9),
+    S('Domaine Clair', 'wein', WEIN, '#8a9a5b', ['#efe8d8'], ['Chardonnay', 'Muscadet', 'Crémant'], 'Frankreich', 9.5),
+    S('Bodega Luz', 'wein', WEIN, '#7d8a52', ['#c9a227'], ['Verdejo', 'Rosado', 'Cava'], 'Spanien', 6.9),
+  ],
+  G3: [
+    S('Limonata', 'flasche', DRINK, '#d9bf45', ['#1e3d6e'], ['Rabarbaro', 'Mandarino', 'Cedrata', 'Gassosa'], '0,5 l', 1.49),
+    S('Neckarquelle', 'flasche', [0.075, 0.29, 0.075], '#5e8aa6', ['#f3f0e8'], ['Apfelschorle', 'Johannisbeerschorle', 'Rhabarberschorle', 'Ingwer-Zitrone'], '0,75 l', 1.19),
+    S('Neckarbräu', 'flasche', [0.065, 0.24, 0.065], '#6b4a1e', ['#e3d3a4'], ['Pils alkoholfrei', 'Dunkel alkoholfrei', 'Malzbier'], '0,5 l', 1.09),
+    S('Basis+', 'tetra', [0.08, 0.2, 0.06], '#f3f0e8', ['#d9873a', '#a8342b', '#3f6b3a'], ['Orangensaft', 'Apfelsaft', 'Multivitamin', 'Traubensaft', 'Tomatensaft'], '1 l', 1.19),
+    S('Teekontor', 'flasche', DRINK, '#2f4f3a', ['#e3d3a4'], ['Eistee Pfirsich', 'Eistee Zitrone', 'Mate'], '0,5 l', 1.69),
+  ],
+};
+for (const [k, lists] of Object.entries(MEHR)) {
+  const extra = lists.flat();
+  // Normalgrößen vor die Großpackungen einreihen
+  const big = CATALOG[k].filter((p) => p.g);
+  CATALOG[k] = [...CATALOG[k].filter((p) => !p.g), ...extra, ...big];
+}
+
+// ---------- zweite Ausbaustufe: weitere Marken für die Gondeln, damit jede Sorte nur 1–3 Facings braucht ----------
+const MEHR2 = {
+  T1: [
+    S('Il Campo', 'packung', [0.12, 0.2, 0.06], '#7a2e22', ['#e3d3a4'], ['Strozzapreti', 'Cavatelli', 'Fusilloni', 'Lumache', 'Radiatori', 'Candele'], 'Trafilata · 500 g', 2.49),
+    S('Il Campo', 'packung', [0.075, 0.27, 0.035], '#7a2e22', ['#e3d3a4'], ['Spaghetti alla chitarra', 'Pici', 'Ziti lunghi'], 'Trafilata · 500 g', 2.59),
+    S('Feldkorn', 'packung', [0.13, 0.17, 0.06], '#e7c45a', ['#2f4f3a'], ['Eierspätzle', 'Schupfnudeln', 'Hörnle', 'Eiernudeln breit', 'Fadennudeln'], '500 g', 1.69),
+  ],
+  T2: [
+    S('Feldkorn', 'packung', [0.12, 0.18, 0.06], '#e7c45a', ['#2f4f3a', '#a8342b'], ['Haferflocken zart', 'Dinkelgrieß', 'Hirse', 'Gerstengraupen', 'Weizen-Couscous', 'Polenta Instant', 'Buchweizengrütze', 'Quinoa weiß', 'Quinoa rot', 'Bulgur fein'], '500 g', 1.79),
+    S('Mittelmeer', 'packung', [0.12, 0.18, 0.06], '#2f5d6b', ['#e3d3a4'], ['Couscous Perl', 'Freekeh', 'Belugalinsen', 'Puy-Linsen', 'Cannellini', 'Borlotti', 'Riesenbohnen', 'Kichererbsen groß'], '400 g', 2.69),
+    S('Reisgarten', 'packung', [0.12, 0.18, 0.06], '#c8742e', ['#f3ead2'], ['Basmati Royal', 'Jasmin Thai', 'Arborio', 'Vialone Nano', 'Camargue-Reis', 'Schwarzer Reis', 'Langkorn', 'Spitzen-Langkorn'], '1 kg', 2.99),
+    S('Masala Haus', 'beutel', [0.13, 0.2, 0.05], '#d9873a', ['#7f2620'], ['Basmati Indien', 'Mung Dal', 'Chana Dal', 'Toor Dal', 'Urid Dal'], '500 g', 2.29),
+  ],
+  T3: [
+    S('Trattoria Sole', 'glas', GLAS, '#efe1b8', ['#a8342b', '#7f2620', '#4c6b3a', '#c9a227'], ['Sugo Napoletana', 'Sugo Puttanesca', 'Sugo Pomodorini', 'Sugo Salsiccia', 'Ragù Bolognese', 'Ragù di Cinghiale', 'Sugo Tonno', 'Sugo Melanzane', 'Sugo Zucchine', 'Sugo Ricotta'], '350 g', 2.69),
+    S('Trattoria Sole', 'glas', GLAS_K, '#efe1b8', ['#3d5e2e', '#a8342b', '#7f2620'], ['Pesto Genovese', 'Pesto Rosso', 'Pesto Siciliano', 'Pesto Trapanese', 'Pesto Bärlauch', 'Pesto Calabrese'], '190 g', 2.79),
+    S('Il Campo', 'glas', [0.08, 0.14, 0.08], '#7a2e22', ['#e3d3a4'], ['Passata Datterino', 'Passata Ciliegino', 'Passata gialla', 'Pomodori gialli'], '500 g', 3.29),
+    S('Mittelmeer', 'glas', GLAS_K, '#2f5d6b', ['#e3d3a4', '#4c6b3a'], ['Getrocknete Tomaten', 'Tomaten-Tapenade', 'Oliven-Tapenade', 'Artischocken-Creme', 'Paprika-Creme'], '180 g', 2.99),
+    S('Pomodoro Rossa', 'tetra', [0.065, 0.16, 0.05], '#9c2f27', ['#f1e7d0'], ['Tomaten stückig', 'Tomaten stückig Kräuter', 'Tomaten stückig Chili', 'Passata fein', 'Polpa Zwiebel'], '390 g', 1.19),
+    S('Cucina Bella', 'glas', [0.08, 0.13, 0.08], '#22324a', ['#c9a227', '#b8322a'], ['Tomate-Burrata', 'Gorgonzola', 'Lachs-Sahne', 'Pilz-Rahm', 'Zucchini-Minze', 'Paprika-Chili'], '400 g', 2.39),
+    S('Cucina Bella', 'flasche', [0.06, 0.18, 0.06], '#22324a', ['#c9a227'], ['Pizzasauce', 'Lasagnesauce weiß', 'Béchamel'], '500 ml', 1.99),
+    S('Basis+', 'tetra', [0.065, 0.16, 0.05], '#f3f0e8', ['#b9472f'], ['Passierte Tomaten', 'Tomaten fein gehackt', 'Tomaten stückig'], '500 g', 0.55),
+    S('Basis+', 'dose', DOSE_K, '#f3f0e8', ['#b9472f'], ['Tomatenmark', 'Tomatenmark 3-fach', 'Tomatenmark Kräuter'], '200 g', 0.69),
+    S('Grünwerk', 'tetra', [0.065, 0.16, 0.05], '#d8c7a2', ['#3f6b3a', '#a8342b'], ['Passata', 'Tomaten stückig', 'Tomaten Basilikum', 'Tomaten Knoblauch'], 'Bio · 500 g', 1.49),
+  ],
+  T4: [
+    S('Konservenhaus', 'dose', DOSE, '#e3d3a4', ['#2f4f3a', '#7f2620', '#c9a227', '#3e6a96'], ['Erbsen & Möhren', 'Junge Erbsen', 'Kidneybohnen', 'Gemüsemais', 'Weiße Riesenbohnen', 'Grüne Bohnen', 'Champignons 1. Wahl', 'Schwarzwurzeln', 'Leipziger Allerlei', 'Rosenkohl', 'Baby-Karotten', 'Linsen mit Suppengrün'], '400 g', 1.39),
+    S('Konservenhaus', 'dose', DOSE_G, '#e3d3a4', ['#7f2620', '#2f4f3a', '#c9a227'], ['Linseneintopf', 'Erbseneintopf', 'Gulaschsuppe', 'Kartoffelsuppe', 'Bohneneintopf', 'Hühnersuppe', 'Gemüseeintopf', 'Chili con Carne'], '800 g', 2.49),
+    S('Gartenglück', 'dose', DOSE_K, '#3d6b3a', ['#f3ead2'], ['Mais', 'Kidneybohnen', 'Kichererbsen', 'Erbsen', 'Champignons', 'Mandarinen', 'Pfirsiche', 'Ananas'], '212 ml', 0.89),
+    S('Gartenglück', 'dose', DOSE, '#e7c45a', ['#3d6b3a', '#a8342b'], ['Pfirsiche halbe', 'Birnen halbe', 'Aprikosen', 'Sauerkirschen', 'Fruchtcocktail', 'Mango-Stücke', 'Ananas Scheiben', 'Mandarin-Orangen'], '425 ml', 1.69),
+    S('Mittelmeer', 'glas', [0.075, 0.13, 0.075], '#2f5d6b', ['#e3d3a4', '#4c6b3a', '#7f2620'], ['Oliven grün', 'Oliven schwarz', 'Kalamata-Oliven', 'Antipasti-Mix', 'Artischockenherzen', 'Grillpaprika', 'Peperoncini', 'Kapern'], '280 g', 2.79),
+    S('Nordküste', 'dose', [0.11, 0.035, 0.07], '#2f5d6b', ['#f3f0e8', '#a8342b'], ['Heringsfilets Senf', 'Heringsfilets Dill', 'Sprotten', 'Ölsardinen Zitrone', 'Makrele Pfeffer', 'Thunfisch Salat'], '200 g', 1.89),
+    S('Basis+', 'glas', [0.085, 0.16, 0.085], '#f3f0e8', ['#3f6b3a', '#b9472f'], ['Gewürzgurken', 'Gurkensticks', 'Rotkohl', 'Rote Bete Scheiben', 'Paprika-Streifen', 'Sellerie', 'Apfelmus', 'Sauerkirschen'], '720 ml', 0.99),
+  ],
+  T5: [
+    S('Seoul Street', 'flasche', [0.06, 0.18, 0.06], '#b8322a', ['#f3f0e8', '#2a1a12'], ['Gochujang-Sauce', 'Bulgogi-Marinade', 'Korean BBQ', 'Kimchi-Base', 'Sesam-Dressing', 'Yangnyeom'], '300 ml', 3.29),
+    S('Seoul Street', 'glas', [0.08, 0.1, 0.08], '#b8322a', ['#f3f0e8'], ['Gochujang', 'Doenjang', 'Ssamjang', 'Kimchi'], '250 g', 3.49),
+    S('Seoul Street', 'beutel', [0.13, 0.19, 0.05], '#b8322a', ['#2a1a12', '#c9a227'], ['Ramyun scharf', 'Ramyun Käse', 'Jjajang-Nudeln', 'Glasnudeln Japchae', 'Reiskuchen Tteok'], '120 g', 1.69),
+    S('Masala Haus', 'glas', GLAS, '#d9873a', ['#7f2620', '#3f6b3a', '#c9a227'], ['Tikka Masala', 'Korma', 'Butter Chicken', 'Madras', 'Vindaloo', 'Jalfrezi', 'Palak', 'Dal Makhani'], '350 g', 2.79),
+    S('Masala Haus', 'glas', GLAS_K, '#d9873a', ['#7f2620', '#3f6b3a'], ['Mango Chutney', 'Limetten-Pickle', 'Tamarinden-Chutney', 'Currypaste mild', 'Currypaste scharf', 'Tandoori-Paste'], '200 g', 2.49),
+    S('Masala Haus', 'packung', [0.14, 0.2, 0.05], '#d9873a', ['#7f2620'], ['Naan Knoblauch', 'Naan natur', 'Papadams', 'Chapati'], '4 Stück', 2.29),
+    S('Lotus Garden', 'dose', [0.074, 0.12, 0.074], '#2f5d3a', ['#c9a227', '#f3f0e8'], ['Kokosmilch light', 'Kokoswasser', 'Litschis', 'Bambussprossen Streifen'], '400 ml', 1.69),
+    S('Lotus Garden', 'flasche', [0.06, 0.2, 0.06], '#2f5d3a', ['#c9a227', '#b8322a'], ['Süß-sauer-Sauce', 'Hoisin', 'Austernsauce', 'Sweet Chili', 'Sriracha', 'Pflaumensauce'], '250 ml', 2.29),
+    S('Kaizen', 'flasche', [0.05, 0.16, 0.05], '#f3f0e8', ['#b8322a', '#2a1a12'], ['Mirin', 'Reisessig', 'Sesamöl geröstet', 'Yuzu-Ponzu', 'Okonomi-Sauce', 'Tonkatsu-Sauce'], '150 ml', 2.99),
+  ],
+  T6: [
+    S('El Sabor', 'packung', [0.16, 0.13, 0.08], '#2b2c30', ['#e7c45a', '#a8342b'], ['Fajita Kit', 'Burrito Kit', 'Quesadilla Kit', 'Nacho Kit', 'Taco Shells', 'Taco Shells Blau'], 'für 4', 3.99),
+    S('El Sabor', 'glas', [0.08, 0.13, 0.08], '#2b2c30', ['#a8342b', '#e7c45a', '#5d7f3a'], ['Salsa Roja', 'Salsa Verde', 'Salsa Chipotle', 'Cheese Dip', 'Bean Dip', 'Guacamole Dip', 'Salsa Habanero', 'Mole Poblano'], '300 g', 2.69),
+    S('El Sabor', 'flasche', [0.05, 0.15, 0.05], '#2b2c30', ['#a8342b', '#5d7f3a', '#e7c45a'], ['Hot Sauce Roja', 'Hot Sauce Verde', 'Chipotle Sauce', 'Habanero Sauce', 'Lime Hot Sauce'], '150 ml', 2.99),
+    S('Sol & Maíz', 'beutel', [0.18, 0.24, 0.07], '#e7c45a', ['#a8342b', '#3f6b3a', '#2b2c30'], ['Tortilla-Chips Salz', 'Tortilla-Chips Chili', 'Tortilla-Chips Käse', 'Tortilla-Chips Limette', 'Tortilla-Chips Blau'], '200 g', 1.79),
+    S('Sol & Maíz', 'packung', [0.12, 0.18, 0.06], '#a5823f', ['#2b2c30'], ['Masa Harina', 'Maismehl gelb', 'Maisgrieß', 'Reis Mexicana'], '1 kg', 3.49),
+    S('Sol & Maíz', 'dose', DOSE, '#a5823f', ['#2b2c30', '#7f2620', '#3f6b3a'], ['Refried Beans', 'Refried Beans scharf', 'Mais mit Paprika', 'Tomatillos', 'Nopales'], '400 g', 2.29),
+    S('La Milpa', 'beutel', [0.2, 0.22, 0.03], '#f3f0e8', ['#e7c45a', '#a8342b'], ['Tortillas Mais', 'Tortillas Weizen groß', 'Tortillas Vollkorn', 'Tortillas Mini'], '8 Stück', 2.19),
+  ],
+  B1: [
+    S('Mittelmeer', 'oel', [0.06, 0.26, 0.06], '#2f5d6b', ['#e3d3a4'], ['Olivenöl Kreta', 'Olivenöl Andalusien', 'Olivenöl Peloponnes', 'Olivenöl Apulien'], '500 ml', 8.49),
+  ],
+  D2: [
+    S('Basis+', 'becher', [0.08, 0.07, 0.08], '#f3f0e8', ['#3e6a96', '#5d3a1a', '#c9a227'], ['Sahnepudding Vanille', 'Sahnepudding Schoko', 'Karamellpudding', 'Grießbrei', 'Milchreis Kirsch'], '200 g', 0.59),
+    S('Gelato Lia', 'becher', [0.08, 0.07, 0.08], '#f3ead2', ['#7a1f3d', '#5d3a1a', '#3f6b3a'], ['Panna Cotta Karamell', 'Mousse Pistazie', 'Semifreddo', 'Affogato-Creme'], '2 × 90 g', 2.79),
+  ],
+  G1: [
+    S('Cantina Sole', 'wein', WEIN, '#1f2a1f', ['#efe8d8', '#7f2620'], ['Chianti Classico', 'Aglianico', 'Dolcetto', 'Rosso di Montalcino'], 'Italien', 9.9),
+    S('Bodega Luz', 'wein', WEIN, '#3a1f1a', ['#c9a227'], ['Rioja Crianza', 'Tempranillo', 'Ribera del Duero'], 'Spanien', 7.5),
+    S('Domaine Clair', 'wein', WEIN, '#2b2116', ['#efe8d8'], ['Minervois', 'Corbières', 'Syrah'], 'Frankreich', 7.9),
+  ],
+  G2: [
+    S('Weingut Neckar', 'wein', WEIN, '#8a9a5b', ['#efe8d8'], ['Riesling feinherb', 'Muskateller', 'Gewürztraminer', 'Sauvignon Blanc', 'Schillerwein'], 'Württemberg', 7.5),
+    S('Cantina Sole', 'wein', WEIN, '#7d8a52', ['#efe8d8'], ['Grillo', 'Falanghina', 'Gavi', 'Bianco Frizzante'], 'Italien', 7.9),
+  ],
+  IMPULS: [
+    S('Knusperei', 'packung', [0.04, 0.14, 0.03], '#e7c45a', ['#7a3b1e', '#a8342b'], ['Erdnussriegel', 'Karamellriegel', 'Kokosriegel'], '40 g', 0.89),
+    S('Kakaowerk', 'tafel', [0.06, 0.12, 0.012], '#3a2216', ['#c9a227', '#a8342b'], ['Mini Nuss', 'Mini Vollmilch'], '40 g', 0.79),
+  ],
+};
+for (const [k, lists] of Object.entries(MEHR2)) {
+  const extra = lists.flat();
+  const big = CATALOG[k].filter((p) => p.g);
+  CATALOG[k] = [...CATALOG[k].filter((p) => !p.g), ...extra, ...big];
+}
+
 // Regalköpfe (Zweitplatzierung „Angebot der Woche“): je Gondel ausgewählte Artikel aus den Warengruppen
 export const AKTION = {
   M4: ['T1', 'Nonna Lia'],
@@ -295,13 +562,18 @@ export function planFace(code, levels = 3) {
   for (const p of normal) if (!brands.includes(p.b)) brands.push(p.b);
   const blocks = brands.map((brand) => {
     const items = normal.filter((p) => p.b === brand);
-    const cols = Math.max(1, Math.ceil(items.length / levels));
     const lv = Array.from({ length: levels }, () => []);
-    // spaltenweise füllen: Sorten derselben Marke stehen untereinander
-    items.forEach((p, i) => lv[i % levels].push(p));
-    return { brand, cols, levels: lv };
+    const sum = new Array(levels).fill(0);
+    // Sorten derselben Marke stehen untereinander; jede Sorte geht auf den Boden mit der geringsten belegten Breite
+    for (const p of items) {
+      let best = 0;
+      for (let i = 1; i < levels; i++) if (sum[i] < sum[best] - 1e-6) best = i;
+      lv[best].push(p);
+      sum[best] += p.m[0];
+    }
+    return { brand, need: Math.max(...sum), levels: lv };
   });
-  const total = blocks.reduce((s, b) => s + b.cols, 0) || 1;
-  for (const b of blocks) b.w = b.cols / total;
-  return { blocks, bulk };
+  const total = blocks.reduce((s, b) => s + b.need, 0) || 1;
+  for (const b of blocks) b.w = b.need / total;
+  return { blocks, bulk, need: total };
 }

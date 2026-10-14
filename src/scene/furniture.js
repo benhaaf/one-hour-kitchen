@@ -697,8 +697,9 @@ const BUILDERS = {
       b.box('terrazzo', [cx - W / 2 + 0.12, cx + W / 2 - 0.12, z1 + 0.06, z1 + 0.28], top, top + 0.1);
       // Teller mit dem Gericht auf Aufsteller (Blick zur Straße)
       const tex = canvasTex(256, 256, (g) => drawPlate(g, 128, 128, 100, rez));
-      b.geo('schwarzMatt', G.box(0.2, 0.012, 0.1), cx, top + 0.266, z1 + 0.5);
-      b.geo('schwarzMatt', G.box(0.012, 0.2, 0.012), cx, top + 0.36, z1 + 0.56, 0, -0.25);
+      // Tellerständer aus feinem Messingdraht (kein dunkles Bauteil im Fenster)
+      b.geo('messing', G.box(0.16, 0.006, 0.006), cx, top + 0.27, z1 + 0.46);
+      b.geo('messing', G.box(0.006, 0.17, 0.006), cx, top + 0.34, z1 + 0.55, 0, -0.25);
       const pl = plane(ctx.extra, lit(tex, { transparent: true }), 0.36, 0.36, cx, top + 0.26 + 0.185, z1 + 0.5, dir, -0.25);
       pl.material.alphaTest = 0.5;
       // Zutaten auf der oberen Stufe

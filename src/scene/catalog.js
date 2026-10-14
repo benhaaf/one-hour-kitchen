@@ -536,6 +536,20 @@ const MEHR2 = {
   IMPULS: [
     S('Knusperei', 'packung', [0.04, 0.14, 0.03], '#e7c45a', ['#7a3b1e', '#a8342b'], ['Erdnussriegel', 'Karamellriegel', 'Kokosriegel'], '40 g', 0.89),
     S('Kakaowerk', 'tafel', [0.06, 0.12, 0.012], '#3a2216', ['#c9a227', '#a8342b'], ['Mini Nuss', 'Mini Vollmilch'], '40 g', 0.79),
+    // Kassenzone: kleine Mitnahmeartikel in vielen Sorten
+    S('Kakaowerk', 'tafel', TAFEL, '#3a2216', ['#c9a227', '#a8342b', '#3f6b3a', '#e3d3a4'], ['Vollmilch', 'Haselnuss', 'Meersalz', 'Minze', 'Weiße Schokolade', 'Mandel'], '100 g', 1.79),
+    S('Cacao Fino', 'tafel', TAFEL, '#efe1b8', ['#7a3b1e', '#a8342b', '#3f6b3a'], ['Grand Cru 85 %', 'Pistazie', 'Orange'], '80 g', 2.99),
+    S('Knusperei', 'packung', [0.04, 0.14, 0.03], '#e7c45a', ['#3f6b3a', '#5d3a1a', '#3e6a96'], ['Proteinriegel', 'Schokoriegel', 'Waffelriegel', 'Joghurtriegel'], '40 g', 0.99),
+    S('Grünwerk', 'packung', [0.04, 0.14, 0.03], '#d8c7a2', ['#a8342b', '#3f6b3a', '#c9a227'], ['Dattelriegel', 'Fruchtriegel', 'Haferriegel'], 'Bio · 35 g', 0.99),
+    S('Basis+', 'packung', [0.05, 0.09, 0.02], '#f3f0e8', ['#3f6b3a', '#a8342b', '#c9a227'], ['Kaugummi Eukalyptus', 'Kaugummi Erdbeer', 'Pfefferminz'], '10 Stück', 0.99),
+    S('Würzhaus', 'packung', [0.06, 0.08, 0.02], '#7f2620', ['#e3d3a4', '#3f6b3a'], ['Ingwer-Bonbons', 'Salbei-Bonbons', 'Zitronen-Bonbons', 'Lakritz'], '75 g', 1.29),
+    S('Hof Neckar', 'becher', [0.1, 0.12, 0.1], '#3f6b3a', ['#f3f0e8'], ['Petersilie', 'Schnittlauch', 'Koriander', 'Thai-Basilikum', 'Minze'], 'im Topf', 1.99),
+    S('Limonata', 'flasche', [0.055, 0.18, 0.055], '#d9bf45', ['#1e3d6e', '#a8342b', '#3f6b3a'], ['Limone', 'Aranciata', 'Pompelmo', 'Chinotto'], '0,33 l', 1.29),
+    S('Neckarquelle', 'flasche', [0.055, 0.18, 0.055], '#5e8aa6', ['#f3f0e8'], ['Wasser still', 'Wasser medium'], '0,5 l', 0.89),
+    S('Teekontor', 'flasche', [0.055, 0.18, 0.055], '#2f4f3a', ['#e3d3a4', '#a8342b'], ['Eistee Pfirsich', 'Mate Zitrone', 'Ingwer-Shot'], '0,33 l', 1.79),
+    S('Knusperei', 'beutel', [0.1, 0.14, 0.04], '#e7c45a', ['#a8342b', '#3f6b3a', '#3e6a96'], ['Chips Mini Paprika', 'Chips Mini Salz', 'Salzbrezel Mini'], '40 g', 0.79),
+    S('Basis+', 'beutel', [0.09, 0.12, 0.03], '#f3f0e8', ['#a5823f', '#7a3b1e', '#c9a227'], ['Studentenfutter', 'Cashews', 'Erdnüsse geröstet', 'Fruchtgummi', 'Saure Zungen'], '100 g', 1.19),
+    S('Gelato Lia', 'packung', [0.06, 0.1, 0.03], '#f3ead2', ['#7a1f3d', '#5d3a1a'], ['Cantuccini Mini', 'Amaretti'], '100 g', 1.49),
   ],
 };
 for (const [k, lists] of Object.entries(MEHR2)) {

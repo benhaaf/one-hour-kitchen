@@ -544,34 +544,168 @@ for (const [k, lists] of Object.entries(MEHR2)) {
   CATALOG[k] = [...CATALOG[k].filter((p) => !p.g), ...extra, ...big];
 }
 
-// Regalköpfe (Zweitplatzierung „Angebot der Woche“): je Gondel ausgewählte Artikel aus den Warengruppen
-export const AKTION = {
-  M4: ['T1', 'Nonna Lia'],
-  M5: ['T3', 'Casa Verde'],
-  M6: ['T5', 'Lotus Garden'],
+// ================= Themenwelten =================
+// Die drei Gondeln folgen den Kochwelten der Anzeigetafel (Gondel 1 = Pasta Night, 2 = Asian Night, 3 = Mexican Night).
+// Jede Gondelseite ist ein Kreuzblock: Warengruppen senkrecht (wg), Marken waagerecht nach Preislage.
+// Das allgemeine Trockensortiment ohne Bezug zu den Rezepten (Eintöpfe, Obstkonserven, Getreide) führt der Laden nicht.
+{
+  const OLD = { ...CATALOG };
+  const take = (code, pred) => {
+    const hit = OLD[code].filter(pred);
+    OLD[code] = OLD[code].filter((p) => !pred(p));
+    return hit;
+  };
+  const tag = (wg, list) => list.map((p) => ({ ...p, wg }));
+  const is = (re) => (p) => re.test(p.n);
+  const of = (b, form) => (p) => p.b === b && (!form || p.form === form);
+  const and = (...f) => (p) => f.every((g) => g(p));
+  const or = (...f) => (p) => f.some((g) => g(p));
+  const not = (f) => (p) => !f(p);
+
+  // ---------- Vorspeisen (Wandregal links vom Eingang): erst aus dem Bestand ziehen ----------
+  const v1alt = [...take('T4', of('Mittelmeer')), ...take('T3', of('Mittelmeer'))];
+  const v2alt = [...take('T5', and(of('Lotus Garden', 'beutel'), is(/Krabbenchips/))), ...take('T5', and(of('Seoul Street', 'glas'), is(/^Kimchi$/)))];
+  const v3alt = take('T6', and(or(of('El Sabor', 'glas'), of('Sol & Maíz', 'glas')), is(/Dip/)));
+
+  // ---------- Pasta Night ----------
+  const risotto = take('T2', is(/Risotto|Arborio|Carnaroli|Vialone|Polenta/));
+  const t1 = OLD.T1;
+  const T1 = [
+    ...tag('Lange Pasta', t1.filter((p) => !p.g && p.m[1] >= 0.25)),
+    ...tag('Kurze Pasta', t1.filter((p) => !p.g && p.m[1] < 0.25 && !['Fratelli Verdi', 'Feldkorn'].includes(p.b))),
+    ...tag('Eiernudeln & Lasagne', t1.filter((p) => !p.g && ['Fratelli Verdi', 'Feldkorn'].includes(p.b))),
+    ...tag('Risotto & Polenta', risotto.filter((p) => !p.g)),
+    ...tag('Großpackungen', [...t1, ...risotto].filter((p) => p.g)),
+  ];
+  const t3 = OLD.T3;
+  const pesto = is(/Pesto/);
+  const sugo = (p) => !pesto(p) && /Sugo|Ragù|Sauce|Béchamel|Napoli|Arrabbiata|Bolognese|Basilico|Funghi|Käse|Carbonara|Spinat|Paprika|Gemüse|Pilz|Burrata|Gorgonzola|Lachs|Zucchini/.test(p.n) && !/Passata|Polpa|Pelati/.test(p.n);
+  const italBohnen = [...take('T4', of('Nonna Lia')), ...take('T2', and(of('Mittelmeer'), is(/Cannellini|Borlotti|Riesenbohnen/))), ...take('T4', and(of('Nordküste'), is(/Thunfisch|Sardinen/)))];
+  const T2 = [
+    ...tag('Tomaten & Passata', t3.filter((p) => !p.g && !pesto(p) && !sugo(p))),
+    ...tag('Sugo & Pastasaucen', t3.filter((p) => !p.g && sugo(p))),
+    ...tag('Pesto', t3.filter((p) => !p.g && pesto(p))),
+    ...tag('Bohnen & Thunfisch', italBohnen.filter((p) => !p.g)),
+    ...tag('Großpackungen', [...t3, ...italBohnen].filter((p) => p.g)),
+  ];
+
+  // ---------- Asian Night ----------
+  const t5 = OLD.T5;
+  const asiaNudeln = t5.filter(or(and(of('Kaizen', 'packung'), not(is(/Nori/))), of('Umami Lab', 'beutel'), of('Seoul Street', 'beutel')));
+  const reis = take('T2', or(of('Reisgarten'), of('Kaizen'), of('Masala Haus'), and(or(of('Basis+'), of('Grünwerk')), is(/Jasmin|Basmati|Langkorn|Vollkornreis/))));
+  const reisOk = reis.filter((p) => !/Milchreis|Paella/.test(p.n));
+  const beilagen = t5.filter(or(of('Masala Haus', 'packung'), of('Lotus Garden', 'beutel'), and(of('Kaizen', 'packung'), is(/Nori/))));
+  const T3 = [
+    ...tag('Asia-Nudeln', asiaNudeln.filter((p) => !p.g)),
+    ...tag('Reis', reisOk.filter((p) => !p.g && !/Dal/.test(p.n))),
+    ...tag('Dal, Naan & Teigblätter', [...reisOk.filter((p) => !p.g && /Dal/.test(p.n)), ...beilagen.filter((p) => !p.g)]),
+    ...tag('Großpackungen', [...asiaNudeln, ...reisOk].filter((p) => p.g)),
+  ];
+  const rest5 = t5.filter((p) => !asiaNudeln.includes(p) && !beilagen.includes(p));
+  const T4 = [
+    ...tag('Soja & Saucen', [...rest5.filter((p) => !p.g && p.form === 'flasche'), ...S('Umami Lab', 'flasche', [0.06, 0.19, 0.06], '#1f2120', ['#c9a227', '#b8322a', '#3f6b3a'], ['Kung-Pao-Sauce', 'General-Tso-Sauce', 'Szechuan-Sauce', 'Mapo-Tofu-Sauce', 'Chili-Öl knusprig', 'Schwarzer Essig', 'Shaoxing-Kochwein', 'XO-Sauce'], '250 ml', 2.79)]),
+    ...tag('Currys & Pasten', rest5.filter((p) => !p.g && (p.form === 'glas' || p.form === 'becher'))),
+    ...tag('Kokosmilch & Gemüse', rest5.filter((p) => !p.g && (p.form === 'dose' || p.form === 'tetra'))),
+    ...tag('Würzen & Toppings', [...rest5.filter((p) => !p.g && p.form === 'beutel'), ...S('Kaizen', 'beutel', [0.1, 0.15, 0.04], '#f3f0e8', ['#b8322a', '#3f6b3a', '#2a1a12'], ['Dashi-Pulver', 'Bonito-Flocken', 'Shichimi Togarashi', 'Matcha zum Kochen', 'Panko Vollkorn'], '50 g', 2.79)]),
+    ...tag('Großpackungen', rest5.filter((p) => p.g)),
+  ];
+
+  // ---------- Mexican Night ----------
+  const t6 = OLD.T6;
+  const tortillas = t6.filter(and(of('La Milpa', 'beutel'), is(/Tortilla|Wraps/)));
+  const kits = t6.filter((p) => p.form === 'packung' && p.b !== 'Sol & Maíz');
+  const chips = [...t6.filter(of('Sol & Maíz', 'beutel')), ...take('B7', of('La Milpa'))];
+  const masa = t6.filter(of('Sol & Maíz', 'packung'));
+  const T5 = [
+    ...tag('Tortillas & Wraps', tortillas.filter((p) => !p.g)),
+    ...tag('Taco-Shells & Kits', kits.filter((p) => !p.g)),
+    ...tag('Tortilla-Chips', chips.filter((p) => !p.g)),
+    ...tag('Masa & Mais', masa.filter((p) => !p.g)),
+    ...tag('Großpackungen', [...tortillas, ...kits, ...chips].filter((p) => p.g)),
+  ];
+  const rest6 = t6.filter((p) => ![...tortillas, ...kits, ...masa].includes(p) && !chips.includes(p));
+  const bohnen = [...rest6.filter((p) => p.form === 'dose'), ...take('T4', is(/Kidney|Schwarze Bohnen|Rote Bohnen|^Mais$|Gemüsemais/))];
+  const T6 = [
+    ...tag('Bohnen & Mais', [...bohnen.filter((p) => !p.g), ...S('Sol & Maíz', 'dose', DOSE, '#a5823f', ['#2b2c30', '#7f2620'], ['Kidneybohnen in Chili-Sauce', 'Schwarze Bohnen gewürzt', 'Pinto-Bohnen gewürzt', 'Mais-Kölbchen'], '400 g', 1.79)]),
+    ...tag('Salsa & Saucen', [...rest6.filter((p) => !p.g && p.form === 'glas' && p.b !== 'Kochwerk'), ...S('El Sabor', 'glas', [0.08, 0.13, 0.08], '#2b2c30', ['#7f2620', '#a8342b', '#5d7f3a'], ['Enchilada-Sauce rot', 'Enchilada-Sauce grün', 'Taco-Sauce mild', 'Fajita-Marinade', 'Burrito-Sauce', 'Adobo-Sauce'], '300 g', 2.49)]),
+    ...tag('Hot Sauces', [...rest6.filter((p) => !p.g && p.form === 'flasche'), ...S('La Milpa', 'flasche', [0.05, 0.15, 0.05], '#f3f0e8', ['#a8342b', '#3f6b3a'], ['Chili-Limette-Sauce', 'Salsa Picante', 'Chipotle-Mayo'], '150 ml', 2.29)]),
+    ...tag('Gewürze', [...rest6.filter((p) => !p.g && (p.form === 'beutel' || p.b === 'Kochwerk')), ...S('El Sabor', 'beutel', [0.09, 0.13, 0.02], '#2b2c30', ['#a8342b', '#e7c45a'], ['Taco-Gewürz scharf', 'Fajita-Gewürz rauchig', 'Adobo-Gewürz', 'Al-Pastor-Gewürz', 'Chili-Limetten-Salz'], '30 g', 1.19)]),
+    ...tag('Großpackungen', bohnen.filter((p) => p.g)),
+  ];
+
+  // ---------- Vorspeisen: je Kochwelt ein Fach ----------
+  const V1 = [
+    ...tag('Antipasti', v1alt.filter((p) => p.form === 'glas' && p.m[1] > 0.1)),
+    ...tag('Cremes & Tapenaden', v1alt.filter((p) => !(p.form === 'glas' && p.m[1] > 0.1))),
+    ...tag('Antipasti', S('Casa Verde', 'glas', GLAS_K, '#f1e7d0', ['#a8342b', '#4c6b3a', '#8a5a32'], ['Bruschetta Tomate', 'Bruschetta Oliven', 'Carciofi grigliati', 'Funghi trifolati', 'Peperoni ripieni', 'Pomodori secchi', 'Melanzane grigliate', 'Cipolline borettane'], '190 g', 3.49)),
+    ...tag('Oliven', S('Il Campo', 'glas', [0.07, 0.14, 0.07], '#7a2e22', ['#e3d3a4', '#4c6b3a'], ['Olive Taggiasche', 'Olive Nocellara', 'Bella di Cerignola', 'Lampascioni'], '180 g', 4.29)),
+    ...tag('Oliven', S('Basis+', 'glas', [0.075, 0.13, 0.075], '#f3f0e8', ['#3f6b3a', '#2b2c30', '#b9472f'], ['Oliven grün entsteint', 'Oliven schwarz entsteint', 'Peperoni mild', 'Champignons mariniert', 'Artischocken geviertelt'], '330 g', 1.29)),
+    ...tag('Grissini & Gebäck', S('Forno Lia', 'packung', [0.065, 0.3, 0.045], '#f3ead2', ['#7a3b1e', '#3f6b3a', '#a8342b'], ['Grissini Torinesi', 'Grissini Rosmarin', 'Grissini Sesam', 'Grissini Vollkorn'], '125 g', 1.99)),
+    ...tag('Grissini & Gebäck', S('Forno Lia', 'beutel', [0.14, 0.2, 0.05], '#f3ead2', ['#a5823f', '#3f6b3a', '#a8342b'], ['Taralli classici', 'Taralli Fenchel', 'Taralli Chili', 'Crostini', 'Friselle', 'Bruschetta-Brot'], '200 g', 2.29)),
+  ];
+  const V2 = [
+    ...tag('Cracker & Snacks', [...v2alt.filter((p) => p.form === 'beutel'), ...S('Kaizen', 'beutel', [0.11, 0.16, 0.04], '#f3f0e8', ['#3f6b3a', '#b8322a', '#2a1a12'], ['Edamame geröstet', 'Wasabi-Erbsen', 'Seetang-Snack', 'Reiscracker', 'Senbei-Mix', 'Sesam-Cracker'], '80 g', 2.29), ...S('Lotus Garden', 'beutel', [0.13, 0.18, 0.04], '#2f5d3a', ['#c9a227', '#b8322a'], ['Krupuk Gemüse', 'Cassava-Chips', 'Linsen-Cracker'], '100 g', 1.79), ...S('Masala Haus', 'beutel', [0.13, 0.18, 0.04], '#d9873a', ['#7f2620', '#3f6b3a'], ['Papadam Pfeffer', 'Bombay Mix', 'Samosa-Teig', 'Pakora-Mix'], '150 g', 1.99)]),
+    ...tag('Eingelegtes & Kimchi', [...v2alt.filter((p) => p.form !== 'beutel'), ...S('Seoul Street', 'glas', GLAS_K, '#b8322a', ['#f3f0e8'], ['Kimchi mild', 'Gurken-Kimchi', 'Rettich-Kimchi'], '200 g', 3.29), ...S('Kaizen', 'glas', GLAS_K, '#f3f0e8', ['#c9787a', '#3f6b3a'], ['Sushi-Ingwer', 'Eingelegter Rettich', 'Algensalat'], '150 g', 2.49)]),
+    ...tag('Dips & Suppen', [...S('Lotus Garden', 'flasche', [0.05, 0.15, 0.05], '#2f5d3a', ['#c9a227', '#b8322a'], ['Frühlingsrollen-Dip', 'Gyoza-Dip', 'Erdnuss-Dip', 'Nuoc Cham'], '150 ml', 2.29), ...S('Umami Lab', 'packung', [0.12, 0.12, 0.05], '#1f2120', ['#c9a227', '#b8322a', '#3f6b3a'], ['Miso-Suppe', 'Miso-Suppe Tofu', 'Wan-Tan-Suppe', 'Tom-Kha-Suppe', 'Hot & Sour Suppe'], '3 × 10 g', 2.49)]),
+  ];
+  const V3 = [
+    ...tag('Nachos & Chips', [...S('El Sabor', 'beutel', [0.18, 0.24, 0.07], '#2b2c30', ['#e7c45a', '#a8342b', '#5d7f3a'], ['Nachos Original', 'Nachos Chili Cheese', 'Nachos Jalapeño', 'Nachos Sour Cream', 'Nachos Lime'], '200 g', 1.99), ...S('La Milpa', 'beutel', [0.16, 0.22, 0.06], '#f3f0e8', ['#a8342b', '#3f6b3a'], ['Totopos', 'Plantain-Chips', 'Mais-Chips Bio', 'Bohnen-Chips'], '150 g', 2.49), ...S('Basis+', 'beutel', [0.18, 0.24, 0.07], '#f3f0e8', ['#e7c45a', '#a8342b'], ['Tortilla-Chips Natur', 'Tortilla-Chips Paprika', 'Tortilla-Chips Chili', 'Tortilla-Chips Käse'], '200 g', 0.99)]),
+    ...tag('Dips', [...v3alt, ...S('El Sabor', 'glas', [0.08, 0.11, 0.08], '#2b2c30', ['#5d7f3a', '#a8342b', '#e7c45a'], ['Jalapeño-Dip', 'Queso Blanco', 'Salsa con Queso', 'Chunky Salsa', 'Black Bean Dip', 'Mango-Habanero-Dip'], '250 g', 2.79), ...S('Basis+', 'glas', [0.08, 0.11, 0.08], '#f3f0e8', ['#a8342b', '#e7c45a', '#3f6b3a'], ['Salsa Dip mild', 'Salsa Dip scharf', 'Käse-Dip', 'Guacamole'], '200 g', 1.29)]),
+    ...tag('Eingelegtes', S('Sol & Maíz', 'glas', [0.07, 0.12, 0.07], '#3f6b3a', ['#e7c45a', '#a8342b'], ['Jalapeño-Scheiben', 'Chipotle-Zwiebeln', 'Pickled Onions', 'Cebollitas'], '220 g', 2.19)),
+  ];
+  Object.assign(CATALOG, { T1, T2, T3, T4, T5, T6, V1, V2, V3, B7: OLD.B7 });
+}
+
+// Titel der Gondelseiten und Vorspeisen-Fächer (für Schilder, Planogramm und Rezeptkarten)
+export const WELTEN = {
+  T1: { welt: 'Pasta Night', titel: 'Pasta & Risotto' },
+  T2: { welt: 'Pasta Night', titel: 'Sugo, Pesto & Tomaten' },
+  T3: { welt: 'Asian Night', titel: 'Nudeln, Reis & Naan' },
+  T4: { welt: 'Asian Night', titel: 'Saucen, Currys & Würzen' },
+  T5: { welt: 'Mexican Night', titel: 'Tortillas, Kits & Chips' },
+  T6: { welt: 'Mexican Night', titel: 'Bohnen, Salsa & Gewürze' },
+  V1: { welt: 'Pasta Night', titel: 'Antipasti' },
+  V2: { welt: 'Asian Night', titel: 'Asia-Vorspeisen' },
+  V3: { welt: 'Mexican Night', titel: 'Nachos & Dips' },
 };
 
-// ---------- Planogramm einer Regalfront: Herstellerblöcke senkrecht, Großpackungen unten ----------
+// ---------- Planogramm einer Regalfront als Kreuzblock ----------
+// Senkrecht: Warengruppen-Blöcke (wg, z. B. „Lange Pasta“ | „Kurze Pasta“ | „Risotto & Polenta“) – der Kunde sucht mit der Rezeptkarte nach dem Produkt.
+// Waagerecht: Marken nach Preislage – Premium oben in der Sichtzone, klassische Marken und Bio in der Greifzone, Eigenmarke unten.
+// So läuft jede Marke als durchgehendes Band über alle Warengruppen (Kreuzblock nach Ahlert/Kenning/Brock).
 // Wird für den 3D-Aufbau UND für das Regalbild in der Infokarte verwendet (gleiches Ergebnis).
-// levels = Anzahl normaler Böden (ohne Bückzone ganz unten). Ergebnis: { blocks: [{ brand, w, levels: [[sku…] je Boden von oben]}], bulk: [sku…] }
+// levels = Anzahl normaler Böden (ohne Bückzone ganz unten). Ergebnis: { blocks: [{ wg, brand, w, levels: [[sku…] je Boden von oben]}], bulk: [sku…] }
+const TIER = { premium: 0, molino: 0, feinkost: 0, wein: 0, klassik: 1, asia: 1, mex: 1, gewuerz: 1, regional: 1, drink: 1, bio: 2, eigen: 3 };
 export function planFace(code, levels = 3) {
   const list = CATALOG[code] || [];
   const normal = list.filter((p) => !p.g);
   const bulk = list.filter((p) => p.g);
-  const brands = [];
-  for (const p of normal) if (!brands.includes(p.b)) brands.push(p.b);
-  const blocks = brands.map((brand) => {
-    const items = normal.filter((p) => p.b === brand);
+  const groups = [];
+  for (const p of normal) {
+    const wg = p.wg || '';
+    let g = groups.find((x) => x.wg === wg);
+    if (!g) groups.push((g = { wg, items: [] }));
+    g.items.push(p);
+  }
+  const tier = (p) => TIER[BRANDS[p.b]?.st] ?? 1;
+  const blocks = groups.map(({ wg, items }) => {
+    // stabil nach Preislage sortieren, Sorten einer Marke bleiben zusammen
+    const brandOrder = [];
+    for (const p of items) if (!brandOrder.includes(p.b)) brandOrder.push(p.b);
+    const sorted = items.slice().sort((a, b) => tier(a) - tier(b) || brandOrder.indexOf(a.b) - brandOrder.indexOf(b.b));
+    const total = sorted.reduce((s, p) => s + p.m[0], 0);
+    const target = total / levels;
     const lv = Array.from({ length: levels }, () => []);
     const sum = new Array(levels).fill(0);
-    // Sorten derselben Marke stehen untereinander; jede Sorte geht auf den Boden mit der geringsten belegten Breite
-    for (const p of items) {
-      let best = 0;
-      for (let i = 1; i < levels; i++) if (sum[i] < sum[best] - 1e-6) best = i;
-      lv[best].push(p);
-      sum[best] += p.m[0];
+    let acc = 0;
+    for (const p of sorted) {
+      const i = Math.min(levels - 1, Math.floor((acc + p.m[0] / 2) / target));
+      lv[i].push(p);
+      sum[i] += p.m[0];
+      acc += p.m[0];
     }
-    return { brand, need: Math.max(...sum), levels: lv };
+    const brands = [...new Set(sorted.map((p) => p.b))];
+    return { wg, brand: wg || brands.join(' · '), brands, need: Math.max(...sum), levels: lv };
   });
   const total = blocks.reduce((s, b) => s + b.need, 0) || 1;
   for (const b of blocks) b.w = b.need / total;

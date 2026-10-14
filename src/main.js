@@ -16,6 +16,7 @@ import { Presentation } from './presentation.js';
 import { LofiAudio } from './audio.js';
 import { Interactions } from './interact.js';
 import { Simulation } from './simulation.js';
+import { Crowd } from './crowd.js';
 import { Shopping } from './shopping.js';
 import { Collider } from './collision.js';
 import { Player } from './player.js';
@@ -27,6 +28,16 @@ import { HUD } from './ui.js';
 import { setupPWA } from './pwa.js';
 import { Deck } from './deck.js';
 import { runReferent } from './referent.js';
+
+// QR-Code-Ziel: Rezeptkarte fürs Handy, kein 3D
+{
+  const nr = new URLSearchParams(location.search).get('rezept');
+  if (nr) {
+    const { runMobileRecipe } = await import('./mobile.js');
+    runMobileRecipe(layout, nr);
+    await new Promise(() => {});
+  }
+}
 
 // Zweites Fenster „Referentenansicht“: nur Notizen/Folien, kein 3D
 if (new URLSearchParams(location.search).has('referent')) {
@@ -385,6 +396,20 @@ sim.onEnd = () => {
 };
 bus.on('simulation', () => (sim.active ? stopSimulation() : startSimulation()));
 
+// ---------- Kundenbetrieb: viele Kunden gleichzeitig (läuft auch während der Präsentation) ----------
+const crowd = new Crowd(layout, scene, [...room.colliders, ...furniture.colliders]);
+function toggleCrowd(on = !crowd.active) {
+  if (on === crowd.active) return;
+  if (on) crowd.start();
+  else crowd.stop();
+  touch.setActive('kunden', on);
+  deck.kundenBtn?.classList.toggle('on', on);
+  hud.toast(on ? 'Kundenbetrieb gestartet – Kunden kaufen wie im echten Laden ein (L: stoppen)' : 'Kundenbetrieb gestoppt', 2200);
+}
+bus.on('kunden', () => toggleCrowd());
+deck.onKunden = () => toggleCrowd();
+if (new URLSearchParams(location.search).has('kunden')) toggleCrowd(true);
+
 // ---------- Einkaufs-Spiel ----------
 const shop = new Shopping(layout, scene, app, hud);
 shop.onChange = () => {
@@ -489,7 +514,7 @@ bus.on('rahmen', () => {
 setupPWA((t) => hud.toast(t, 4000));
 
 // Diagnose in der Browser-Konsole: ?debug → window.rille
-if (new URLSearchParams(location.search).has('debug')) window.rille = { deck, panels, shop, layout, renderer, scene, camera, player, topView, bus, presentation, audio, interactions, sim };
+if (new URLSearchParams(location.search).has('debug')) window.rille = { deck, panels, shop, layout, renderer, scene, camera, player, topView, bus, presentation, audio, interactions, sim, crowd };
 
 // Größe
 function resize() {
@@ -548,6 +573,7 @@ renderer.setAnimationLoop(() => {
   shop.update(dt);
 
   if (sim.active) sim.update(dt, view === 'ego');
+  crowd.update(dt);
   if (view === 'ego') {
     if (sim.active) {
       // Kamera wird von der Simulation geführt

@@ -2,7 +2,8 @@
 import * as THREE from 'three';
 import { Builder, yawFacing, rng } from './builder.js';
 import { signMesh } from './labels.js';
-import { CATALOG } from './catalog.js';
+import { CATALOG, WELTEN } from './catalog.js';
+import { QR } from './qr.js';
 import { AccessoryKit, canvasTex, fitText } from './accessories.js';
 import { Decor } from './decor.js';
 import { addStaticPerson, randomLook } from './people.js';
@@ -108,6 +109,24 @@ const ANLASS = {
   besonders: { sym: '★', text: 'besonders', sub: 'Menü mit Dessert', farbe: '#6a4f5e' },
   günstig: { sym: '€', text: 'günstig', sub: '≤ 4 € je Portion', farbe: '#4f6b45' },
 };
+// Reihenfolge der Anlass-Zeilen auf der Tafel: besonders oben, darunter schnell, dann günstig
+const ANLASS_REIHE = ['besonders', 'schnell', 'günstig'];
+// QR-Code zeichnen (Module als Quadrate, mit Ruhezone)
+function drawQR(g, rows, x, y, size, { fg = '#1f2120', bg = '#ffffff', quiet = 2 } = {}) {
+  if (!rows) return;
+  const n = rows.length;
+  const m = size / (n + quiet * 2);
+  g.fillStyle = bg;
+  g.fillRect(x, y, size, size);
+  g.fillStyle = fg;
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (rows[r][c] === '1') g.fillRect(x + (c + quiet) * m, y + (r + quiet) * m, Math.ceil(m), Math.ceil(m));
+}
+// Text kürzen, bis er in maxW passt (mit „…“)
+function clip(g, t, maxW) {
+  if (g.measureText(t).width <= maxW) return t;
+  while (t.length > 1 && g.measureText(`${t}…`).width > maxW) t = t.slice(0, -1);
+  return `${t.trimEnd()}…`;
+}
 const WELT_FARBE = { 'Pasta Night': '#a8432c', 'Asian Night': '#a8843a', 'Mexican Night': '#3f6e4a' };
 const SERIF = 'Georgia, "Times New Roman", serif';
 // „DESSERT & WEIN“ → „Dessert & Wein“, Codes wie K1–K6 bleiben
@@ -124,7 +143,7 @@ function rr(g, x, y, w, h, r) {
 }
 
 // Gezeichnetes „Foodfoto“: Teller von oben mit dem Gericht der Kochwelt
-function drawPlate(g, cx, cy, r, rez) {
+export function drawPlate(g, cx, cy, r, rez) {
   let t = rez.nr.charCodeAt(2) * 97 + rez.titel.length * 13;
   const rnd = () => ((t = (t * 1664525 + 1013904223) % 4294967296) / 4294967296);
   const blob = (x, y, rx, ry, col, rot = 0) => {
@@ -207,8 +226,22 @@ export function recipeCardTexture(r, w = 360, h = 504) {
     g.beginPath();
     g.rect(0, 0, w, 168);
     g.clip();
-    drawPlate(g, w / 2, 92, 96, r);
+    drawPlate(g, w / 2 - 40, 92, 96, r);
     g.restore();
+    // QR-Code: Rezept aufs Handy
+    g.fillStyle = 'rgba(0,0,0,0.12)';
+    rr(g, w - 118, 22, 102, 124, 10);
+    g.fill();
+    g.fillStyle = '#ffffff';
+    rr(g, w - 120, 20, 102, 124, 10);
+    g.fill();
+    drawQR(g, QR[r.nr], w - 116, 24, 94, { quiet: 1 });
+    g.fillStyle = '#4a4540';
+    g.font = `600 11px ${SANS}`;
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillText('aufs Handy', w - 69, 132);
+    g.textAlign = 'left';
     // Nummer als Pille
     g.fillStyle = wc;
     rr(g, 16, 16, 66, 30, 15);
@@ -272,68 +305,65 @@ export function recipeCardTexture(r, w = 360, h = 504) {
 }
 
 const TEX = {
-  dashboard(layout) {
-    // Moderne Bildschirm-Oberfläche: helles UI, Karten mit Foodfotos, Spalten = Küche, Zeilen = Anlass
-    const W = 1600;
-    const H = 1000;
+  dashboard(layout, W = 2200, H = 960) {
+    // Moderne Bildschirm-Oberfläche: helles UI, Karten mit Foodfotos, Spalten = Küche, Zeilen = Anlass (besonders · schnell · günstig)
+    // Seitenverhältnis = Bildschirm, damit nichts verzerrt; alle Texte werden auf ihre Fläche begrenzt
     return canvasTex(W, H, (g) => {
       g.fillStyle = '#f4f1ec';
       g.fillRect(0, 0, W, H);
       g.textBaseline = 'middle';
       g.fillStyle = '#1f2120';
-      g.font = `400 72px ${SERIF}`;
-      g.fillText('Was kochst du heute?', 56, 82);
-      // Schritte als Chips
-      ['1  Küche wählen', '2  Anlass wählen', '3  Rezeptkarte ziehen'].forEach((t, i) => {
-        const x = 56 + i * 250;
+      g.font = `400 70px ${SERIF}`;
+      g.fillText('Was kochst du heute?', 60, 78);
+      g.font = `600 22px ${SANS}`;
+      let cx0 = 760;
+      ['1  Küche wählen', '2  Anlass wählen', '3  Karte ziehen oder QR scannen'].forEach((t, i) => {
+        const tw = g.measureText(t).width + 44;
         g.fillStyle = i === 2 ? '#1f2120' : '#e7e1d7';
-        rr(g, x, 134, 232, 44, 22);
+        rr(g, cx0, 56, tw, 46, 23);
         g.fill();
         g.fillStyle = i === 2 ? '#f4f1ec' : '#3a3632';
-        g.font = `600 22px ${SANS}`;
-        g.fillText(t, x + 22, 157);
+        g.fillText(t, cx0 + 22, 80);
+        cx0 += tw + 14;
       });
       g.fillStyle = '#8a8378';
       g.font = `500 22px ${SANS}`;
       g.textAlign = 'right';
-      g.fillText('Rezepte des Monats · Oktober', W - 56, 82);
+      g.fillText('Rezepte des Monats · Oktober', W - 60, 80);
       g.textAlign = 'left';
       const welten = ['Pasta Night', 'Asian Night', 'Mexican Night'];
-      const zeilen = ['schnell', 'besonders', 'günstig'];
-      const x0 = 300;
-      const gap = 18;
-      const cw = (W - x0 - 56 - gap * 2) / 3;
-      const y0 = 214;
-      const hh = 56;
-      const rh = (H - y0 - hh - 40 - gap * 2) / 3;
+      const x0 = 330;
+      const gap = 20;
+      const cw = (W - x0 - 60 - gap * 2) / 3;
+      const y0 = 140;
+      const hh = 64;
+      const rh = (H - y0 - hh - 36 - gap * 2) / 3;
       welten.forEach((wl, i) => {
         const x = x0 + i * (cw + gap);
         g.fillStyle = WELT_FARBE[wl];
         g.beginPath();
-        g.arc(x + 14, y0 + hh / 2, 8, 0, Math.PI * 2);
+        g.arc(x + 14, y0 + hh / 2, 9, 0, Math.PI * 2);
         g.fill();
         g.fillStyle = '#1f2120';
-        g.font = `400 34px ${SERIF}`;
-        g.fillText(wl, x + 34, y0 + hh / 2);
+        g.font = `400 38px ${SERIF}`;
+        g.fillText(clip(g, wl, cw - 40), x + 36, y0 + hh / 2);
       });
-      zeilen.forEach((z, j) => {
+      ANLASS_REIHE.forEach((z, j) => {
         const an = ANLASS[z];
         const y = y0 + hh + 12 + j * (rh + gap);
         g.fillStyle = '#1f2120';
         g.beginPath();
-        g.arc(86, y + rh / 2 - 22, 30, 0, Math.PI * 2);
+        g.arc(92, y + rh / 2 - 22, 32, 0, Math.PI * 2);
         g.fill();
         g.fillStyle = '#f4f1ec';
         g.font = `700 30px ${SANS}`;
         g.textAlign = 'center';
-        g.fillText(an.sym, 86, y + rh / 2 - 21);
+        g.fillText(an.sym, 92, y + rh / 2 - 21);
         g.textAlign = 'left';
         g.fillStyle = '#1f2120';
-        g.font = `600 30px ${SANS}`;
-        g.fillText(an.text, 128, y + rh / 2 - 22);
+        fitText(g, an.text, 138, y + rh / 2 - 22, x0 - 150, 600, 32);
         g.fillStyle = '#8a8378';
-        g.font = `500 21px ${SANS}`;
-        g.fillText(an.sub, 128, y + rh / 2 + 16);
+        fitText(g, an.sub, 138, y + rh / 2 + 16, x0 - 150, 500, 21);
         welten.forEach((wl, i) => {
           const r = layout.rezepte.find((x) => x.welt === wl && x.anlass === z);
           const cx = x0 + i * (cw + gap);
@@ -344,20 +374,28 @@ const TEX = {
           rr(g, cx, y, cw, rh, 18);
           g.fill();
           if (!r) return;
-          // Foto links
           g.save();
           rr(g, cx, y, rh, rh, 18);
           g.clip();
           drawPlate(g, cx + rh / 2, y + rh / 2, rh * 0.36, r);
           g.restore();
+          // QR-Code rechts unten in der Karte
+          const qs = Math.min(112, rh - 56);
+          const qx = cx + cw - qs - 16;
+          const qy = y + rh - qs - 14;
+          drawQR(g, QR[r.nr], qx, qy, qs, { quiet: 1 });
+          g.fillStyle = '#8a8378';
+          g.font = `600 15px ${SANS}`;
+          g.textAlign = 'center';
+          g.fillText('aufs Handy', qx + qs / 2, qy - 13);
+          g.textAlign = 'left';
           const tx = cx + rh + 22;
+          const maxW = cx + cw - tx - 18;
           g.fillStyle = WELT_FARBE[wl];
-          g.font = `700 20px ${SANS}`;
-          g.fillText(r.nr, tx, y + 38);
+          g.font = `700 21px ${SANS}`;
+          g.fillText(r.nr, tx, y + 34);
           g.fillStyle = '#1f2120';
-          // Titel: max. zwei Zeilen
-          g.font = `400 28px ${SERIF}`;
-          const maxW = cw - rh - 44;
+          g.font = `400 30px ${SERIF}`;
           const lines = [];
           let line = '';
           for (const wd of r.titel.split(' ')) {
@@ -368,12 +406,12 @@ const TEX = {
             } else line = t;
           }
           lines.push(line);
-          if (lines.length > 2) lines.splice(1, lines.length - 1, `${lines.slice(1).join(' ').slice(0, 16)}…`);
-          lines.forEach((l, k) => g.fillText(l, tx, y + 78 + k * 33));
+          lines.slice(0, 2).forEach((l, k) => g.fillText(clip(g, k === 1 && lines.length > 2 ? `${l} ${lines.slice(2).join(' ')}` : l, maxW), tx, y + 72 + k * 34));
           g.fillStyle = '#8a8378';
           g.font = `500 20px ${SANS}`;
-          g.fillText(`${r.zeit} · ${r.preis}`, tx, y + rh - 30);
-          g.textAlign = 'left';
+          const infoW = qx - tx - 12;
+          g.fillText(clip(g, r.zeit, infoW), tx, y + rh - 48);
+          g.fillText(clip(g, r.preis, infoW), tx, y + rh - 22);
         });
       });
     });
@@ -545,25 +583,231 @@ const TEX = {
     }),
 };
 
+// ---------- Regalkopf: Küchenhelfer aus der Showküche ----------
+// Pfanne, Reibe, Pfeffermühle … – genau die Geräte, mit denen der Koch gerade kocht. Non-Food mit höherer Marge.
+const HELFER = {
+  'Pasta Night': [['Pfeffermühle Eiche', '29,90 €'], ['Parmesanreibe', '19,90 €'], ['Pastatopf 6 l', '49,90 €'], ['Pfanne 28 cm', '39,90 €']],
+  'Asian Night': [['Bambusdämpfer', '24,90 €'], ['Essstäbchen 4er', '9,90 €'], ['Wok Carbonstahl', '44,90 €'], ['Hackmesser', '34,90 €']],
+  'Mexican Night': [['Tortillapresse', '39,90 €'], ['Limettenpresse', '12,90 €'], ['Molcajete', '34,90 €'], ['Gusseisenpfanne', '49,90 €']],
+};
+function priceTag(ctx, text, x, y, z, dir) {
+  sign(ctx.extra, text, { w: 0.09, h: 0.04, bg: '#fbf8f2', fg: '#1f2120', font: '700' }, x, y, z, dir);
+}
+function kuechenhelfer(b, ctx, welt, x2, z1, z2, H) {
+  const X = x2 + 0.005;
+  const D = 0.19;
+  const zc = (z1 + z2) / 2;
+  const L = z2 - z1 - 0.08;
+  const dir = [1, 0];
+  const items = HELFER[welt] || HELFER['Pasta Night'];
+  if (!b.materials.bambus) b.materials.bambus = std(0xc9a46a, 0.75);
+  if (!b.materials.guss) b.materials.guss = std(0x1c1c1e, 0.55, 0.35);
+  // Rahmen: Sockel, Rückwand als Lochblech, zwei Eichenböden mit Messingkante
+  b.box('schwarzMatt', [x2 - 0.03, X + D, z1, z2], 0, 0.1);
+  b.box('anthrazit', [X, X + 0.012, z1 + 0.03, z2 - 0.03], 0.1, H - 0.03);
+  for (const y of [0.46, 0.9]) {
+    b.box('eiche', [X, X + D, z1 + 0.03, z2 - 0.03], y - 0.03, y);
+    b.box('messing', [X + D - 0.004, X + D, z1 + 0.03, z2 - 0.03], y - 0.03, y - 0.01);
+  }
+  // Lochblech-Punkte (dezent)
+  const hole = new THREE.CircleGeometry(0.0045, 6);
+  for (let y = 1.0; y < H - 0.1; y += 0.06) for (let z = z1 + 0.07; z < z2 - 0.05; z += 0.06) b.geo('schwarz', hole, X + 0.0125, y, z, Math.PI / 2);
+  const front = X + D;
+  const zl = zc - L / 4;
+  const zr = zc + L / 4;
+  // unten: verpackte Ware im Karton mit Aufdruck
+  for (const [k, z] of [[3, zl], [2, zr]]) {
+    b.box(k === 3 ? 'weiss' : 'anthrazit', [X + 0.02, front - 0.01, z - L / 4 + 0.015, z + L / 4 - 0.015], 0.1, 0.34);
+    const [n, pr] = items[k];
+    sign(ctx.extra, n, { w: L / 2 - 0.05, h: 0.12, bg: k === 3 ? '#f3efe7' : '#2b2c30', fg: k === 3 ? '#2b2c30' : '#efe7d6', font: '600', sub: 'aus der Showküche' }, front - 0.009, 0.24, z, dir);
+    priceTag(ctx, pr, front + 0.002, 0.37, z - L / 4 + 0.07, dir);
+  }
+  // Boden 1 (0,46): große Geräte; Boden 2 (0,9): Kleingeräte; Lochblech: hängende Pfanne/Utensilien
+  const y1 = 0.46;
+  const y2 = 0.9;
+  const xm = X + D / 2 + 0.01;
+  if (welt === 'Asian Night') {
+    b.geo('guss', new THREE.CylinderGeometry(0.15, 0.06, 0.09, 28, 1, true), xm, y1 + 0.05, zl);
+    b.geo('holz', G.box(0.02, 0.02, 0.16), xm, y1 + 0.08, zl - 0.2);
+    for (let i = 0; i < 2; i++) b.geo('bambus', G.disc(0.085, 0.055, 24), xm, y2 + 0.03 + i * 0.058, zl);
+    b.geo('bambus', G.disc(0.088, 0.012, 24), xm, y2 + 0.122, zl);
+    for (let i = 0; i < 4; i++) b.geo('schwarz', G.box(0.012, 0.012, 0.22), xm - 0.04 + i * 0.025, y2 + 0.01, zr, 0.05 * i);
+    b.geo('edelstahl', G.box(0.004, 0.09, 0.18), X + 0.02, 1.38, zr);
+    b.geo('holzDunkel', G.box(0.02, 0.03, 0.11), X + 0.02, 1.38, zr + 0.14);
+    b.geo('guss', new THREE.CylinderGeometry(0.11, 0.04, 0.06, 24, 1, true), X + 0.05, 1.42, zl, 0, 0, Math.PI / 2);
+  } else if (welt === 'Mexican Night') {
+    b.geo('stein', new THREE.CylinderGeometry(0.1, 0.075, 0.08, 20), xm, y1 + 0.07, zl);
+    for (const a of [0, 2.1, 4.2]) b.geo('stein', G.disc(0.015, 0.04, 8), xm + Math.cos(a) * 0.05, y1 + 0.02, zl + Math.sin(a) * 0.05);
+    b.geo('stein', G.disc(0.022, 0.12, 10), xm + 0.02, y1 + 0.14, zl + 0.03, 0, 0.5);
+    for (let i = 0; i < 3; i++) b.geo('guss', G.disc(0.12, 0.03, 28), xm, y1 + 0.016 + i * 0.032, zr);
+    b.geo('guss', G.disc(0.09, 0.025, 24), xm, y2 + 0.015, zl);
+    b.geo('guss', G.disc(0.09, 0.025, 24), xm, y2 + 0.05, zl);
+    b.geo('guss', G.box(0.03, 0.02, 0.2), xm, y2 + 0.075, zl + 0.08, 0, 0.25);
+    b.geo('gelb', G.box(0.05, 0.03, 0.17), xm, y2 + 0.02, zr, 0.4);
+    b.geo('guss', G.disc(0.13, 0.025, 28), X + 0.03, 1.45, zl + 0.05, 0, 0, Math.PI / 2);
+    b.geo('guss', G.box(0.02, 0.2, 0.03), X + 0.03, 1.22, zl + 0.05);
+    b.geo('holz', G.box(0.02, 0.26, 0.05), X + 0.02, 1.4, zr + 0.06);
+  } else {
+    b.geo('edelstahl', G.disc(0.1, 0.17, 28), xm, y1 + 0.085, zl);
+    b.geo('edelstahl', G.disc(0.104, 0.012, 28), xm, y1 + 0.176, zl);
+    b.geo('schwarz', G.disc(0.015, 0.02, 10), xm, y1 + 0.19, zl);
+    b.geo('edelstahl', G.box(0.07, 0.22, 0.09), xm, y1 + 0.11, zr);
+    b.geo('schwarz', G.box(0.03, 0.04, 0.09), xm, y1 + 0.24, zr);
+    for (let i = 0; i < 3; i++) {
+      const z = zc - 0.12 + i * 0.12;
+      b.geo(i === 1 ? 'holzDunkel' : 'eiche', new THREE.CylinderGeometry(0.026, 0.03, 0.2, 16), xm, y2 + 0.1, z);
+      b.geo('messing', G.disc(0.012, 0.03, 10), xm, y2 + 0.215, z);
+    }
+    b.geo('edelstahl', G.disc(0.13, 0.02, 28), X + 0.03, 1.45, zl + 0.05, 0, 0, Math.PI / 2);
+    b.geo('schwarz', G.box(0.02, 0.2, 0.03), X + 0.03, 1.22, zl + 0.05);
+    b.geo('edelstahl', G.box(0.012, 0.3, 0.025), X + 0.02, 1.4, zr + 0.08);
+    b.geo('edelstahl', G.disc(0.035, 0.015, 14), X + 0.025, 1.24, zr + 0.08, 0, 0, Math.PI / 2);
+  }
+  priceTag(ctx, items[2][1], front + 0.002, y1 - 0.03, zl - 0.12, dir);
+  priceTag(ctx, items[1][1], front + 0.002, y1 - 0.03, zr + 0.06, dir);
+  priceTag(ctx, items[0][1], front + 0.002, y2 - 0.03, zc - 0.03, dir);
+  sign(ctx.extra, 'Aus unserer Showküche', { w: 0.5, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: `${items[0][0]} · ${items[2][0]} – damit kocht unser Koch` }, X + 0.04, H + 0.2, zc, dir);
+  b.box('schwarzMatt', [x2 - 0.02, x2 + 0.03, zc - 0.02, zc + 0.02], H, H + 0.3);
+  sign(ctx.extra, welt, { w: L, h: 0.09, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: WELT_FARBE[welt] }, X + 0.014, H - 0.1, zc, dir);
+}
+
 // ---------- Möbeltypen ----------
 const BUILDERS = {
+  // Schaufenster „Was kochst du heute?“: drei Podeste (je Kochwelt ein Gericht mit Zutaten), Leuchtplakat mit QR, Spots, Glasbeschriftung
   schaufenster(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
-    const top = 0.35;
-    b.box('holz', [x1, x2, z1, z2], 0, top);
-    b.box('akzent', [x1, x2, z1 - 0.005, z1], 0.28, top);
-    // Plakat auf Staffelei zur Straße
-    const cx = x1 + 0.55;
-    const zc = (z1 + z2) / 2;
-    b.box('holzDunkel', [cx - 0.02, cx + 0.02, zc, zc + 0.04], top, top + 1.05);
-    plane(ctx.extra, lit(TEX.plakat(m.schild, ['#01 Creamy Tomato Pasta', '#04 Gebratene Udon', '#07 Quesadillas', 'Rezeptkarte nehmen – Zutaten im Laden'])), 0.62, 0.87, cx, top + 0.62, zc - 0.03, [0, -1], -0.08);
-    // Kiste mit Tomaten, Pasta-Gläser, Olivenöl
+    const top = 0.32;
+    const L = ctx.layout;
+    b.box('eicheDunkel', [x1, x2, z1, z2], 0, top);
+    b.box('akzent', [x1, x2, z1 - 0.005, z1], 0.26, top);
+    b.box('led', [x1 + 0.02, x2 - 0.02, z1 - 0.008, z1 - 0.004], top - 0.012, top - 0.006);
     const P = ctx.products;
-    b.box('kiste', [x1 + 1.05, x1 + 1.5, z1 + 0.08, z1 + 0.42], top, top + 0.16);
-    ctx.fresh.crate(b, x1 + 1.275, top + 0.16, z1 + 0.25, 0.4, 0.3, 'tomate', 0);
-    for (let i = 0; i < 4; i++) P.add(P.pick('R01', i), x1 + 1.65 + i * 0.12, top, z1 + 0.2, [0, -1]);
-    for (let i = 0; i < 3; i++) P.add(P.pick('B2', 0), x2 - 0.18 - i * 0.09, top, z1 + 0.2, [0, -1]);
-    P.add(P.pick('R01B', 0), x2 - 0.5, top, z1 + 0.35, [0, -1]);
+    const welten = [
+      { welt: 'Pasta Night', nr: '#01', codes: ['T1', 'T2'], fresh: ['tomate', 'knoblauch'], preis: '4,60 €' },
+      { welt: 'Asian Night', nr: '#04', codes: ['T3', 'T4'], fresh: ['pakchoi', 'limette'], preis: '4,40 €' },
+      { welt: 'Mexican Night', nr: '#07', codes: ['T5', 'T6'], fresh: ['avocado', 'paprikaRot'], preis: '4,20 €' },
+    ];
+    const W = (x2 - x1) / 3;
+    const dir = [0, -1];
+    welten.forEach((w, i) => {
+      const cx = x1 + (i + 0.5) * W;
+      const rez = L.rezepte.find((r) => r.nr === w.nr);
+      // Podest in zwei Stufen
+      b.box('eiche', [cx - W / 2 + 0.08, cx + W / 2 - 0.08, z1 + 0.28, z2 - 0.04], top, top + 0.26);
+      b.box('terrazzo', [cx - W / 2 + 0.12, cx + W / 2 - 0.12, z1 + 0.06, z1 + 0.28], top, top + 0.1);
+      // Teller mit dem Gericht auf Aufsteller (Blick zur Straße)
+      const tex = canvasTex(256, 256, (g) => drawPlate(g, 128, 128, 100, rez));
+      b.geo('holzDunkel', G.box(0.02, 0.3, 0.02), cx, top + 0.26 + 0.15, z1 + 0.5, 0, -0.25);
+      const pl = plane(ctx.extra, lit(tex, { transparent: true }), 0.36, 0.36, cx, top + 0.26 + 0.22, z1 + 0.46, dir, -0.25);
+      pl.material.alphaTest = 0.5;
+      // Zutaten auf der oberen Stufe
+      for (let k = 0; k < 4; k++) {
+        const kind = P.pick(w.codes[k % 2], 7 + k * 5);
+        const side = k < 2 ? -1 : 1;
+        const sc = Math.min(1, 0.24 / kind.p.m[1]);
+        P.add(kind, cx + side * (0.28 + (k % 2) * 0.13), top + 0.26, z1 + 0.42 + (k % 2) * 0.1, dir, { scale: sc });
+      }
+      // Frischekisten auf der unteren Stufe
+      for (let k = 0; k < 2; k++) {
+        const fx = cx + (k ? 0.22 : -0.22);
+        b.box('kiste', [fx - 0.15, fx + 0.15, z1 + 0.08, z1 + 0.26], top + 0.1, top + 0.18);
+        ctx.fresh.crate(b, fx, top + 0.18, z1 + 0.17, 0.26, 0.15, w.fresh[k], 0);
+      }
+      // Karte vorne: Kochwelt, Gericht, Preis je Portion, QR
+      const card = canvasTex(480, 220, (g, cw, ch) => {
+        g.fillStyle = '#fbf8f2';
+        g.fillRect(0, 0, cw, ch);
+        g.fillStyle = WELT_FARBE[w.welt];
+        g.fillRect(0, 0, 10, ch);
+        g.textBaseline = 'middle';
+        g.fillStyle = '#8a8378';
+        g.font = `600 20px ${SANS}`;
+        g.fillText(w.welt.toUpperCase(), 30, 34);
+        g.fillStyle = '#1f2120';
+        fitText(g, rez.titel, 30, 82, 290, 400, 38, SERIF);
+        g.fillStyle = '#3a3632';
+        g.font = `500 22px ${SANS}`;
+        g.fillText(`${rez.zeit} · Zutaten im Laden`, 30, 132);
+        g.fillStyle = WELT_FARBE[w.welt];
+        g.font = `700 34px ${SANS}`;
+        g.fillText(`${w.preis} je Portion`, 30, 180);
+        drawQR(g, QR[w.nr], 340, 50, 124, { quiet: 1 });
+        g.fillStyle = '#8a8378';
+        g.font = `600 14px ${SANS}`;
+        g.textAlign = 'center';
+        g.fillText('Rezept aufs Handy', 402, 190);
+      });
+      plane(ctx.extra, lit(card), 0.42, 0.19, cx, top + 0.06, z1 + 0.055, dir, -0.5);
+      // Spot über dem Podest
+      b.box('metall', [cx - 0.004, cx + 0.004, z1 + 0.35 - 0.004, z1 + 0.35 + 0.004], 2.45, 3.2);
+      b.geo('schwarzMatt', new THREE.CylinderGeometry(0.05, 0.08, 0.16, 18, 1, true), cx, 2.4, z1 + 0.35);
+      b.geo('led', new THREE.CircleGeometry(0.07, 18), cx, 2.33, z1 + 0.35, 0, Math.PI / 2);
+    });
+    // Leuchtplakat über den Podesten, von der Decke abgehängt
+    const pw = 1.5;
+    const ph = 0.84;
+    const px = (x1 + x2) / 2;
+    const pz = z2 - 0.08;
+    const py = 1.72;
+    for (const s of [-1, 1]) b.box('metall', [px + s * (pw / 2 - 0.08) - 0.004, px + s * (pw / 2 - 0.08) + 0.004, pz - 0.004, pz + 0.004], py + ph / 2, 3.2);
+    b.box('schwarzMatt', [px - pw / 2 - 0.02, px + pw / 2 + 0.02, pz, pz + 0.05], py - ph / 2 - 0.02, py + ph / 2 + 0.02);
+    const poster = canvasTex(1500, 840, (g, PW, PH) => {
+      g.fillStyle = '#1f2120';
+      g.fillRect(0, 0, PW, PH);
+      g.textBaseline = 'middle';
+      g.fillStyle = '#b39b6b';
+      g.font = `600 30px ${SANS}`;
+      g.fillText('ONE HOUR KITCHEN · REZEPTE DES MONATS', 70, 80);
+      g.fillStyle = '#f4f1ec';
+      g.font = `400 92px ${SERIF}`;
+      g.fillText('Was kochst du heute?', 70, 180);
+      g.fillStyle = '#c9c4bc';
+      g.font = `500 34px ${SANS}`;
+      g.fillText('Rezept wählen · Zutaten einkaufen · in einer Stunde auf dem Tisch', 70, 262);
+      welten.forEach((w, i) => {
+        const rez = L.rezepte.find((r) => r.nr === w.nr);
+        const cx = 230 + i * 400;
+        g.save();
+        g.beginPath();
+        g.arc(cx, 470, 130, 0, Math.PI * 2);
+        g.clip();
+        drawPlate(g, cx, 470, 105, rez);
+        g.restore();
+        g.fillStyle = '#f4f1ec';
+        g.textAlign = 'center';
+        g.font = `400 36px ${SERIF}`;
+        g.fillText(clip(g, rez.titel, 360), cx, 650);
+        g.fillStyle = '#c9c4bc';
+        g.font = `500 26px ${SANS}`;
+        g.fillText(`${w.welt} · ${rez.zeit}`, cx, 700);
+        g.textAlign = 'left';
+      });
+      drawQR(g, QR.start, PW - 250, 360, 190, { quiet: 2 });
+      g.fillStyle = '#f4f1ec';
+      g.font = `600 24px ${SANS}`;
+      g.textAlign = 'center';
+      g.fillText('Alle 9 Rezepte', PW - 155, 580);
+      g.fillText('aufs Handy', PW - 155, 612);
+      g.fillStyle = '#b39b6b';
+      g.font = `500 28px ${SANS}`;
+      g.fillText('Live-Cooking täglich 12–13:30 · 17:30–19 Uhr', PW / 2, PH - 50);
+      g.textAlign = 'left';
+    });
+    const pm = new THREE.MeshStandardMaterial({ map: poster, emissive: 0xffffff, emissiveMap: poster, emissiveIntensity: 0.55, roughness: 0.5 });
+    plane(ctx.extra, pm, pw, ph, px, py, pz - 0.002, dir);
+    // Glasbeschriftung (Folie innen auf der Scheibe, von der Straße lesbar)
+    const decal = canvasTex(2048, 256, (g, DW, DH) => {
+      g.clearRect(0, 0, DW, DH);
+      g.fillStyle = 'rgba(250,247,240,0.92)';
+      g.textBaseline = 'middle';
+      g.textAlign = 'center';
+      g.font = `italic 400 120px ${SERIF}`;
+      g.fillText('Shop. Cook. Enjoy.', DW / 2, 100);
+      g.font = `500 44px ${SANS}`;
+      g.fillText('9 Rezepte · alle Zutaten an einem Ort · Live-Cooking', DW / 2, 200);
+    });
+    const dm = new THREE.MeshBasicMaterial({ map: decal, transparent: true, depthWrite: false });
+    plane(ctx.extra, dm, 3.4, 0.425, (x1 + x2) / 2 + 0.3, 2.55, 0.04, dir);
   },
 
   'matrix-dashboard'(b, m, ctx) {
@@ -587,7 +831,7 @@ const BUILDERS = {
     const w = x2 - x1 - 0.2;
     const h = top - y0;
     b.box('schwarz', [x1 + 0.08, x2 - 0.08, zc - 0.035, zc + 0.035], y0 - 0.02, top + 0.01);
-    plane(ctx.extra, unlit(TEX.dashboard(ctx.layout)), w, h, cx, y0 + h / 2 - 0.005, zc - 0.037, [0, -1]);
+    plane(ctx.extra, unlit(TEX.dashboard(ctx.layout, Math.round((960 * w) / h), 960)), w, h, cx, y0 + h / 2 - 0.005, zc - 0.037, [0, -1]);
     plane(ctx.extra, unlit(TEX.dashboardBack()), w, h, cx, y0 + h / 2 - 0.005, zc + 0.037, [0, 1]);
     // Kartenpult (Eiche), um 25° geneigt, mit Lichtkante
     const pz1 = z1 - 0.2;
@@ -595,7 +839,7 @@ const BUILDERS = {
     b.box('led', [x1 + 0.08, x2 - 0.08, pz1 - 0.003, pz1], 0.865, 0.875);
     b.box('schwarzMatt', [x1 + 0.1, x2 - 0.1, pz1 + 0.05, zc - 0.06], 0.05, 0.86);
     const wl = ['Pasta Night', 'Asian Night', 'Mexican Night'];
-    const an = ['schnell', 'besonders', 'günstig'];
+    const an = ANLASS_REIHE;
     const colW = w / 3;
     wl.forEach((welt, i) => {
       // Spaltenkopf: Kochwelt als kleines Schild
@@ -671,11 +915,13 @@ const BUILDERS = {
     }
   },
 
-  // Gondel im Trockensortiment: je Seite eine Warengruppe (klassisch wie im Supermarkt), Herstellerblöcke senkrecht
+  // Gondel einer Kochwelt (Gondel 1 = Pasta Night …): je Seite eine Warengruppen-Familie als Kreuzblock
   gondel(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
     const H = m.hoehe;
     const zc = (z1 + z2) / 2;
+    const welt = m.regal?.welt || '';
+    const wfarbe = WELT_FARBE[welt] || '#b39b6b';
     b.box('schwarzMatt', [x1 + 0.02, x2 - 0.02, z1 + 0.04, z2 - 0.04], 0, 0.1);
     b.box('eicheDunkel', [x1 + 0.03, x2 - 0.03, zc - 0.02, zc + 0.02], 0.1, H - 0.01);
     for (const x of [x1, x2 - 0.03]) b.box('schwarzMatt', [x, x + 0.03, z1, z2], 0, H);
@@ -693,46 +939,38 @@ const BUILDERS = {
       b.box('eiche', faceRect(f, x1, x2, 0.02, -0.03), H - 0.04, H);
       ctx.priceRail(f, x1 + 0.03, x2 - 0.03, 0.06, 0.1, 'preisDunkel');
       const face = m.regal?.[seite];
-      if (!face) continue;
-      // Planogramm: Böden von oben (Sichtzone) nach unten (Bückzone, Großpackungen)
-      ctx.products.placeFace(face.code, {
+      if (!face || !face.code) continue;
+      // Planogramm (Kreuzblock): Böden von oben (Sichtzone) nach unten (Bückzone, Großpackungen)
+      const plan = ctx.products.placeFace(face.code, {
         along: 'x', from: x1 + 0.04, to: x2 - 0.04, front: f.front, dir: f.dir,
         levels: [{ y: 1.48, maxH: 0.29, depth: 0.24 }, { y: 1.15, maxH: 0.3, depth: 0.24 }, { y: 0.8, maxH: 0.32, depth: 0.24 }, { y: 0.45, maxH: 0.32, depth: 0.24 }, { y: 0.1, maxH: 0.32, depth: 0.24 }],
       });
-      // Warengruppenschild über der Seite (Reckzone) mit Fachcode
+      // Schild über der Seite: Kochwelt groß, darunter Warengruppen + Fachcode
       const d = f.dir;
-      sign(ctx.extra, face.titel, { w: 2.6, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: `Fachcode ${face.code}${face.unter ? ` · ${face.unter}` : ''}` }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
+      sign(ctx.extra, welt || face.titel, { w: 2.6, h: 0.32, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, accent: wfarbe, sub: `${face.titel} · Fachcode ${face.code}` }, (x1 + x2) / 2, H + 0.3, zc + d[1] * 0.012, d);
+      // Warengruppen-Leiste über der Ware: zeigt die senkrechten Blöcke des Kreuzblocks
+      if (plan) {
+        let a = x1 + 0.04;
+        const W = x2 - x1 - 0.08;
+        for (const bl of plan.blocks) {
+          const w = bl.w * W;
+          if (w > 0.35 && bl.wg) {
+            const [px, pz] = f.at(a + w / 2, 0.026);
+            sign(ctx.extra, bl.wg, { w: Math.min(w - 0.06, 1.2), h: 0.075, bg: '#25282a', fg: '#efe7d6', font: '500' }, px, H + 0.06, pz, d);
+          }
+          a += w;
+        }
+      }
     }
     // Kopfschild-Träger
     b.box('schwarzMatt', [(x1 + x2) / 2 - 0.01, (x1 + x2) / 2 + 0.01, zc - 0.01, zc + 0.01], H, H + 0.18);
-    // Stirnseite zum Rundlauf (−x): Übersicht der beiden Warengruppen
+    // Stirnseite zum Rundlauf (−x): Kochwelt mit beiden Warengruppen
     b.box('eicheDunkel', [x1 - 0.012, x1, z1 + 0.02, z2 - 0.02], 0.1, H - 0.03);
-    const titles = ['vorne', 'hinten'].map((sd) => m.regal?.[sd]).filter(Boolean);
-    sign(ctx.extra, titles.map((t) => t.titel).join(' · '), { w: 0.46, h: 0.22, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: titles.map((t) => t.code).join(' · ') }, x1 - 0.016, 1.45, zc, [-1, 0]);
-    // Regalkopf zum Gang (+x): Zweitplatzierung „Angebot der Woche“
-    const ex = x2 + 0.005;
-    b.box('schwarzMatt', [x2 - 0.03, ex + 0.02, z1, z2], 0, 0.1);
-    for (const y of [0.45, 0.85, 1.25]) b.box('eiche', [x2, x2 + 0.16, z1 + 0.04, z2 - 0.04], y - 0.025, y);
-    const kopf = m.regal?.kopf;
-    if (kopf) {
-      const list = (CATALOG[kopf.code] || []).filter((p) => p.b === kopf.marke && !p.g).slice(0, 6);
-      const kinds = list.map((p) => ctx.products.byCode[kopf.code].find((k) => k.p === p));
-      [0.85, 0.45, 1.25].forEach((y, li) => {
-        const row = kinds.slice(li * 2, li * 2 + 2);
-        row.forEach((k, i) => {
-          if (!k) return;
-          const zA = z1 + 0.05 + (i * (z2 - z1 - 0.1)) / 2;
-          const zB = zA + (z2 - z1 - 0.1) / 2;
-          const sc = Math.min(1, 0.36 / k.p.m[1]);
-          const w = k.p.m[0] * sc;
-          const n = Math.max(1, Math.floor((zB - zA) / (w + 0.005)));
-          for (let q = 0; q < n; q++) ctx.products.add(k, x2 + 0.15 - (k.p.m[2] * sc) / 2 - 0.01, y, zA + (q + 0.5) * ((zB - zA) / n), [1, 0], { scale: sc });
-          ctx.products.addTag(k, x2 + 0.165, y - 0.013, zA + 0.04, [1, 0]);
-        });
-      });
-      sign(ctx.extra, 'Angebot der Woche', { w: 0.5, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: kopf.marke }, x2 + 0.035, H + 0.2, zc, [1, 0]);
-      b.box('schwarzMatt', [x2 - 0.02, x2 + 0.03, zc - 0.02, zc + 0.02], H, H + 0.3);
-    }
+    const titles = ['vorne', 'hinten'].map((sd) => m.regal?.[sd]).filter((t) => t && t.code);
+    sign(ctx.extra, welt, { w: 0.5, h: 0.24, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, accent: wfarbe, sub: titles.map((t) => t.code).join(' · ') }, x1 - 0.016, 1.45, zc, [-1, 0]);
+    // Regalkopf zum Hauptgang (+x): Küchenhelfer aus der Showküche (Non-Food, Zweitplatzierung)
+    kuechenhelfer(b, ctx, welt, x2, z1, z2, H);
+    ctx.colliders.push([x2, x2 + 0.2, z1, z2]);
   },
 
   kuehlregal(b, m, ctx) {
@@ -854,7 +1092,9 @@ const BUILDERS = {
         const a2 = z1 + (i + 1) * L - 0.04;
         ctx.products.placeFace(s.code, { along: 'z', from: a1, to: a2, front: f.front, dir: f.dir, levels: levels.slice().reverse().map((y, k, arr) => ({ y, maxH: k === 0 ? 0.36 : arr[k - 1] - y - 0.04, depth })), rows: 2, tagOut: 0.008 });
         const [sx, sz] = f.at((a1 + a2) / 2, 0.02);
-        const bs = { bg: '#25282a', fg: '#efe7d6', font: '500', accent: '#3f5873', sub: s.code };
+        // Basis ohne Kürzel auf dem Schild; Vorspeisen mit Bezug zur Kochwelt
+        const wf = WELT_FARBE[(WELTEN[s.code] || {}).welt];
+        const bs = { bg: '#25282a', fg: '#efe7d6', font: '500', accent: wf || '#3f5873', sub: s.unter || null };
         if (H > 1.8) sign(ctx.extra, s.name, { ...bs, w: Math.min(1.5, L - 0.2), h: 0.2 }, sx, H - 0.14, sz, f.dir);
         else {
           const [px, pz] = f.at((a1 + a2) / 2, -0.01);
@@ -893,22 +1133,32 @@ const BUILDERS = {
     b.geo('schwarz', G.box(0.3, 0.02, 0.03), cx + 0.25, h + 0.04, z2 - 0.32, 0.2);
     b.box('brett', [cx + 0.45, cx + 0.85, z2 - 0.45, z2 - 0.18], h, h + 0.025);
     ctx.fresh.crate(b, cx + 0.65, h + 0.025, z2 - 0.315, 0.3, 0.2, 'tomate', 0);
-    for (let i = 0; i < 6; i++) b.geo('teller', G.disc(0.07, 0.015, 20), x1 + 0.25 + i * 0.16, h + 0.008, z1 + 0.12); // Probierschälchen
+    for (let i = 0; i < 6; i++) b.geo('teller', G.disc(0.06, 0.015, 20), x1 + 0.3 + i * 0.32, h + 0.008, z1 + 0.12); // Probierschälchen an den Barplätzen
     // Induktionsfeld mit Kochzonen
     for (const [dx, dz, r] of [[-0.32, -0.2, 0.09], [-0.1, -0.35, 0.07], [0.02, -0.18, 0.1]]) b.geo('kochzone', new THREE.RingGeometry(r - 0.006, r, 24), cx + dx, h + 0.0095, z2 + dz, 0, -Math.PI / 2);
-    // Inselhaube: schlanker Edelstahlkasten mit LED-Unterseite, an Stahlseilen
-    b.box('edelstahl', [cx - 0.7, cx + 0.4, z2 - 0.7, z2 - 0.02], 2.38, 2.52);
-    b.box('led', [cx - 0.66, cx + 0.36, z2 - 0.66, z2 - 0.06], 2.375, 2.38);
-    for (const [dx, dz] of [[-0.65, -0.65], [0.35, -0.65], [-0.65, -0.07], [0.35, -0.07]]) b.box('metall', [cx + dx - 0.004, cx + dx + 0.004, z2 + dz - 0.004, z2 + dz + 0.004], 2.52, 3.2);
-    // Pendelleuchten über dem Tresen (Zuschauerseite)
-    for (const dx of [-0.9, 0, 0.9]) {
+    // Dunstabzugshaube (Inselesse): Edelstahl-Schirm über dem Kochfeld mit Fettfilter, LED und Kamin bis zur Decke
+    const hx = cx - 0.15;
+    const hz = z2 - 0.3;
+    const yb = 1.92;
+    const canopy = new THREE.CylinderGeometry(0.2, 0.5, 0.3, 4, 1);
+    canopy.rotateY(Math.PI / 4);
+    canopy.scale(1.3, 1, 0.95);
+    b.geo('edelstahl', canopy, hx, yb + 0.07 + 0.15, hz);
+    b.box('edelstahl', [hx - 0.46, hx + 0.46, hz - 0.34, hz + 0.34], yb, yb + 0.07);
+    b.box('gitter', [hx - 0.42, hx + 0.42, hz - 0.3, hz + 0.3], yb - 0.004, yb);
+    b.box('led', [hx - 0.4, hx - 0.3, hz - 0.28, hz + 0.28], yb - 0.006, yb - 0.004);
+    b.box('led', [hx + 0.3, hx + 0.4, hz - 0.28, hz + 0.28], yb - 0.006, yb - 0.004);
+    b.box('edelstahl', [hx - 0.14, hx + 0.14, hz - 0.12, hz + 0.12], yb + 0.37, 3.2);
+    b.box('schwarz', [hx - 0.1, hx + 0.1, hz - 0.345, hz - 0.34], yb + 0.02, yb + 0.05);
+    // Pendelleuchten über dem Tresen (Zuschauerseite), links und rechts der Haube
+    for (const dx of [-0.85, 0.85]) {
       b.box('metall', [cx + dx - 0.003, cx + dx + 0.003, z1 + 0.2 - 0.003, z1 + 0.2 + 0.003], 1.95, 3.2);
       b.geo('messing', new THREE.CylinderGeometry(0.07, 0.11, 0.16, 20, 1, true), cx + dx, 1.9, z1 + 0.2);
       b.geo('led', new THREE.CircleGeometry(0.1, 20), cx + dx, 1.83, z1 + 0.2, 0, Math.PI / 2);
     }
     // Messer- und Utensilienleiste
-    b.box('messing', [cx + 0.45, cx + 1.05, z2 - 0.03, z2 - 0.01], h + 0.3, h + 0.33);
-    for (let i = 0; i < 5; i++) b.box(i % 2 ? 'schwarz' : 'edelstahl', [cx + 0.5 + i * 0.11, cx + 0.53 + i * 0.11, z2 - 0.03, z2 - 0.015], h + 0.1, h + 0.3);
+    b.box('messing', [cx + 0.45, cx + 1.0, z2 - 0.03, z2 - 0.01], h + 0.3, h + 0.33);
+    for (let i = 0; i < 5; i++) b.box(i % 2 ? 'schwarz' : 'edelstahl', [cx + 0.5 + i * 0.1, cx + 0.53 + i * 0.1, z2 - 0.03, z2 - 0.015], h + 0.1, h + 0.3);
     // Schild hängt zur Zuschauerseite
     sign(ctx.extra, 'Showküche', { w: 1.6, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Live-Cooking täglich 12–13:30 · 17:30–19 Uhr' }, cx - 0.15, 2.45, z2 - 0.76, [0, -1]);
   },
@@ -932,6 +1182,70 @@ const BUILDERS = {
     b.box('brett', [xc - 0.25, xc + 0.25, zc - 0.12, zc + 0.12], h, h + 0.025);
     ctx.fresh.crate(b, xc, h + 0.025, zc, 0.36, 0.16, 'tomate', 0);
     sign(ctx.extra, 'Probieren erwünscht', { w: 0.5, h: 0.12, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true }, xc, h + 0.1, z1 + 0.15, [0, -1]);
+  },
+
+  // Sitzecke in der Showküche: Polsterbank an der Glaswand, zwei Bistrotische mit Stühlen (Probierportionen im Sitzen)
+  sitzecke(b, m, ctx) {
+    const [x1, x2, z1, z2] = m.rechteck;
+    const bx2 = x1 + 0.45;
+    // Bank: Sockel, Sitzpolster, Rückenpolster
+    b.box('schwarzMatt', [x1 + 0.02, bx2, z1, z2], 0, 0.06);
+    b.box('eiche', [x1, bx2, z1, z2], 0.06, 0.4);
+    b.box('polster', [x1 + 0.04, bx2, z1 + 0.02, z2 - 0.02], 0.4, 0.47);
+    b.box('polster', [x1, x1 + 0.1, z1 + 0.02, z2 - 0.02], 0.47, 0.95);
+    for (let z = z1 + 0.45; z < z2 - 0.2; z += 0.45) b.box('akzent', [x1 + 0.1, x1 + 0.105, z - 0.002, z + 0.002], 0.5, 0.92);
+    // Bistrotische (rund) mit je zwei Stühlen gegenüber
+    const tx = bx2 + 0.36;
+    for (const tz of [z1 + 0.8, z2 - 0.6]) {
+      b.geo('schwarzMatt', G.disc(0.22, 0.02, 24), tx, 0.01, tz);
+      b.geo('schwarzMatt', G.disc(0.025, 0.72, 10), tx, 0.37, tz);
+      b.geo('terrazzo', G.disc(0.32, 0.03, 32), tx, 0.74, tz);
+      b.geo('teller', G.disc(0.09, 0.015, 20), tx - 0.1, 0.76, tz - 0.08);
+      b.geo('teller', G.disc(0.09, 0.015, 20), tx + 0.08, 0.76, tz + 0.1);
+      b.geo('glas', G.disc(0.03, 0.11, 12), tx + 0.12, 0.81, tz - 0.12);
+      for (const dz of [-0.24, 0.24]) {
+        const cx = tx + 0.46;
+        const cz = tz + dz;
+        for (const [ox, oz] of [[-0.17, -0.17], [0.17, -0.17], [-0.17, 0.17], [0.17, 0.17]]) b.box('schwarzMatt', [cx + ox - 0.012, cx + ox + 0.012, cz + oz - 0.012, cz + oz + 0.012], 0, 0.45);
+        b.box('eiche', [cx - 0.2, cx + 0.2, cz - 0.2, cz + 0.2], 0.45, 0.48);
+        b.box('eiche', [cx + 0.17, cx + 0.2, cz - 0.19, cz + 0.19], 0.48, 0.85);
+      }
+    }
+    sign(ctx.extra, 'Platz nehmen & probieren', { w: 0.62, h: 0.13, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true }, x1 + 0.025, 1.25, (z1 + z2) / 2, [1, 0]);
+  },
+
+  // Einkaufskörbe mit Rollen und Teleskopgriff (statt Einkaufswagen), zwei Stapel direkt links hinter dem Eingang
+  rollkoerbe(b, m, ctx) {
+    const [x1, x2, z1, z2] = m.rechteck;
+    if (!b.materials.korb) b.materials.korb = std(0x7d2a24, 0.6);
+    if (!b.materials.korbGriff) b.materials.korbGriff = std(0x1f2022, 0.5, 0.3);
+    const n = 2;
+    const sw = (x2 - x1) / n;
+    for (let s = 0; s < n; s++) {
+      const cx = x1 + (s + 0.5) * sw;
+      const bw = sw - 0.08;
+      const za = z1 + 0.02;
+      const zb = z2 - 0.06;
+      // Achse mit Rollen am hinteren Ende, Stapel ineinander
+      for (const dx of [-bw / 2 + 0.03, bw / 2 - 0.03]) b.geo('korbGriff', G.disc(0.035, 0.025, 14), cx + dx, 0.035, zb - 0.03, 0, 0, Math.PI / 2);
+      const k = 7;
+      for (let i = 0; i < k; i++) {
+        const y = 0.06 + i * 0.05;
+        const t = 0.006;
+        const hh = 0.26;
+        b.box('korb', [cx - bw / 2, cx + bw / 2, za, zb], y, y + t);
+        b.box('korb', [cx - bw / 2, cx - bw / 2 + t, za, zb], y, y + hh);
+        b.box('korb', [cx + bw / 2 - t, cx + bw / 2, za, zb], y, y + hh);
+        b.box('korb', [cx - bw / 2, cx + bw / 2, za, za + t], y, y + hh);
+        b.box('korb', [cx - bw / 2, cx + bw / 2, zb - t, zb], y, y + hh);
+        b.box('korbGriff', [cx - bw / 2, cx + bw / 2, za - 0.004, za], y + hh - 0.03, y + hh);
+      }
+      // Teleskopgriff des obersten Korbs (ausgezogen)
+      const ytop = 0.06 + (k - 1) * 0.05 + 0.26;
+      for (const dx of [-bw / 2 + 0.02, bw / 2 - 0.02]) b.box('korbGriff', [cx + dx - 0.008, cx + dx + 0.008, zb - 0.02, zb - 0.004], ytop - 0.05, ytop + 0.42);
+      b.box('korbGriff', [cx - bw / 2 + 0.01, cx + bw / 2 - 0.01, zb - 0.025, zb], ytop + 0.4, ytop + 0.44);
+    }
+    sign(ctx.extra, 'Rollkorb nehmen', { w: 0.5, h: 0.14, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'ziehen statt schieben' }, 5.9, 1.5, 0.06, [0, 1]);
   },
 
   kuechenzeile(b, m, ctx) {
@@ -1245,13 +1559,13 @@ export function buildFurniture(layout) {
     for (const s of [-1, 1]) {
       const ox = dir[1] !== 0 ? s * (w / 2 - 0.1) : 0;
       const oz = dir[0] !== 0 ? s * (w / 2 - 0.1) : 0;
-      b.box('metall', [x + ox - 0.005, x + ox + 0.005, z + oz - 0.005, z + oz + 0.005], 2.5 + h / 2, 3.2);
+      b.box('metall', [x + ox - 0.005, x + ox + 0.005, z + oz - 0.005, z + oz + 0.005], (d.y || 2.5) + h / 2, 3.2);
     }
     const opts = { w, h: h * 1.15, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: d.farbe };
     const yaw = yawFacing(dir[0], dir[1]);
     for (const s of [1, -1]) {
       const m = signMesh(titleCase(d.text), opts);
-      m.position.set(x, 2.5, -z);
+      m.position.set(x, d.y || 2.5, -z);
       m.rotation.y = yaw + (s < 0 ? Math.PI : 0);
       m.translateZ(0.006);
       extra.add(m);

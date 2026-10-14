@@ -20,6 +20,7 @@ export class Deck {
          <button class="db-btn" data-d="next" title="Weiter (→ / Leertaste / Bild ↓)">›</button>
          <span class="db-count"></span>
          <button class="db-time" data-d="timer" title="Timer (Klick: zurücksetzen)"></button>
+         <button class="db-btn db-txt" data-d="kunden" title="Kunden im Laden starten/stoppen (L)">Kunden</button>
          <button class="db-btn db-txt" data-d="notes" title="Sprechernotizen (N)">Notizen</button>
          <button class="db-btn db-txt" data-d="overview" title="Folienübersicht (O)">Übersicht</button>
          <button class="db-btn db-txt" data-d="referent" title="Referentenansicht im zweiten Fenster (V)">Referent</button>
@@ -36,6 +37,7 @@ export class Deck {
     this.notes = root.querySelector('#deck-notes');
     this.overview = root.querySelector('#deck-overview');
     this.notesOn = false;
+    this.kundenBtn = this.bar.querySelector('[data-d="kunden"]');
     this.ref = null; // Fenster der Referentenansicht
 
     // Kapitel-Leiste: je Folie ein Punkt, Kapitel als Gruppe
@@ -59,6 +61,7 @@ export class Deck {
       if (d === 'prev') this.p.prev();
       else if (d === 'next') this.p.next();
       else if (d === 'notes') this.toggleNotes();
+      else if (d === 'kunden') this.onKunden?.();
       else if (d === 'overview') this.toggleOverview();
       else if (d === 'referent') this.openReferent();
       else if (d === 'full') this.toggleFullscreen();

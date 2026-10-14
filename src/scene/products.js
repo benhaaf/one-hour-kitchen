@@ -9,7 +9,7 @@ const PPAD = 2;
 const SANS = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 const SERIF = 'Georgia, "Times New Roman", serif';
 
-import { CATALOG, BRANDS, AKTION, planFace } from './catalog.js';
+import { CATALOG, BRANDS, planFace } from './catalog.js';
 export { CATALOG };
 const COUNT = Object.values(CATALOG).reduce((n, l) => n + l.length, 0) + 4;
 const GRID = Math.ceil(Math.sqrt(COUNT));
@@ -763,8 +763,7 @@ export class Products {
     let key = null;
     if (p.b === 'Grünwerk' && h < 2) key = 'bio';
     else if (/Neckar/.test(p.b) && h < 4) key = 'regional';
-    else if (p.b === 'Basis+' && h < 3) key = 'aktion';
-    else if ((p.b === 'Nonna Lia' || p.b === 'Casa Verde' || p.b === 'Kaizen') && h === 1) key = 'neu';
+    // keine Aktions- oder Neu-Stopper: nur Bio- und Regional-Kennzeichnung
     if (!key) return null;
     this.wobbleCount.set(p, n + 1);
     return this.wobbler[key];

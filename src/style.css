@@ -537,8 +537,8 @@ body.presenting #slide:not(.sl-wide):not(.sl-side) { max-height: calc(100vh - 96
 .bk-bar { display: flex; align-items: center; gap: 8px; }
 .bk-bar i { display: block; height: 30px; border-radius: 6px; min-width: 4px; }
 .bk-bar b { font-size: 22px; font-variant-numeric: tabular-nums; }
-.sl-hlcol tbody tr > *:nth-child(3) { background: rgba(214, 69, 39, 0.16); color: #fff; font-weight: 600; }
-.sl-hlcol thead th:nth-child(3) { color: #ff7a5c; }
+.sl-hlcol.hl2 tbody tr > *:nth-child(2), .sl-hlcol.hl3 tbody tr > *:nth-child(3), .sl-hlcol.hl4 tbody tr > *:nth-child(4) { background: rgba(214, 69, 39, 0.16); color: #fff; font-weight: 600; }
+.sl-hlcol.hl2 thead th:nth-child(2), .sl-hlcol.hl3 thead th:nth-child(3), .sl-hlcol.hl4 thead th:nth-child(4) { color: #ff7a5c; }
 .sl-farbpunkte { list-style: none; padding: 0; margin: 12px 0 0; }
 .sl-farbpunkte li { display: grid; grid-template-columns: 14px 1fr; gap: 2px 10px; margin-bottom: 10px; font-size: 14px; line-height: 1.4; }
 .sl-farbpunkte i { width: 14px; height: 14px; border-radius: 4px; margin-top: 3px; grid-row: span 2; }
@@ -570,6 +570,7 @@ body.presenting #slide:not(.sl-wide):not(.sl-side) { max-height: calc(100vh - 96
 .sl-rezept footer { font-size: 10px; color: #6b6258; padding: 6px 14px 10px; }
 .code { font-size: 12px; padding: 1px 7px; border-radius: 4px; color: #fff; background: #555; }
 .code-O { background: #2f9e44; } .code-W { background: #d64527; } .code-K { background: #2b6cb0; } .code-B { background: #6b4f2a; } .code-D { background: #8e44ad; } .code-G { background: #7b1e3a; }
+.code-T { background: #a8642c; } .code-V { background: #8a5a32; }
 .sl-schritte { list-style: none; padding: 0; margin: 0 0 12px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
 .sl-schritte li { background: rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 8px 10px; border-top: 3px solid var(--akzent); }
 .sl-schritte span { display: block; font-size: 12px; font-weight: 800; color: var(--akzent); }
@@ -599,6 +600,7 @@ body.presenting #station-indicator, body.presenting #status, body.presenting #cr
 body.touch-mode #deck-bar { bottom: calc(96px + var(--safe-b)); }
 .db-btn, .db-time { background: rgba(255, 255, 255, 0.08); color: #f4f1ec; border: 0; border-radius: 8px; height: 30px; min-width: 32px; font-size: 18px; font-weight: 700; cursor: pointer; padding: 0 8px; font-family: inherit; }
 .db-btn:hover, .db-time:hover { background: rgba(214, 69, 39, 0.5); }
+.db-btn.on { background: #4f7f5a; }
 .db-txt { font-size: 12px; font-weight: 600; }
 .db-time { font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .db-time.warn { background: #e8862e; color: #1c1c1f; }
@@ -734,3 +736,28 @@ body.referent #slide.sl-frame { aspect-ratio: auto; left: 8px; top: 8px; right: 
 #zone-legend p { margin: 6px 0 0; font-size: 11px; color: #8d8880; }
 body.presenting #zone-legend { top: auto; bottom: calc(62px + var(--safe-b)); }
 #slide.sl-frame[hidden], #slide.sl-side[hidden] { display: none; }
+
+/* ---------- Rezeptkarte fürs Handy (?rezept=…) ---------- */
+body.mobile-rezept { overflow: auto; background: #f4f1ec; height: auto; }
+body.mobile-rezept #app { position: static; height: auto; }
+#mr { max-width: 640px; margin: 0 auto; background: #fbf9f5; min-height: 100vh; color: #1f2120; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+#mr header { display: flex; justify-content: space-between; align-items: baseline; padding: 16px; background: #1f2120; color: #efe7d6; }
+#mr .mr-brand { font-family: Georgia, serif; font-size: 20px; }
+#mr .mr-tag { font-size: 13px; color: #b39b6b; }
+#mr canvas { display: block; position: static; width: 100% !important; height: auto !important; inset: auto; }
+#mr .mr-body { padding: 16px 16px 32px; }
+#mr .mr-kicker { margin: 0; font-size: 13px; color: #8a8378; letter-spacing: 0.04em; text-transform: uppercase; }
+#mr h1 { font-family: Georgia, serif; font-weight: 400; font-size: 30px; margin: 6px 0 4px; }
+#mr .mr-meta { margin: 0 0 18px; color: #6b6258; }
+#mr h2 { font-size: 15px; margin: 18px 0 8px; }
+#mr .mr-list { list-style: none; margin: 0; padding: 0; }
+#mr .mr-list li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; padding: 10px 0; border-bottom: 1px solid #e4ddd1; }
+#mr .mr-list small { grid-column: 1 / -1; color: #8a8378; font-size: 13px; }
+#mr .code { color: #fff; border-radius: 10px; padding: 2px 9px; font-size: 13px; }
+#mr .mr-hint { font-size: 13px; color: #6b6258; margin: 18px 0; }
+#mr .mr-more { display: flex; flex-wrap: wrap; gap: 6px; }
+#mr .mr-more a { font-size: 13px; padding: 6px 10px; border-radius: 14px; background: #ece6dc; color: #3a3632; text-decoration: none; }
+#mr .mr-more a.on { background: #1f2120; color: #f4f1ec; }
+#mr .mr-3d { display: block; margin-top: 18px; text-align: center; padding: 12px; border-radius: 10px; background: #1f2120; color: #efe7d6; text-decoration: none; }
+html:has(body.mobile-rezept) { overflow: auto; height: auto; }
+body.mobile-rezept { touch-action: auto; -webkit-user-select: text; user-select: text; overscroll-behavior: auto; }

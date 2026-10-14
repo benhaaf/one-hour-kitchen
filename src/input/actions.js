@@ -10,7 +10,8 @@ export const ACTIONS = {
   zurueck: { label: 'Vorige Station', kurz: 'Zurück', icon: '‹', etappe: 5 },
   rahmen: { label: 'Rahmen-Overlay', kurz: 'Rahmen', icon: '≡', etappe: 5 },
   png: { label: 'Draufsicht als PNG', kurz: 'PNG', icon: '⤓', etappe: 4 },
-  simulation: { label: 'Kundensimulation', kurz: 'Sim.', icon: '🚶', etappe: 7 },
+  simulation: { label: 'Kundensimulation (geführter Rundgang)', kurz: 'Sim.', icon: '🚶', etappe: 7 },
+  kunden: { label: 'Kunden im Laden: Betrieb starten/stoppen', kurz: 'Kunden', icon: '👥', etappe: 7 },
   einkauf: { label: 'Einkaufs-Spiel: Rezept wählen und einkaufen', kurz: 'Einkauf', icon: '🛒', etappe: 8 },
   musik: { label: 'Musik an/aus', kurz: 'Musik', icon: '♪', etappe: 6 },
 };

@@ -6,7 +6,7 @@ import { textSprite } from './scene/labels.js';
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const REACH = 1.7;
-const PREISE = { O1: 0.99, T1: 1.79, T2: 2.49, T3: 2.29, T4: 0.99, T5: 2.79, T6: 2.29, K1: 1.19, K2: 2.49, K3: 2.29, K4: 4.99, K5: 2.19, K6: 1.79, D1: 3.49, D2: 2.29, D3: 2.49, G1: 6.99, G2: 6.49, G3: 1.29, B1: 4.99, B2: 1.79, B3: 1.09, B4: 2.49, B5: 4.49, B6: 2.49, B7: 1.79 };
+const PREISE = { O1: 0.99, T1: 1.79, T2: 2.29, T3: 2.29, T4: 2.79, T5: 2.49, T6: 1.29, V1: 3.29, V2: 2.29, V3: 2.49, K1: 1.19, K2: 2.49, K3: 2.29, K4: 4.99, K5: 2.19, K6: 1.79, D1: 3.49, D2: 2.29, D3: 2.49, G1: 6.99, G2: 6.49, G3: 1.29, B1: 4.99, B2: 1.79, B3: 1.09, B4: 2.49, B5: 4.49, B6: 2.49, B7: 1.79 };
 const ANLASS = { schnell: '» schnell', besonders: '★ besonders', günstig: '€ günstig' };
 
 // Wo liegt ein Fachcode? → Punkt vor der Regalfront (Kunde steht dort) + Blickziel

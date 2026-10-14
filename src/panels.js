@@ -14,7 +14,7 @@ export function flaechenbilanz(layout) {
   const total = (vx2 - vx1) * (vz2 - vz1);
   const area = (r) => Math.abs((r[1] - r[0]) * (r[3] - r[2]));
   const WARE = new Set(['gondel', 'kuehlregal', 'glastuer-kuehlung', 'weinregal', 'basis-regal', 'impulsregal', 'schaufenster', 'obst-stand']);
-  const SONST = new Set(['kasse-band', 'sb-kasse', 'matrix-dashboard']);
+  const SONST = new Set(['kasse-band', 'sb-kasse', 'matrix-dashboard', 'rollkoerbe']);
   const showkueche = layout.zonen.find((z) => z.id === 'Z4');
   const erlebnis = showkueche ? area(showkueche.rechteck) : 0;
   let ware = 0;
@@ -25,7 +25,7 @@ export function flaechenbilanz(layout) {
     const a = m.mitte ? m.laenge * m.tiefe : footprints(m).slice(0, 1).reduce((s, r) => s + area(r), 0);
     if (WARE.has(m.typ)) {
       ware += a;
-      const key = m.typ === 'gondel' ? 'Trockensortiment (3 Gondeln)' : m.typ === 'basis-regal' ? 'Basissortiment' : m.typ === 'obst-stand' ? 'Obst & Gemüse' : m.typ === 'kuehlregal' ? 'Kühlung' : m.typ === 'glastuer-kuehlung' ? 'Dessert & TK' : m.typ === 'weinregal' ? 'Wein & Getränke' : m.typ === 'impulsregal' ? 'Impuls an der Kasse' : 'Schaufenster';
+      const key = m.typ === 'gondel' ? 'Kochwelt-Gondeln (3)' : m.id === 'M20' ? 'Vorspeisen' : m.typ === 'basis-regal' ? 'Basissortiment' : m.typ === 'obst-stand' ? 'Obst & Gemüse' : m.typ === 'kuehlregal' ? 'Kühlung' : m.typ === 'glastuer-kuehlung' ? 'Dessert & TK' : m.typ === 'weinregal' ? 'Wein & Getränke' : m.typ === 'impulsregal' ? 'Impuls an der Kasse' : 'Schaufenster';
       proBereich[key] = (proBereich[key] || 0) + a;
     } else if (SONST.has(m.typ)) sonst += a;
   }
@@ -123,19 +123,18 @@ export class Panels {
     const B = plan.blocks;
     const zonen = L.regalzonen.zonen;
     const fmtH = (z) => (z.von === 0 ? `< ${z.bis}` : `${z.von}–${z.bis}`).replace(/\./g, ',');
+    // Zelle: Marken in dieser Zone (Kreuzblock = Marken als waagerechte Bänder) + Anzahl Sorten
     const cell = (zi, bl) => {
-      if (zi === 0) return `<b>${esc(face.titel)} · ${esc(face.code)}</b>`;
-      if (zi === 3) {
-        const big = plan.bulk.filter((p) => p.b === bl.brand);
-        const rest = bl.levels.slice(2).flat();
-        return esc([...rest.map(nm), ...big.map((p) => `${nm(p)} (Groß)`)].join(', ') || '–');
-      }
-      return esc((bl.levels[zi - 1] || []).map(nm).join(', ') || '–');
+      if (zi === 0) return `<b>${esc(m.regal.welt || '')} · ${esc(face.titel)} · ${esc(face.code)}</b>`;
+      const items = zi === 3 ? [...bl.levels.slice(2).flat(), ...plan.bulk.filter((p) => p.wg === bl.wg)] : bl.levels[zi - 1] || [];
+      if (!items.length) return '–';
+      const br = [...new Set(items.map((p) => p.b))];
+      return `<b>${esc(br.join(', '))}</b><br><small>${items.length} Sorten, z. B. ${esc(items.slice(0, 2).map(nm).join(', '))}</small>`;
     };
-    return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · ${esc(face.titel)} (${esc(face.code)}) · Herstellerblöcke senkrecht, Regalzonen waagerecht</span>
+    return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · ${esc(m.regal.welt || '')} · ${esc(face.titel)} (${esc(face.code)}) · Kreuzblock: Warengruppen senkrecht, Marken waagerecht</span>
       <table class="planogram"><thead><tr><th></th>${B.map((bl) => `<th>${esc(bl.brand)}</th>`).join('')}</tr></thead>
       <tbody>${zonen.map((z, zi) => `<tr><th style="border-left:4px solid ${z.farbe}">${esc(z.name)}<small>${fmtH(z)} m</small></th>${zi === 0 ? `<td colspan="${B.length}">${cell(0)}</td>` : B.map((bl) => `<td>${cell(zi, bl)}</td>`).join('')}</tr>`).join('')}</tbody></table>
-      <p class="pg-note">Klassisch sortiert wie im Supermarkt: Jede Sorte steht genau einmal. Die Rezeptkarte führt über den Fachcode ${esc(face.code)} hierher; Kühlware steht in der Kühlung.</p></div>`;
+      <p class="pg-note">Jede Sorte steht genau einmal (${plan.blocks.reduce((n, b) => n + b.levels.flat().length, 0) + plan.bulk.length} Sorten). Die Marken laufen als waagerechtes Band über alle Warengruppen – oben Premium, unten Eigenmarke. Die Rezeptkarte führt über den Fachcode ${esc(face.code)} hierher.</p></div>`;
   }
 
   hideCard() {
@@ -190,7 +189,7 @@ export class Panels {
     }
     if (sl.tabelle) {
       const T = sl.tabelle;
-      h += `<table class="sl-table${T.hervorhebenSpalte ? ' sl-hlcol' : ''}" style="--hl:${(T.hervorhebenSpalte || 0) + 1}"><thead><tr>${T.kopf.map((x) => `<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${T.zeilen
+      h += `<table class="sl-table${T.hervorhebenSpalte ? ` sl-hlcol hl${T.hervorhebenSpalte + 1}` : ''}"><thead><tr>${T.kopf.map((x) => `<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${T.zeilen
         .map((r) => `<tr class="${r[0] === 'One Hour Kitchen' ? 'hl' : ''}">${r.map((c, j) => (j ? `<td>${marks(c)}</td>` : `<th>${marks(c)}</th>`)).join('')}</tr>`)
         .join('')}</tbody></table>`;
     }
@@ -241,7 +240,7 @@ export class Panels {
     const row = ([n, c]) => `<li><span>${esc(n)}</span><b class="code code-${c[0]}">${esc(c)}</b></li>`;
     const card = `<div class="sl-rezept"><header><small>Rezept ${esc(r.nr)} · ${SYM[r.anlass] || ''} ${esc(r.anlass)}</small><h4>${esc(r.titel)}</h4><span>${esc(r.zeit)} · 2 Personen · ${esc(r.welt)}</span></header><ul>${r.zutaten.map(row).join('')}${r.ergaenzung
       .map(([n, c]) => row([`+ ${n}`, c]))
-      .join('')}</ul><footer>O Obst/Gemüse · T Trockensortiment · K Kühlung · B Basis · D Dessert · G Getränke</footer></div>`;
+      .join('')}</ul><footer>O Obst & Gemüse · T Gondeln der Kochwelten · V Vorspeisen · K Kühlung · B Basis · D Dessert & TK · G Getränke</footer></div>`;
     const steps = schritte ? `<ol class="sl-schritte">${schritte.map(([n, t, x]) => `<li><span>${esc(n)}</span><b>${esc(t)}</b><small>${esc(x)}</small></li>`).join('')}</ol>` : '';
     return `<div class="sl-rezept-wrap">${card}<div>${steps}${rechts}</div></div>`;
   }

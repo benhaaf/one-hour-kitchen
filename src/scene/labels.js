@@ -85,13 +85,15 @@ export function signMesh(text, { w, h, bg = '#1c1c1f', fg = '#f4f1ec', font = '6
   const famMain = chalk ? '"Segoe Print", "Comic Sans MS", cursive' : fam;
   g.font = `${weight} ${size}px ${famMain}`;
   const maxW = W * (align === 'left' ? 0.86 : 0.88);
-  while (g.measureText(text).width > maxW && size > 20) {
+  // Text (inkl. Farbpunkt) bleibt immer innerhalb des Schilds
+  const dot = () => (accent && !chalk ? size * 0.7 : 0);
+  while (g.measureText(text).width + dot() > maxW && size > 12) {
     size -= 4;
     g.font = `${weight} ${size}px ${famMain}`;
   }
   g.textAlign = align;
   g.textBaseline = 'middle';
-  const x = align === 'left' ? W * 0.06 : W / 2;
+  const x = align === 'left' ? W * 0.06 : W / 2 + (accent && !chalk ? size * 0.35 : 0);
   const ty = H * main + 3 - (accent ? 6 : 0);
   g.fillText(text, x, ty);
   if (accent && !chalk) {
@@ -107,8 +109,8 @@ export function signMesh(text, { w, h, bg = '#1c1c1f', fg = '#f4f1ec', font = '6
     g.globalAlpha = 0.75;
     let s2 = 40;
     g.font = `400 ${s2}px ${fam}`;
-    while (g.measureText(sub).width > maxW && s2 > 16) g.font = `400 ${(s2 -= 2)}px ${fam}`;
-    g.fillText(sub, x, H * 0.74 - (accent ? 6 : 0));
+    while (g.measureText(sub).width > maxW && s2 > 12) g.font = `400 ${(s2 -= 2)}px ${fam}`;
+    g.fillText(sub, align === 'left' ? x : W / 2, H * 0.74 - (accent ? 6 : 0));
     g.globalAlpha = 1;
   }
   const tex = new THREE.CanvasTexture(c);

@@ -22,7 +22,10 @@ const G = {
   head: new THREE.SphereGeometry(1, 24, 18),
   nose: new THREE.ConeGeometry(0.016, 0.04, 8),
   ear: new THREE.SphereGeometry(1, 10, 8),
-  eye: new THREE.SphereGeometry(0.011, 8, 6),
+  eye: new THREE.SphereGeometry(0.0075, 10, 8),
+  eyeWhite: new THREE.SphereGeometry(1, 12, 8),
+  lip: new THREE.CapsuleGeometry(0.006, 0.026, 3, 8),
+  jaw: new THREE.SphereGeometry(1, 18, 12),
   brow: new THREE.BoxGeometry(0.03, 0.006, 0.008),
   mouth: new THREE.BoxGeometry(0.032, 0.005, 0.006),
   thigh: new THREE.CapsuleGeometry(0.072, 0.3, 4, 14),
@@ -32,8 +35,12 @@ const G = {
   hand: new THREE.SphereGeometry(1, 12, 10),
   shoe: new THREE.CapsuleGeometry(0.048, 0.14, 4, 10),
   sole: new THREE.BoxGeometry(0.1, 0.022, 0.24),
-  hairCap: new THREE.SphereGeometry(1, 22, 12, 0, Math.PI * 2, 0, Math.PI * 0.6),
+  // Haarkappe: endet vorn auf der Stirn (Haaransatz), hinten am Nacken – das Gesicht bleibt frei
+  hairCap: new THREE.SphereGeometry(1, 22, 12, 0, Math.PI * 2, 0, Math.PI * 0.5),
   hairBack: new THREE.SphereGeometry(1, 18, 10, Math.PI * 1.12, Math.PI * 0.76, Math.PI * 0.3, Math.PI * 0.42),
+  // Schläfen (seitlich über den Ohren); phi = 0 bzw. π sind die Kopfseiten, π/2 ist das Gesicht
+  hairSideL: new THREE.SphereGeometry(1, 10, 8, -Math.PI * 0.14, Math.PI * 0.28, Math.PI * 0.28, Math.PI * 0.24),
+  hairSideR: new THREE.SphereGeometry(1, 10, 8, Math.PI * 0.86, Math.PI * 0.28, Math.PI * 0.28, Math.PI * 0.24),
   basket: new THREE.BoxGeometry(0.36, 0.2, 0.25),
   basketHandle: new THREE.TorusGeometry(0.13, 0.01, 5, 16, Math.PI),
   hairLong: new THREE.CylinderGeometry(0.11, 0.12, 0.26, 18, 1, true, Math.PI * 0.2, Math.PI * 1.6),
@@ -145,27 +152,33 @@ export function buildPerson(look) {
   const head = joint(spine, [0, 0.575, 0.012]);
   head.scale.setScalar(1.1); // Kopf im Verhältnis zum Körper (ca. 1/7,5 der Körperhöhe)
   J.head = head;
-  mesh(head, G.head, skin, [0, 0.1, 0], 0.55, [0.092, 0.118, 0.104]);
-  mesh(head, G.nose, skin, [0, 0.085, 0.108], 0.55, null, [Math.PI / 2, 0, 0]);
+  mesh(head, G.head, skin, [0, 0.105, 0], 0.55, [0.088, 0.112, 0.1]);
+  mesh(head, G.jaw, skin, [0, 0.06, 0.018], 0.55, [0.072, 0.062, 0.078]); // Kinn und Wangen
+  mesh(head, G.nose, skin, [0, 0.085, 0.104], 0.55, null, [Math.PI / 2 + 0.25, 0, 0]);
   for (const s of [-1, 1]) {
-    mesh(head, G.ear, skin, [s * 0.09, 0.095, 0.0], 0.6, [0.014, 0.026, 0.018]);
-    mesh(head, G.eye, '#1c1c1f', [s * 0.034, 0.11, 0.094], 0.3);
-    mesh(head, G.brow, look.hair, [s * 0.035, 0.135, 0.097], 0.9, null, [0, 0, s * -0.1]);
+    mesh(head, G.ear, skin, [s * 0.087, 0.095, 0.0], 0.6, [0.012, 0.024, 0.016]);
+    mesh(head, G.eyeWhite, '#f4f1ec', [s * 0.032, 0.108, 0.09], 0.25, [0.013, 0.008, 0.008]);
+    mesh(head, G.eye, '#3a2a20', [s * 0.032, 0.108, 0.096], 0.25);
+    mesh(head, G.brow, look.hair, [s * 0.034, 0.128, 0.094], 0.9, [1.1, 1.4, 1], [0, 0, s * -0.12]);
   }
-  mesh(head, G.mouth, '#8a4a44', [0, 0.05, 0.099], 0.6);
-  if (look.beard) mesh(head, G.beard, look.hair, [0, 0.085, 0.006], 0.95, [0.096, 0.118, 0.106]);
+  mesh(head, G.lip, '#a0605a', [0, 0.052, 0.094], 0.6, null, [0, 0, Math.PI / 2]);
+  if (look.beard) mesh(head, G.beard, look.hair, [0, 0.085, 0.006], 0.95, [0.094, 0.112, 0.104]);
   if (look.glasses) {
-    for (const s of [-1, 1]) mesh(head, G.lens, '#2a2a2e', [s * 0.036, 0.11, 0.108], 0.3);
-    mesh(head, G.bridge, '#2a2a2e', [0, 0.112, 0.11], 0.3);
+    for (const s of [-1, 1]) mesh(head, G.lens, '#2a2a2e', [s * 0.034, 0.108, 0.104], 0.3);
+    mesh(head, G.bridge, '#2a2a2e', [0, 0.11, 0.106], 0.3);
   }
-  // Frisur
+  // Frisur: Kappe nach hinten gekippt (Haaransatz über der Stirn), Hinterkopf, Schläfen
   if (look.hairStyle !== 'glatze') {
-    mesh(head, G.hairCap, look.hair, [0, 0.112, -0.006], 0.9, [0.098, 0.115, 0.11], [-0.3, 0, 0]);
-    mesh(head, G.hairBack, look.hair, [0, 0.1, -0.004], 0.9, [0.097, 0.118, 0.108]); // Hinterkopf bis zum Nacken
+    const short = look.hairStyle === 'kurz';
+    mesh(head, G.hairCap, look.hair, [0, 0.118, -0.008], 0.9, [0.094, short ? 0.1 : 0.106, 0.106], [-0.42, 0, 0]);
+    mesh(head, G.hairBack, look.hair, [0, 0.105, -0.006], 0.9, [0.093, 0.114, 0.104]);
+    for (const g of [G.hairSideL, G.hairSideR]) mesh(head, g, look.hair, [0, 0.108, -0.01], 0.9, [0.092, 0.108, 0.1]);
+  } else {
+    mesh(head, G.hairBack, look.hair, [0, 0.09, -0.006], 0.9, [0.09, 0.09, 0.1]); // Haarkranz
   }
-  if (look.hairStyle === 'lang') mesh(head, G.hairLong, look.hair, [0, 0.02, -0.012], 0.9, [0.9, 1, 0.92]);
-  if (look.hairStyle === 'bob') mesh(head, G.hairLong, look.hair, [0, 0.07, -0.01], 0.9, [0.92, 0.5, 0.95]);
-  if (look.hairStyle === 'dutt') mesh(head, G.bun, look.hair, [0, 0.21, -0.07], 0.9);
+  if (look.hairStyle === 'lang') mesh(head, G.hairLong, look.hair, [0, 0.03, -0.022], 0.9, [0.88, 1, 0.82]);
+  if (look.hairStyle === 'bob') mesh(head, G.hairLong, look.hair, [0, 0.075, -0.016], 0.9, [0.92, 0.5, 0.88]);
+  if (look.hairStyle === 'dutt') mesh(head, G.bun, look.hair, [0, 0.2, -0.075], 0.9);
 
   // Arme
   for (const s of [-1, 1]) {
@@ -181,7 +194,7 @@ export function buildPerson(look) {
       // Einkaufskorb in der linken Hand
       const hand = joint(elbow, [0, -0.3, 0.02]);
       mesh(hand, G.basketHandle, '#2b2c30', [0, -0.005, 0], 0.5, null, [0, Math.PI / 2, 0]);
-      mesh(hand, G.basket, '#b8322a', [0, -0.2, 0], 0.6, null, [0, Math.PI / 2, 0]);
+      mesh(hand, G.basket, '#7d2a24', [0, -0.2, 0], 0.6, null, [0, Math.PI / 2, 0]);
       J.basket = hand;
     }
   }
@@ -242,17 +255,19 @@ export function addStaticPerson(b, look, x, z, yaw, pose = 'stehen') {
 
 // Animierte Person für die Simulation: Gehzyklus mit Knie- und Ellbogenbeugung, leichtes Wippen
 export class Walker {
-  constructor(look) {
+  constructor(look, { ring = true } = {}) {
     const { root, J } = buildPerson(look);
     this.group = root;
     this.group.name = 'Simulationskunde';
     this.J = J;
     applyPose(J, 'stehen');
     // Markierung am Boden, damit man die Figur auch in der Draufsicht gut sieht
-    const ring = new THREE.Mesh(new THREE.RingGeometry(0.32, 0.4, 32), new THREE.MeshBasicMaterial({ color: 0xe8772e, transparent: true, opacity: 0.85 }));
-    ring.rotation.x = -Math.PI / 2;
-    ring.position.y = 0.02;
-    this.group.add(ring);
+    if (ring) {
+      const r = new THREE.Mesh(new THREE.RingGeometry(0.32, 0.4, 32), new THREE.MeshBasicMaterial({ color: 0xe8772e, transparent: true, opacity: 0.85 }));
+      r.rotation.x = -Math.PI / 2;
+      r.position.y = 0.02;
+      this.group.add(r);
+    }
     this.phase = 0;
     this.amount = 0;
   }

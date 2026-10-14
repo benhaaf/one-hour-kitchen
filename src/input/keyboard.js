@@ -15,6 +15,7 @@ const KEYS = {
   b: 'png', // Draufsicht als Bild speichern
   m: 'musik', // Lo-Fi-Musik an/aus
   k: 'simulation', // Kundensimulation starten/beenden
+  l: 'kunden', // Kundenbetrieb: viele Kunden laufen durch den Laden (auch während der Präsentation)
   g: 'einkauf', // Einkaufs-Spiel starten/beenden
   // Präsentation (auch für Presenter/Clicker, die Bild ↑/↓ senden)
   PageDown: 'weiter',

@@ -70,7 +70,7 @@ export function buildZones(layout) {
 export function shelfFaces(m) {
   switch (m.typ) {
     case 'gondel':
-      return Object.keys(m.regal || { hinten: 1, vorne: 1 }).filter((k) => k !== 'kopf');
+      return Object.keys(m.regal || { hinten: 1, vorne: 1 }).filter((k) => k === 'vorne' || k === 'hinten');
     case 'kuehlregal':
     case 'glastuer-kuehlung':
     case 'weinregal':

@@ -205,7 +205,7 @@ export function buildStreet(layout) {
     g.textBaseline = 'middle';
     fitText(g, 'HEUTE: PASTA NIGHT', 14, 34, w - 28, 800, 26);
     g.fillStyle = '#f4f1ec';
-    const lines = ['» #01 Creamy Tomato', '   Pasta – 20 Min.', '', '€ #03 Pasta e Fagioli', '   3,20 € / Portion', '', 'Live-Cooking', '12:00–13:30', 'zum Probieren!'];
+    const lines = ['» #01 Creamy Tomato', '   Pasta – 20 Min.', '', '€ #03 Pasta e Fagioli', '   3,20 € / Portion', '', 'Live-Cooking', '11:30–13:30', 'zum Probieren!'];
     g.font = `600 22px ${SANS}`;
     lines.forEach((l, i) => g.fillText(l, 16, 100 + i * 30));
   });

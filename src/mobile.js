@@ -36,7 +36,7 @@ export function runMobileRecipe(layout, nr) {
       <h2>Zutaten & wo du sie findest</h2>
       <ul class="mr-list">${r.zutaten.map(row).join('')}</ul>
       ${r.ergaenzung?.length ? `<h2>Passt dazu</h2><ul class="mr-list">${r.ergaenzung.map(row).join('')}</ul>` : ''}
-      <p class="mr-hint">Der Fachcode steht auf dem Schild über dem Regal. Live-Cooking täglich 12–13:30 und 17:30–19 Uhr.</p>
+      <p class="mr-hint">Der Fachcode steht auf dem Schild über dem Regal. Live-Cooking täglich 11:30–13:30 und 17:30–19 Uhr.</p>
       <nav class="mr-more">${list.map((x) => `<a href="?rezept=${x.nr.slice(1)}"${x === r ? ' class="on"' : ''}>${esc(x.nr)} ${esc(x.titel)}</a>`).join('')}</nav>
       <a class="mr-3d" href="./">Laden in 3D ansehen</a>
     </section></main>`;

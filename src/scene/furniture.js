@@ -429,7 +429,7 @@ const TEX = {
       g.fillText('Heute probieren', 70, 170);
       g.fillStyle = '#c9c4bc';
       g.font = `500 30px ${SANS}`;
-      g.fillText('täglich 12:00–13:30 und 17:30–19:00 · Probieren kostenlos · 19–22 Uhr mietbar', 70, 240);
+      g.fillText('täglich 11:30–13:30 und 17:30–19:00 · Probieren kostenlos · 19–22 Uhr mietbar', 70, 240);
       const rows = [['Mo', '#01 Creamy Tomato Pasta'], ['Di', '#04 Gebratene Udon'], ['Mi', '#07 Quesadillas'], ['Do', '#03 Pasta e Fagioli'], ['Fr', '#08 Taco-Abend mit Guacamole'], ['Sa', '#05 Ramen-Abend']];
       rows.forEach(([d, n], i) => {
         const y = 330 + i * 92;
@@ -490,7 +490,7 @@ const TEX = {
       g.textAlign = 'center';
       g.textBaseline = 'middle';
       g.font = `400 70px Georgia, "Times New Roman", serif`;
-      g.fillText('Live-Cooking · täglich 12–13:30', W / 2, H / 2 + 4);
+      g.fillText('Live-Cooking · täglich 11:30–13:30', W / 2, H / 2 + 4);
     }),
   glasband: () =>
     canvasTex(2048, 128, (g, W, H) => {
@@ -523,7 +523,7 @@ const TEX = {
       g.font = `800 66px ${SANS}`;
       g.fillText('LIVE-COOKING', 60, 100);
       g.font = `500 36px ${SANS}`;
-      g.fillText('täglich 12:00–13:30 · Probieren erwünscht', 60, 180);
+      g.fillText('täglich 11:30–13:30 · Probieren erwünscht', 60, 180);
       g.fillStyle = '#b84a32';
       g.font = `700 32px ${SANS}`;
       g.fillText('Heute: #01 Creamy Tomato Pasta', 60, 245);
@@ -795,7 +795,7 @@ const BUILDERS = {
       g.fillText('aufs Handy', PW - 155, 612);
       g.fillStyle = '#b39b6b';
       g.font = `500 28px ${SANS}`;
-      g.fillText('Live-Cooking täglich 12–13:30 · 17:30–19 Uhr', PW / 2, PH - 50);
+      g.fillText('Live-Cooking täglich 11:30–13:30 · 17:30–19 Uhr', PW / 2, PH - 50);
       g.textAlign = 'left';
     });
     const pm = new THREE.MeshStandardMaterial({ map: poster, emissive: 0xffffff, emissiveMap: poster, emissiveIntensity: 0.55, roughness: 0.5 });
@@ -1160,7 +1160,7 @@ const BUILDERS = {
     }
     // Messer- und Utensilienleiste
     // Schild hängt zur Zuschauerseite
-    sign(ctx.extra, 'Showküche', { w: 1.6, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Live-Cooking täglich 12–13:30 · 17:30–19 Uhr' }, cx - 0.15, 2.45, z2 - 0.76, [0, -1]);
+    sign(ctx.extra, 'Showküche', { w: 1.6, h: 0.3, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Live-Cooking täglich 11:30–13:30 · 17:30–19 Uhr' }, cx - 0.15, 2.45, z2 - 0.76, [0, -1]);
   },
 
   // Probiertheke: Stehtisch aus Eiche mit Probierschälchen für das Live-Cooking (keine Kursplätze)

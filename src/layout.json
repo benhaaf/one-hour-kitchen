@@ -1912,7 +1912,7 @@
           7.0
         ]
       },
-      "entscheidung": "Showküche (ca. 18 m²) in der Raummitte als visueller Anker: Kochtresen mit vier Barhockern zum Eingang, darüber eine Dunstabzugshaube (Inselesse mit Kamin), links an der Glaswand eine Polsterbank mit einem durchgehenden Tisch zum Probieren, hinten die Küchenzeile. Glaswand an drei Seiten. Live-Cooking zweimal täglich, Probierportionen kostenlos – Kochkurse bieten wir nicht an.",
+      "entscheidung": "Showküche (ca. 18 m²) in der Raummitte als visueller Anker: Kochtresen mit vier Barhockern zum Eingang, darüber eine Dunstabzugshaube (Inselesse mit Kamin), links an der Glaswand eine Polsterbank mit einem durchgehenden Tisch zum Probieren, hinten die Küchenzeile. Glaswand an drei Seiten. Live-Cooking zweimal täglich, Probierportionen kostenlos. Abends von 19 bis 22 Uhr ist die Küche für private Kochabende mit Freunden mietbar.",
       "begruendung": "Die Blickachse vom Eingang endet auf dem Kochtresen (Arena-Prinzip). Das Live-Cooking zeigt ein Rezept der Matrix und macht es probierbar. Die Haube zieht Dunst direkt am Kochfeld ab, die Glaswand hält Geruch und Lärm von den Regalen fern. Statt eines Stehtischs in der Mitte gibt es Sitzplätze: Wer sitzt, probiert in Ruhe und bleibt länger; die Mitte bleibt für den Koch frei.",
       "quelle": "Seminarskript (Arena-Prinzip, Blickachse mit visuellem Anker) ✓; Ahlert/Kenning/Brock 2020, S. 297–302 ✓; Hui/Bradlow/Fader 2009 (Einfluss anderer Kunden) ✓; Gröppel 1991 (Erlebnisstrategien) ◐",
       "annahme": "Wirtschaftlich, wenn der Ø-Bon um ca. 4 € steigt (Folie Wirtschaftlichkeit).",
@@ -1922,7 +1922,7 @@
         "wege": false,
         "blickachse": true
       },
-      "notizen": "Die Showküche ist der visuelle Anker am Ende der Blickachse. Über dem Kochfeld hängt jetzt eine richtige Dunstabzugshaube. Den Stehtisch in der Mitte haben wir entfernt: Dafür gibt es vier Barhocker am Tresen und eine Sitzbank mit einem durchgehenden Tisch an der Glaswand. Zweimal täglich Live-Cooking, Probieren ist kostenlos, Kurse gibt es bewusst nicht."
+      "notizen": "Die Showküche ist der visuelle Anker am Ende der Blickachse. Über dem Kochfeld hängt jetzt eine richtige Dunstabzugshaube. Den Stehtisch in der Mitte haben wir entfernt: Dafür gibt es vier Barhocker am Tresen und eine Sitzbank mit einem durchgehenden Tisch an der Glaswand. Zweimal täglich Live-Cooking, Probieren ist kostenlos. Abends von 19 bis 22 Uhr kann man die Küche mit Freunden mieten."
     },
     {
       "nr": 9,
@@ -2404,7 +2404,7 @@
           ],
           [
             "Öffnung",
-            "Mo–Sa 8–21 Uhr; Live-Cooking 12–13:30 und 17:30–19 Uhr",
+            "Mo–Sa 11–22 Uhr; Live-Cooking 12–13:30 und 17:30–19 Uhr; Küche abends 19–22 Uhr mietbar",
             "A"
           ]
         ],
@@ -2421,7 +2421,7 @@
           ]
         },
         "fuss": "Alle Rahmendaten sind Fallannahmen. Vergleich Kochhaus Berlin: 150 m², 600 Artikel ◐.",
-        "notizen": "Der Standort begründet Zielgruppe und Öffnungszeiten: Studierende und Berufstätige kommen mittags und nach Feierabend vorbei – genau dann läuft das Live-Cooking. Kurse bieten wir nicht an. Der Verkaufsraum hat rund 190 m², dazu ein L-förmiges Lager hinten und rechts."
+        "notizen": "Der Standort begründet Zielgruppe und Öffnungszeiten: Studierende und Berufstätige kommen mittags und nach Feierabend vorbei – genau dann läuft das Live-Cooking. Geöffnet ist von 11 bis 22 Uhr, ab 19 Uhr kann man die Küche mit Freunden mieten. Der Verkaufsraum hat rund 190 m², dazu ein L-förmiges Lager hinten und rechts."
       },
       "wirtschaft": {
         "typ": "folie",
@@ -2494,7 +2494,7 @@
             7.2
           ]
         },
-        "notizen": "Weil wir keine Kurse anbieten, muss sich die Showküche über den Verkauf tragen. Sie kostet 18 m² Regalfläche, also rund 31.600 Euro Rohertrag, dazu ca. 18.000 Euro für Personal und Probierware. Das sind knapp 50.000 Euro. Die holen wir rein, wenn der Durchschnittsbon um rund 4 Euro steigt – etwa durch Wein und Dessert zum Rezept – oder wenn täglich rund 23 Kunden mehr kommen. Aussagegrenze: Die Investition ist nicht enthalten, alle Werte sind Annahmen."
+        "notizen": "Die Showküche muss sich vor allem über den Verkauf tragen; die Vermietung am Abend (19–22 Uhr) kommt obendrauf und ist hier nicht eingerechnet. Sie kostet 18 m² Regalfläche, also rund 31.600 Euro Rohertrag, dazu ca. 18.000 Euro für Personal und Probierware. Das sind knapp 50.000 Euro. Die holen wir rein, wenn der Durchschnittsbon um rund 4 Euro steigt – etwa durch Wein und Dessert zum Rezept – oder wenn täglich rund 23 Kunden mehr kommen. Aussagegrenze: Die Investition ist nicht enthalten, alle Werte sind Annahmen."
       },
       "grundriss": {
         "typ": "folie",
@@ -3344,7 +3344,7 @@
             ],
             [
               "Warum keine Kochkurse?",
-              "Fokus auf den Einkauf; Live-Cooking zeigt die Rezepte ohne Kursbetrieb und Raumbedarf.",
+              "Fokus auf den Einkauf: tagsüber Live-Cooking, abends 19–22 Uhr kann man die Küche mit Freunden mieten – ohne Kursbetrieb und Trainer.",
               "Wirtschaftlichkeit"
             ],
             [

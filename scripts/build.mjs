@@ -1,7 +1,7 @@
 // Baut die App als EINE HTML-Datei (läuft per Doppelklick, offline, ohne Server):
 //   bun scripts/build.mjs            → dist/index.html  (+ Kopie dist/one-hour-kitchen.html)
 // three.js liegt lokal in vendor/three (kein npm nötig).
-import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
 const root = resolve(import.meta.dir, '..');
@@ -42,5 +42,11 @@ writeFileSync(join(root, 'dist/artifact.html'), frag);
 for (const f of ['One_Hour_Kitchen_Praesentation.pptx', 'One_Hour_Kitchen_Praesentation.pdf']) {
   const src = join(root, 'praesentation', f);
   if (existsSync(src)) copyFileSync(src, join(root, 'dist', f));
+}
+// Bilder für die Canva-Folien (öffentlich, damit Canva sie per Link importieren kann)
+const canvaDir = join(root, 'praesentation', 'canva');
+if (existsSync(canvaDir)) {
+  mkdirSync(join(root, 'dist', 'canva'), { recursive: true });
+  for (const f of readdirSync(canvaDir)) copyFileSync(join(canvaDir, f), join(root, 'dist', 'canva', f));
 }
 console.log(`dist/index.html geschrieben (${Math.round(html.length / 1024)} KB)`);

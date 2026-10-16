@@ -107,8 +107,8 @@ export function buildRoom(layout) {
       a = d.bis - half * 0.45;
     }
     colliders.push([a, W + t + 1, -t - 0.02, 0]);
-    // Gehweg: Bordstein, seitliche Grenzen
-    colliders.push([-40, 60, -30, -4.3], [-40, -8, -4.3, -t], [W + 8, 60, -4.3, -t]);
+    // Außenbereich: Gehweg, Straße und gegenüberliegender Gehweg begehbar (bessere Außenansicht), Grenze vor dem Campus-Gebäude
+    colliders.push([-40, 60, -30, -14.8], [-40, -10, -14.8, -t], [W + 10, 60, -14.8, -t]);
   }
 
   // Decke (Böden kommen aus surfaces.js)

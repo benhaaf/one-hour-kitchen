@@ -50,6 +50,21 @@ const MATERIALS = {
   terrazzo: std(0xd9d4ca, 0.4),
   kupfer: std(0xb87348, 0.35, 0.85),
   kochzone: new THREE.MeshBasicMaterial({ color: 0x5a5d62 }),
+  // Gerichte im Schaufenster
+  pasta: std(0xe8c27a, 0.55),
+  sosseTomate: std(0xc4532f, 0.45),
+  basilikum: std(0x3f7a32, 0.6),
+  parmesan: std(0xf3ead2, 0.7),
+  udon: std(0xe2c98f, 0.45),
+  udonSoja: std(0xb98447, 0.45),
+  pakchoi: std(0x5e9a3a, 0.6),
+  karotte: std(0xd9792e, 0.6),
+  schale: std(0x2b2c30, 0.35, 0.1),
+  tortilla: std(0xd6a14c, 0.7),
+  tortillaDunkel: std(0xa86f32, 0.7),
+  kaese: std(0xf0c850, 0.5),
+  salsa: std(0xb8322a, 0.5),
+  guacamole: std(0x7aa346, 0.6),
 };
 
 const G = {
@@ -60,6 +75,50 @@ const G = {
   unit: new THREE.BoxGeometry(1, 1, 1),
 };
 const E = 0.005;
+
+// ---------- Fertige Gerichte (Schaufenster-Vitrine) ----------
+const GERICHT = {
+  // #01 Creamy Tomato Pasta: Penne in Tomaten-Sahnesoße, Basilikum, Parmesan
+  '#01'(b, x, y, z, r) {
+    b.geo('teller', G.disc(0.17, 0.018, 40), x, y + 0.009, z);
+    b.geo('sosseTomate', new THREE.SphereGeometry(0.11, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2).scale(1, 0.32, 1), x, y + 0.018, z);
+    const penne = new THREE.CylinderGeometry(0.011, 0.011, 0.045, 10, 1, true);
+    for (let k = 0; k < 46; k++) {
+      const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 0.095;
+      const h = 0.032 * (1 - (d / 0.1) ** 2);
+      b.geo(r() < 0.55 ? 'sosseTomate' : 'pasta', penne, x + Math.cos(a) * d, y + 0.03 + h, z + Math.sin(a) * d, r() * 6.3, 1.2 + r() * 0.7, r() * 0.6);
+    }
+    for (let k = 0; k < 4; k++) b.geo('basilikum', new THREE.SphereGeometry(0.022, 10, 6).scale(1, 0.18, 0.6), x + (r() - 0.5) * 0.06, y + 0.068, z + (r() - 0.5) * 0.06, r() * 6.3);
+    for (let k = 0; k < 10; k++) b.geo('parmesan', G.box(0.012, 0.003, 0.008), x + (r() - 0.5) * 0.12, y + 0.062 + r() * 0.01, z + (r() - 0.5) * 0.12, r() * 6.3);
+  },
+  // #04 Gebratene Udon: dunkle Schale, dicke Nudeln, Pak Choi, Karotten
+  '#04'(b, x, y, z, r) {
+    b.geo('schale', new THREE.CylinderGeometry(0.135, 0.075, 0.075, 36, 1, true), x, y + 0.0375, z);
+    b.geo('schale', G.disc(0.075, 0.008, 28), x, y + 0.004, z);
+    b.geo('udonSoja', G.disc(0.122, 0.01, 32), x, y + 0.055, z);
+    const nudel = new THREE.CylinderGeometry(0.008, 0.008, 0.16, 8);
+    for (let k = 0; k < 34; k++) {
+      const a = r() * Math.PI * 2, d = Math.sqrt(r()) * 0.07;
+      b.geo(r() < 0.6 ? 'udon' : 'udonSoja', nudel, x + Math.cos(a) * d, y + 0.065 + r() * 0.025, z + Math.sin(a) * d, r() * 6.3, Math.PI / 2 + (r() - 0.5) * 0.5, 0);
+    }
+    for (let k = 0; k < 5; k++) b.geo('pakchoi', G.box(0.05, 0.006, 0.03), x + (r() - 0.5) * 0.12, y + 0.095, z + (r() - 0.5) * 0.12, r() * 6.3, (r() - 0.5) * 0.4);
+    for (let k = 0; k < 8; k++) b.geo('karotte', G.box(0.04, 0.007, 0.007), x + (r() - 0.5) * 0.12, y + 0.096, z + (r() - 0.5) * 0.12, r() * 6.3);
+  },
+  // #07 Quesadillas: vier Ecken mit Käse, dazu Salsa und Guacamole
+  '#07'(b, x, y, z, r) {
+    b.geo('teller', G.disc(0.17, 0.018, 40), x, y + 0.009, z);
+    const keil = new THREE.CylinderGeometry(0.085, 0.085, 0.022, 3);
+    const pos = [[-0.06, -0.035, 0.3], [0.02, -0.06, 2.4], [0.07, 0.02, 4.4], [-0.02, 0.055, 1.3]];
+    pos.forEach(([dx, dz, yaw], k) => {
+      b.geo(k % 2 ? 'tortilla' : 'tortillaDunkel', keil, x + dx, y + 0.03 + k * 0.006, z + dz, yaw, 0.08, 0);
+      b.geo('kaese', new THREE.CylinderGeometry(0.083, 0.083, 0.006, 3), x + dx, y + 0.03 + k * 0.006, z + dz, yaw, 0.08, 0);
+    });
+    for (const [dx, mat] of [[-0.11, 'salsa'], [0.11, 'guacamole']]) {
+      b.geo('schale', new THREE.CylinderGeometry(0.035, 0.028, 0.03, 20, 1, true), x + dx, y + 0.033, z + 0.1);
+      b.geo(mat, G.disc(0.032, 0.012, 20), x + dx, y + 0.042, z + 0.1);
+    }
+  },
+};
 const SANS = 'system-ui, -apple-system, "Segoe UI", sans-serif';
 
 // ---------- kleine Helfer ----------
@@ -689,34 +748,30 @@ const BUILDERS = {
     ];
     const W = (x2 - x1) / 3;
     const dir = [0, -1];
+    // Vitrine: Eichensockel, Glaskasten mit Messingkanten, Lichtleiste oben
+    const vx1 = x1 + 0.08, vx2 = x2 - 0.08, vz1 = z1 + 0.1, vz2 = z2 - 0.04;
+    const baseH = 0.36, glasH = 0.5;
+    b.box('eiche', [vx1, vx2, vz1, vz2], top, top + baseH);
+    const gy0 = top + baseH, gy1 = gy0 + glasH;
+    b.box('glas', [vx1, vx2, vz1, vz1 + 0.008], gy0, gy1);
+    b.box('glas', [vx1, vx2, vz2 - 0.008, vz2], gy0, gy1);
+    b.box('glas', [vx1, vx1 + 0.008, vz1, vz2], gy0, gy1);
+    b.box('glas', [vx2 - 0.008, vx2, vz1, vz2], gy0, gy1);
+    b.box('glas', [vx1, vx2, vz1, vz2], gy1, gy1 + 0.008);
+    for (const x of [vx1, vx2 - 0.012]) for (const z of [vz1, vz2 - 0.012]) b.box('messing', [x, x + 0.012, z, z + 0.012], gy0, gy1 + 0.01);
+    b.box('messing', [vx1, vx2, vz1, vz1 + 0.012], gy1, gy1 + 0.012);
+    b.box('messing', [vx1, vx2, vz2 - 0.012, vz2], gy1, gy1 + 0.012);
+    b.box('led', [vx1 + 0.03, vx2 - 0.03, vz1 + 0.05, vz1 + 0.07], gy1 - 0.018, gy1 - 0.008);
+    // Trennstege zwischen den drei Gerichten
+    for (let k = 1; k < 3; k++) b.box('messing', [x1 + k * W - 0.004, x1 + k * W + 0.004, vz1, vz2], gy0, gy0 + 0.05);
     welten.forEach((w, i) => {
       const cx = x1 + (i + 0.5) * W;
       const rez = L.rezepte.find((r) => r.nr === w.nr);
-      // Podest in zwei Stufen
-      b.box('eiche', [cx - W / 2 + 0.08, cx + W / 2 - 0.08, z1 + 0.28, z2 - 0.04], top, top + 0.26);
-      b.box('terrazzo', [cx - W / 2 + 0.12, cx + W / 2 - 0.12, z1 + 0.06, z1 + 0.28], top, top + 0.1);
-      // Teller mit dem Gericht auf Aufsteller (Blick zur Straße)
-      const tex = canvasTex(256, 256, (g) => drawPlate(g, 128, 128, 100, rez));
-      // Tellerständer aus feinem Messingdraht (kein dunkles Bauteil im Fenster)
-      b.geo('messing', G.box(0.16, 0.006, 0.006), cx, top + 0.27, z1 + 0.46);
-      const pz = z1 + 0.5;
-      const py = top + 0.26 + 0.185;
-      b.geo('teller', G.disc(0.178, 0.014, 40), cx, py, pz + 0.009, 0, Math.PI / 2 - 0.25);
-      const pl = plane(ctx.extra, lit(tex, { transparent: true }), 0.36, 0.36, cx, py + 0.0004, pz - 0.0, dir, -0.25);
-      pl.material.alphaTest = 0.5;
-      // Zutaten auf der oberen Stufe
-      for (let k = 0; k < 4; k++) {
-        const kind = P.pick(w.codes[k % 2], 7 + k * 5);
-        const side = k < 2 ? -1 : 1;
-        const sc = Math.min(1, 0.24 / kind.p.m[1]);
-        P.add(kind, cx + side * (0.28 + (k % 2) * 0.13), top + 0.26, z1 + 0.42 + (k % 2) * 0.1, dir, { scale: sc });
-      }
-      // Frischekisten auf der unteren Stufe
-      for (let k = 0; k < 2; k++) {
-        const fx = cx + (k ? 0.22 : -0.22);
-        b.box('kiste', [fx - 0.15, fx + 0.15, z1 + 0.08, z1 + 0.26], top + 0.1, top + 0.18);
-        ctx.fresh.crate(b, fx, top + 0.18, z1 + 0.17, 0.26, 0.15, w.fresh[k], 0);
-      }
+      // Gericht in der Vitrine (fertig gekocht, je Kochwelt eins)
+      const vz = (vz1 + vz2) / 2;
+      const vy = top + baseH;
+      b.box('terrazzo', [cx - 0.24, cx + 0.24, vz - 0.17, vz + 0.17], vy, vy + 0.1);
+      GERICHT[w.nr](b, cx, vy + 0.1, vz, rng(11 + i * 7));
       // Karte vorne: Kochwelt, Gericht, Preis je Portion, QR
       const card = canvasTex(480, 220, (g, cw, ch) => {
         g.fillStyle = '#fbf8f2';
@@ -741,8 +796,8 @@ const BUILDERS = {
         g.textAlign = 'center';
         g.fillText('Rezept aufs Handy', 402, 190);
       });
-      plane(ctx.extra, lit(card), 0.42, 0.19, cx, top + 0.06, z1 + 0.055, dir, -0.5);
-      b.geo("eiche", G.box(0.42, 0.19, 0.008), cx, top + 0.06 - 0.002, z1 + 0.062, 0, -0.5);
+      plane(ctx.extra, lit(card), 0.42, 0.19, cx, top + baseH / 2, vz1 - 0.012, dir);
+      b.geo('eicheDunkel', G.box(0.44, 0.21, 0.008), cx, top + baseH / 2, vz1 - 0.006);
       // Spot über dem Podest
       b.box('metall', [cx - 0.004, cx + 0.004, z1 + 0.35 - 0.004, z1 + 0.35 + 0.004], 2.45, 3.2);
       b.geo('schwarzMatt', new THREE.CylinderGeometry(0.05, 0.08, 0.16, 18, 1, true), cx, 2.4, z1 + 0.35);
@@ -829,7 +884,6 @@ const BUILDERS = {
     // Kopfblende mit Markenname
     b.box('schwarzMatt', [x1 + 0.06, x2 - 0.06, zc - 0.05, zc + 0.05], H - 0.14, H);
     sign(ctx.extra, 'One Hour Kitchen', { w: 0.9, h: 0.1, bg: '#1d1e20', fg: '#efe7d6', font: '400', serif: true }, cx, H - 0.07, zc - 0.052, [0, -1]);
-    sign(ctx.extra, 'One Hour Kitchen', { w: 0.9, h: 0.1, bg: '#1d1e20', fg: '#efe7d6', font: '400', serif: true }, cx, H - 0.07, zc + 0.052, [0, 1]);
     // Bildschirm: dünner Rahmen, Glasfront
     const y0 = 1.02;
     const top = H - 0.17;
@@ -837,7 +891,7 @@ const BUILDERS = {
     const h = top - y0;
     b.box('schwarz', [x1 + 0.08, x2 - 0.08, zc - 0.035, zc + 0.035], y0 - 0.02, top + 0.01);
     plane(ctx.extra, unlit(TEX.dashboard(ctx.layout, Math.round((960 * w) / h), 960)), w, h, cx, y0 + h / 2 - 0.005, zc - 0.037, [0, -1]);
-    plane(ctx.extra, unlit(TEX.dashboardBack()), w, h, cx, y0 + h / 2 - 0.005, zc + 0.037, [0, 1]);
+    // Rückseite bleibt bewusst schwarz (keine Tafel)
     // Kartenpult (Eiche), um 25° geneigt, mit Lichtkante
     const pz1 = z1 - 0.2;
     b.box('eiche', [x1 + 0.06, x2 - 0.06, pz1, zc - 0.035], 0.86, 0.9);

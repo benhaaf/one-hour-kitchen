@@ -430,8 +430,8 @@ bus.on('aussen', () => {
   if (view === 'top') setView('ego');
   if (player.z > 0) {
     insidePos = { x: player.x, z: player.z, yaw: player.yaw, pitch: player.pitch };
-    Object.assign(player, { x: 3.6, z: -3.7, yaw: 0.25, pitch: -0.04 });
-    hud.toast('Außenansicht: Schaufenster und Eingang – durch die Tür geht es hinein (U: zurück)', 2600);
+    Object.assign(player, { x: 5.6, z: -11.2, yaw: 0, pitch: 0.02 });
+    hud.toast('Außenansicht von der anderen Straßenseite – über die Straße und durch die Tür geht es hinein (U: zurück)', 2800);
   } else {
     const st = layout.start;
     Object.assign(player, insidePos || { x: st.position[0], z: st.position[1], yaw: ((st.blickrichtung_grad || 0) * Math.PI) / 180, pitch: 0 });

@@ -21,6 +21,7 @@ export class TouchInput {
         <button id="btn-sprint" class="tbtn round" aria-pressed="false"><span>»</span><small>Schnell</small></button>
         <div id="toggle-bar">${TOGGLE_BUTTONS.map(btn).join('')}</div>
         <div id="station-bar">${['zurueck', 'info', 'weiter'].map(btn).join('')}</div>
+        <button id="btn-leiste" class="tbtn" data-action="leiste" aria-pressed="false" title="Funktionstasten aus-/einblenden (Taste C, Controller: Touchpad oder Steuerkreuz unten)"><span>☰</span><small>Tasten</small></button>
       </div>`,
     );
     this.ui = root.querySelector('#touch-ui');
@@ -39,6 +40,23 @@ export class TouchInput {
       sprintBtn.setAttribute('aria-pressed', String(this.sprint));
     });
 
+    // Funktionstasten an der Seite und unten ein-/ausblenden; Zustand bleibt im Browser gespeichert
+    let hidden = false;
+    try {
+      hidden = localStorage.getItem('ohk-tasten-aus') === '1';
+    } catch {
+      /* ohne Speicher: eingeblendet */
+    }
+    this.setBarsHidden(hidden);
+    bus.on('leiste', () => {
+      this.setBarsHidden(!this.barsHidden);
+      try {
+        localStorage.setItem('ohk-tasten-aus', this.barsHidden ? '1' : '0');
+      } catch {
+        /* egal */
+      }
+    });
+
     root.querySelectorAll('#touch-ui [data-action]').forEach((el) => {
       el.addEventListener('pointerdown', (e) => {
         e.preventDefault();
@@ -55,6 +73,16 @@ export class TouchInput {
       el.addEventListener('pointercancel', up);
       el.addEventListener('pointerleave', up);
     });
+  }
+
+  setBarsHidden(on) {
+    this.barsHidden = on;
+    this.ui.classList.toggle('bars-hidden', on);
+    const b = this.ui.querySelector('#btn-leiste');
+    if (b) {
+      b.setAttribute('aria-pressed', String(on));
+      b.querySelector('small').textContent = on ? 'Tasten' : 'Ausblenden';
+    }
   }
 
   show(on) {

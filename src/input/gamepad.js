@@ -17,6 +17,8 @@ const BUTTONS = {
   12: 'simulation', // Steuerkreuz oben: Kundensimulation (Ergänzung zur SPEC)
   15: 'einkauf', // Steuerkreuz rechts: Einkaufs-Spiel
   14: 'zurueck', // Steuerkreuz links: im Rezept-Menü zurück
+  13: 'leiste', // Steuerkreuz unten: Funktionstasten aus-/einblenden
+  17: 'leiste', // Touchpad-Klick (DualSense): Funktionstasten aus-/einblenden
 };
 const R2 = 7;
 

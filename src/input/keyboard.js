@@ -18,6 +18,7 @@ const KEYS = {
   k: 'simulation', // Kundensimulation starten/beenden
   l: 'kunden', // Kundenbetrieb: viele Kunden laufen durch den Laden (auch während der Präsentation)
   g: 'einkauf', // Einkaufs-Spiel starten/beenden
+  c: 'leiste', // Funktionstasten am Rand aus-/einblenden
   // Präsentation (auch für Presenter/Clicker, die Bild ↑/↓ senden)
   PageDown: 'weiter',
   PageUp: 'zurueck',

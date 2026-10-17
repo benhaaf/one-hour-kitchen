@@ -143,6 +143,17 @@ html, body {
   gap: 8px;
 }
 
+#btn-leiste {
+  position: absolute;
+  right: calc(84px + var(--safe-r));
+  top: calc(10px + var(--safe-t));
+  width: 62px;
+  height: 46px;
+}
+#btn-leiste span { font-size: 18px; }
+#touch-ui.bars-hidden #toggle-bar,
+#touch-ui.bars-hidden #station-bar { display: none; }
+
 #station-bar {
   position: absolute;
   right: calc(90px + var(--safe-r));
@@ -153,7 +164,7 @@ html, body {
 #station-bar .tbtn { width: 76px; height: 64px; }
 #station-bar .tbtn span { font-size: 28px; }
 
-@media (max-height: 700px) {
+@media (max-height: 880px) {
   #toggle-bar { gap: 5px; }
   #toggle-bar .tbtn { height: 50px; }
 }

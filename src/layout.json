@@ -787,15 +787,35 @@
     },
     {
       "id": "L1",
-      "name": "Kühlzelle (Hinterbefüllung)",
+      "name": "Kühlzelle +2 °C (Lager & Hinterbefüllung)",
+      "typ": "kuehlzelle",
+      "rechteck": [
+        2.0,
+        7.4,
+        12.05,
+        13.6
+      ],
+      "hoehe": 2.4,
+      "temp": "+2 °C",
+      "dach": "KÜHLZELLE",
+      "schild": "KÜHLZELLE · Molkerei, Fleisch, Fisch",
+      "_hinweis": "Begehbare Kühlzelle im Lager: Lagerung der Kühlware und Hinterbefüllung des Kühlregals K1–K6. Zugleich Vorraum zur Tiefkühlzelle."
+    },
+    {
+      "id": "L5",
+      "name": "Tiefkühlzelle −20 °C",
       "typ": "kuehlzelle",
       "rechteck": [
         0.2,
-        7.4,
+        2.0,
         12.05,
-        12.85
+        13.6
       ],
-      "hoehe": 2.4
+      "hoehe": 2.4,
+      "temp": "−20 °C",
+      "dach": "TIEFKÜHL",
+      "tuer": "innen",
+      "_hinweis": "Zugang über die Kühlzelle (Vorraum): beim Öffnen kommt weniger warme Luft hinein."
     },
     {
       "id": "L2",
@@ -2043,7 +2063,7 @@
           9.4
         ]
       },
-      "entscheidung": "Das L-Lager umfasst die Rückseite und die rechte Seite (ca. 49 m²). Anlieferung über ein Rolltor hinten rechts, die Lagertür liegt am Basissortiment, die Kühlung wird von hinten befüllt.",
+      "entscheidung": "Das L-Lager umfasst die Rückseite und die rechte Seite (ca. 49 m²). Hinten links liegen eine begehbare Kühlzelle (+2 °C, ca. 8 m²) und dahinter eine Tiefkühlzelle (−20 °C, ca. 3 m²), die man durch die Kühlzelle betritt. Anlieferung über ein Rolltor hinten rechts, die Lagertür liegt am Basissortiment, das Kühlregal wird von hinten aus der Kühlzelle befüllt.",
       "begruendung": "Waren-, Arbeits- und Kundenweg kreuzen sich kaum: Die Ware kommt hinten rein und geht direkt in Kühlzelle und Regale. Der Personalraum liegt abgetrennt vorn rechts.",
       "quelle": "Seminar-Checkliste Tag 2: F4–F6, E9 Anlieferung ✓",
       "annahme": "Anlieferzeiten und Rolltor sind am Standort zulässig (Fallannahme).",

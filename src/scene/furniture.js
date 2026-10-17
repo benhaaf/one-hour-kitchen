@@ -1451,18 +1451,49 @@ const BUILDERS = {
     }
   },
 
+  // Begehbare Zelle im Lager (Kühlzelle oder Tiefkühlzelle): Paneelwände, Tür, Temperaturanzeige,
+  // Kälteaggregat auf dem Dach und eine Dachbeschriftung für die Draufsicht.
   kuehlzelle(b, m, ctx) {
     const [x1, x2, z1, z2] = m.rechteck;
     const H = m.hoehe;
+    const tk = m.temp && m.temp.startsWith('−');
     if (!b.materials.zelle) b.materials.zelle = lit(TEX.kuehlzelle());
     b.box('kuehlwand', [x1, x2, z1, z2], 0, H);
+    // Paneel-Fugen an den sichtbaren Seiten
     plane(ctx.extra, b.materials.zelle, x2 - x1, H, (x1 + x2) / 2, H / 2, z2 + 0.006, [0, 1]);
-    // Tür zur Lagerseite
-    const dx = x2 - 1.2;
-    b.box('edelstahl', [dx, dx + 0.9, z2, z2 + 0.03], 0.05, 2.05);
-    b.box('chrom', [dx + 0.75, dx + 0.8, z2 + 0.03, z2 + 0.07], 0.95, 1.2);
-    sign(ctx.extra, 'KÜHLZELLE · Hinterbefüllung K1–K6', { w: 1.5, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '500', brass: true }, x1 + 2.2, 1.9, z2 + 0.01, [0, 1]);
-    sign(ctx.extra, '+2 °C', { w: 0.3, h: 0.14, bg: '#1c1c1f', fg: '#4f8a6a', font: '700' }, dx + 0.45, 2.15, z2 + 0.035, [0, 1]);
+    plane(ctx.extra, b.materials.zelle, z2 - z1, H, x2 + 0.006, H / 2, (z1 + z2) / 2, [1, 0]);
+    // Tür rechts zum Lagergang; eine Zelle mit tuer: 'innen' wird über die Nachbarzelle betreten (Vorraum)
+    if (m.tuer !== 'innen') {
+      const tz = (z1 + z2) / 2;
+      const zr = [tz - 0.45, tz + 0.45];
+      b.box(tk ? 'anthrazit' : 'edelstahl', [x2, x2 + 0.03, zr[0], zr[1]], 0.05, 2.05);
+      b.box('chrom', [x2 + 0.03, x2 + 0.07, zr[0] + 0.1, zr[0] + 0.15], 0.95, 1.2);
+      sign(ctx.extra, m.schild || m.name, { w: 1.3, h: 0.2, bg: tk ? '#1d3b5c' : '#25282a', fg: '#efe7d6', font: '600', brass: !tk }, x2 + 0.035, 2.25, tz, [1, 0]);
+      sign(ctx.extra, m.temp, { w: 0.34, h: 0.14, bg: '#1c1c1f', fg: tk ? '#7fb6ff' : '#4f8a6a', font: '700' }, x2 + 0.04, 1.75, zr[0] - 0.25, [1, 0]);
+    }
+    // Kälteaggregat(e) auf dem Dach
+    const n = Math.max(1, Math.round((x2 - x1) / 3));
+    for (let i = 0; i < n; i++) {
+      const cx = x1 + ((i + 0.5) * (x2 - x1)) / n;
+      b.box('metall', [cx - 0.4, cx + 0.4, z2 - 0.62, z2 - 0.1], H, H + 0.34);
+      b.geo('schwarz', G.disc(0.19, 0.02, 20), cx, H + 0.35, z2 - 0.36, 0, 0);
+    }
+    // Dachbeschriftung (in der Draufsicht lesbar)
+    const tex = canvasTex(Math.round(160 * (x2 - x1) / (z2 - z1 - 0.8)), 160, (g, W, Hh) => {
+      g.fillStyle = tk ? '#d6e4f2' : '#e4ecef';
+      g.fillRect(0, 0, W, Hh);
+      g.fillStyle = tk ? '#1d3b5c' : '#2c3b40';
+      g.textAlign = 'center';
+      g.textBaseline = 'middle';
+      fitText(g, m.dach || m.name, W / 2, 62, W - 30, 800, 54);
+      g.font = `700 40px ${SANS}`;
+      g.fillText(m.temp, W / 2, 122);
+    });
+    const rd = z2 - z1 - 0.8;
+    const roof = new THREE.Mesh(new THREE.PlaneGeometry(x2 - x1 - 0.1, rd), lit(tex));
+    roof.rotation.x = -Math.PI / 2;
+    roof.position.set((x1 + x2) / 2, H + 0.005, -(z1 + 0.06 + rd / 2));
+    ctx.extra.add(roof);
   },
 
   lagerregal(b, m, ctx) {

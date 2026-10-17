@@ -1,4 +1,4 @@
-// Umgebung vor dem Laden: Gehweg, Straße mit Haltestelle, Bäume, Fahrräder, Kundenstopper,
+// Umgebung vor dem Laden: Gehweg, Straße mit Haltestelle, Bäume, Fahrräder,
 // gegenüber ein Campus-Gebäude (freie Darstellung). Alles aus einfachen Formen.
 import * as THREE from 'three';
 import { Builder, rng, yawFacing } from './builder.js';
@@ -194,28 +194,6 @@ export function buildStreet(layout) {
   for (let x = 0.8; x < 17; x += 2.2) for (const y of [4.2, 6.8]) b.box('glas', [x, x + 1.4, -0.24, -0.2], y, y + 1.6);
   // Markise über dem Schaufenster
   b.geo('dunkel', new THREE.BoxGeometry(5.4, 0.04, 1.1), 3.05, 2.98, -0.6, 0, 0.18); // Markise Schwarzstahl
-
-  // Kundenstopper vor dem Laden
-  const aTex = canvasTex(256, 384, (g, w, h) => {
-    g.fillStyle = '#1f2421';
-    g.fillRect(0, 0, w, h);
-    g.fillStyle = '#2b2e2c';
-    g.fillRect(0, 0, w, 64);
-    g.fillStyle = '#fff';
-    g.textBaseline = 'middle';
-    fitText(g, 'HEUTE: PASTA NIGHT', 14, 34, w - 28, 800, 26);
-    g.fillStyle = '#f4f1ec';
-    const lines = ['» #01 Creamy Tomato', '   Pasta – 20 Min.', '', '€ #03 Pasta e Fagioli', '   3,20 € / Portion', '', 'Live-Cooking', '11:30–13:30', 'zum Probieren!'];
-    g.font = `600 22px ${SANS}`;
-    lines.forEach((l, i) => g.fillText(l, 16, 100 + i * 30));
-  });
-  const aMat = new THREE.MeshStandardMaterial({ map: aTex, roughness: 0.9 });
-  const ax = 8.8;
-  const az = -1.5;
-  for (const s of [1, -1]) {
-    const m = plane(group, aMat, 0.55, 0.85, ax, 0.5, az + s * 0.17, [0, s > 0 ? 1 : -1], s * 0.2);
-    void m;
-  }
 
   // Passanten
   const ppl = [[-5, -2.0, [1, 0]], [2.0, -3.2, [-1, 0]], [16.2, -1.9, [0, -1]], [20.5, -2.8, [-1, 0]], [7.4, -12.6, [0, 1]], [9.1, -12.5, [-1, 0]], [-8, -1.4, [1, 0]]];

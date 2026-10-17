@@ -162,7 +162,7 @@ export function buildRoom(layout) {
         leaf.renderOrder = 2;
         group.add(leaf);
       }
-      const s = sign(o.richtung === 'raus' ? '◀ AUSGANG' : 'EINGANG ▶', { bg: '#25282a', fg: '#efe7d6', w: 0.9, h: 0.2 });
+      const s = sign(o.richtung === 'raus' ? '▼  AUSGANG  ▼' : '▼  EINGANG  ▼', { bg: '#25282a', fg: '#efe7d6', w: 0.9, h: 0.2 });
       // Schild außen über der Tür (zur Straße)
       const c = (o.von + o.bis) / 2;
       toThree(c, o.hoehe + 0.22, -t - 0.03, s.position);

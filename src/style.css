@@ -133,15 +133,18 @@ html, body {
   bottom: calc(40px + var(--safe-b));
 }
 
+/* Spalte rechts: reicht von oben bis knapp über die Knöpfe „Ausblenden“ und „Aufnahme“ – die Tasten schrumpfen, statt darüber zu liegen */
 #toggle-bar {
   position: absolute;
   right: calc(12px + var(--safe-r));
-  top: 50%;
-  transform: translateY(-58%);
+  top: calc(10px + var(--safe-t));
+  bottom: calc(126px + var(--safe-b));
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 8px;
 }
+#toggle-bar .tbtn { flex: 0 1 58px; height: auto; min-height: 30px; }
 
 /* Tasten-Knopf und Aufnahme-Knopf unten rechts übereinander */
 #btn-leiste {
@@ -167,11 +170,9 @@ html, body {
 
 @media (max-height: 880px) {
   #toggle-bar { gap: 5px; }
-  #toggle-bar .tbtn { height: 50px; }
 }
-@media (max-height: 560px) {
+@media (max-height: 760px) {
   #toggle-bar { gap: 4px; }
-  #toggle-bar .tbtn { height: 42px; }
   #toggle-bar .tbtn small { display: none; }
 }
 
@@ -269,8 +270,8 @@ body.top-mode #status { display: none; }
 #station-indicator {
   position: fixed;
   z-index: 24;
-  right: calc(16px + var(--safe-r));
-  bottom: calc(120px + var(--safe-b));
+  right: calc(96px + var(--safe-r));
+  bottom: calc(100px + var(--safe-b));
   background: var(--akzent);
   color: #1c1c1f;
   font-weight: 800;
@@ -280,7 +281,7 @@ body.top-mode #status { display: none; }
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 #station-indicator[hidden] { display: none; }
-body.touch-mode #station-indicator { bottom: calc(120px + var(--safe-b)); }
+
 body.presenting #joystick,
 body.presenting #btn-sprint { display: none; }
 
@@ -806,9 +807,7 @@ body.mobile-rezept { touch-action: auto; -webkit-user-select: text; user-select:
 }
 #rec-badge[hidden] { display: none; }
 /* Bei der Tab-Aufnahme verschwinden Aufnahme-Knopf, Anzeige und Tasten-Knopf aus dem Video (Stopp: Taste J oder „Freigabe beenden“ im Browser) */
-body.recording-tab #btn-rec,
-body.recording-tab #rec-badge,
-body.recording-tab #btn-leiste { display: none; }
+body.recording-tab #rec-badge { display: none; }
 
 /* Während der Tab-Aufnahme: nur die kleine Texteinblendung, keine Bedienelemente (Weiter: → oder Leertaste) */
 body.recording-tab #sim-caption .sim-ctl,
@@ -817,3 +816,4 @@ body.recording-tab #status { display: none; }
 /* Im Präsentationsmodus liegt unten die Folienleiste – Knöpfe darüber */
 body.presenting #btn-rec { bottom: calc(64px + var(--safe-b)); }
 body.presenting #btn-leiste { bottom: calc(116px + var(--safe-b)); }
+body.presenting #toggle-bar { bottom: calc(178px + var(--safe-b)); }

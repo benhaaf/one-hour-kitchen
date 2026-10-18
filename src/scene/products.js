@@ -834,7 +834,7 @@ export class Products {
 
   // Ganze Regalfront nach Planogramm bestücken (keine Wiederholungen: jede Sorte steht genau einmal, mit Facings).
   // levels: Böden von oben nach unten [{ y, maxH, depth }]; der unterste Boden nimmt Großpackungen auf, falls vorhanden.
-  placeFace(code, { along, from, to, front, dir, levels, tagOut = 0.008, tagDy = -0.045, gap = 0.005, rows = 3, reverse = false }) {
+  placeFace(code, { along, from, to, front, dir, levels, tagOut = 0.008, tagDy = -0.045, gap = 0.005, rows = 3, reverse = false, maxFacings = 3 }) {
     const plan = planShelf(code, levels.length);
     const W = to - from;
     const kindOf = new Map((this.byCode[code] || []).map((k) => [k.p, k]));
@@ -850,11 +850,13 @@ export class Products {
       const nf = items.map(() => 1);
       const width = () => ws.reduce((s, x, i) => s + nf[i] * (x + gap), 0);
       let used0 = width();
-      for (let pass = 0; pass < 2; pass++) {
+      for (let pass = 0; pass < maxFacings; pass++) {
         const order = ws.map((x, i) => i).sort((a, b) => ws[a] - ws[b]);
+        let grew = false;
         for (const i of order) {
-          if (nf[i] < 3 && used0 + ws[i] + gap <= L) { nf[i]++; used0 += ws[i] + gap; }
+          if (nf[i] < maxFacings && used0 + ws[i] + gap <= L) { nf[i]++; used0 += ws[i] + gap; grew = true; }
         }
+        if (!grew) break;
       }
       const air = (L - used0) / items.length;
       let s1 = a1;

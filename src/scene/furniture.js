@@ -1001,6 +1001,8 @@ const BUILDERS = {
         levels: [{ y: 1.48, maxH: 0.29, depth: 0.24 }, { y: 1.15, maxH: 0.3, depth: 0.24 }, { y: 0.8, maxH: 0.32, depth: 0.24 }, { y: 0.45, maxH: 0.32, depth: 0.24 }, { y: 0.1, maxH: 0.32, depth: 0.24 }],
         // aus Sicht der Kundin vor der Seite: „besonders“ rechts – auf der Rückseite läuft x andersherum
         reverse: f.dir[1] > 0,
+        // volle Regale: Sorten bekommen so viele Facings, bis der Block gefüllt ist
+        maxFacings: 12,
       });
       // Schild über der Seite: Kochwelt groß, darunter Warengruppen + Fachcode
       const d = f.dir;

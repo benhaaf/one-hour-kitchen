@@ -153,23 +153,36 @@ export class Simulation {
 
   // Kamera schräg hinter der Figur, weich nachgeführt
   updateCamera(dt, snap = false) {
-    const back = new THREE.Vector3(-Math.sin(this.heading), 0, -Math.cos(this.heading));
     const head = new THREE.Vector3(this.pos.x, 1.35, -this.pos.y);
-    // Kamera näher heranziehen, wenn ein Regal zwischen Figur und Kamera stünde
-    let dist = CAM_DIST;
-    for (let t = 0.35; t <= CAM_DIST; t += 0.1) {
-      const px = head.x + back.x * t;
-      const pz = -(head.z + back.z * t);
-      if (this.blockers.some(([a, b, c, d]) => px > a - 0.15 && px < b + 0.15 && pz > c - 0.15 && pz < d + 0.15)) {
-        dist = Math.max(0.7, t - 0.25);
+    const [bx1, bx2, bz1, bz2] = this.bounds;
+    const inside = this.pos.y > 0.2;
+    // freie Strecke hinter der Figur in einer Richtung (hohe Regale, Schaufenster)
+    const freeDist = (dir) => {
+      for (let t = 0.35; t <= CAM_DIST; t += 0.1) {
+        const px = head.x + dir.x * t;
+        const pz = -(head.z + dir.z * t);
+        const hit = this.blockers.some(([a, b, c, d]) => px > a - 0.15 && px < b + 0.15 && pz > c - 0.15 && pz < d + 0.15);
+        if (hit) return Math.max(0, t - 0.25);
+      }
+      return CAM_DIST;
+    };
+    // Normal schräg hinter der Figur; ist dort zu wenig Platz (z. B. Schaufenster im Rücken),
+    // schwenkt die Kamera zur Seite, statt in Wand oder Möbel zu rutschen
+    let best = null;
+    for (const deg of [0, 30, -30, 60, -60, 90, -90, 125, -125]) {
+      const a = this.heading + (deg * Math.PI) / 180;
+      const dir = new THREE.Vector3(-Math.sin(a), 0, -Math.cos(a));
+      const d = freeDist(dir);
+      if (!best || d > best.d + 0.05) best = { dir, d };
+      if (d >= 1.6) {
+        best = { dir, d };
         break;
       }
     }
-    const want = head.clone().addScaledVector(back, dist);
+    const want = head.clone().addScaledVector(best.dir, Math.max(0.7, Math.min(CAM_DIST, best.d)));
     want.y = CAM_HEIGHT;
     // Im Laden nicht durch Wände/Decke: Kamera innerhalb des Raums halten (Passage davor ist offen)
-    const [bx1, bx2, bz1, bz2] = this.bounds;
-    if (-want.z > 0.2 || this.pos.y > 0.2) {
+    if (-want.z > 0.2 || inside) {
       want.x = THREE.MathUtils.clamp(want.x, bx1 + 0.3, bx2 - 0.3);
       want.z = -THREE.MathUtils.clamp(-want.z, bz1 + 0.3, bz2 - 0.3);
     }

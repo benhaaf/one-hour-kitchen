@@ -1,10 +1,12 @@
 // Bildschirmaufnahme direkt aus dem Modell (z. B. für das Kundenweg-Video in der Präsentation).
 // Am Computer: Aufnahme des Browser-Tabs über getDisplayMedia – mit allen Einblendungen (Infokarten, Simulationstexte).
 // Wo das nicht geht (z. B. iPad): Aufnahme nur der 3D-Ansicht über canvas.captureStream.
-// Ergebnis: Video-Datei (MP4, sonst WebM) zum Herunterladen.
+// Ergebnis: Video-Datei (WebM, sonst MP4) zum Herunterladen.
 
+// WebM (VP9) zuerst: Chromes MP4/H.264-Aufnahme erzeugt bei Fenstergrößen, die nicht durch 16 teilbar sind,
+// einen flackernden grünen Balken am unteren Rand. VP9 hat das Problem nicht; Canva kann WebM abspielen.
 function pickMime() {
-  const list = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm'];
+  const list = ['video/webm;codecs=vp9', 'video/webm;codecs=vp8', 'video/webm', 'video/mp4;codecs=avc1', 'video/mp4'];
   if (typeof MediaRecorder === 'undefined') return null;
   return list.find((m) => MediaRecorder.isTypeSupported(m)) || '';
 }

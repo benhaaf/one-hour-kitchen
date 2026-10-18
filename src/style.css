@@ -143,11 +143,12 @@ html, body {
   gap: 8px;
 }
 
+/* Tasten-Knopf und Aufnahme-Knopf unten rechts übereinander */
 #btn-leiste {
   position: absolute;
-  right: calc(84px + var(--safe-r));
-  top: calc(10px + var(--safe-t));
-  width: 62px;
+  right: calc(12px + var(--safe-r));
+  bottom: calc(64px + var(--safe-b));
+  width: 70px;
   height: 46px;
 }
 #btn-leiste span { font-size: 18px; }
@@ -156,7 +157,7 @@ html, body {
 
 #station-bar {
   position: absolute;
-  right: calc(90px + var(--safe-r));
+  right: calc(96px + var(--safe-r));
   bottom: calc(22px + var(--safe-b));
   display: flex;
   gap: 10px;
@@ -269,7 +270,7 @@ body.top-mode #status { display: none; }
   position: fixed;
   z-index: 24;
   right: calc(16px + var(--safe-r));
-  bottom: calc(16px + var(--safe-b));
+  bottom: calc(120px + var(--safe-b));
   background: var(--akzent);
   color: #1c1c1f;
   font-weight: 800;
@@ -279,7 +280,7 @@ body.top-mode #status { display: none; }
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 #station-indicator[hidden] { display: none; }
-body.touch-mode #station-indicator { bottom: calc(100px + var(--safe-b)); }
+body.touch-mode #station-indicator { bottom: calc(120px + var(--safe-b)); }
 body.presenting #joystick,
 body.presenting #btn-sprint { display: none; }
 
@@ -783,12 +784,11 @@ body.mobile-rezept { touch-action: auto; -webkit-user-select: text; user-select:
   position: fixed;
   z-index: 30;
   right: calc(12px + var(--safe-r));
-  top: calc(10px + var(--safe-t));
+  bottom: calc(12px + var(--safe-b));
   width: 70px;
   height: 46px;
 }
 #btn-rec span { font-size: 16px; color: #e5484d; }
-body.touch-mode #btn-rec { right: calc(156px + var(--safe-r)); }
 #btn-rec[aria-pressed='true'] { border-color: #e5484d; color: #e5484d; }
 #rec-badge {
   position: fixed;
@@ -814,3 +814,6 @@ body.recording-tab #btn-leiste { display: none; }
 body.recording-tab #sim-caption .sim-ctl,
 body.recording-tab #station-indicator,
 body.recording-tab #status { display: none; }
+/* Im Präsentationsmodus liegt unten die Folienleiste – Knöpfe darüber */
+body.presenting #btn-rec { bottom: calc(64px + var(--safe-b)); }
+body.presenting #btn-leiste { bottom: calc(116px + var(--safe-b)); }

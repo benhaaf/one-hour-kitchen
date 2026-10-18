@@ -280,14 +280,14 @@
       },
       "bodenteile": [
         {
-          "boden": "fliese",
+          "boden": "beton",
           "rechteck": [
             7.6,
             11.0,
             10.4,
             12
           ],
-          "_hinweis": "Fliesen vor Dessert & Tiefkühlung (Kondenswasser, leicht zu reinigen); vor dem Wein bleibt Holz"
+          "_hinweis": "Graue Bodenplatten vor Dessert & Tiefkühlung wie vor der Kühlung; vor dem Wein bleibt Holz"
         }
       ]
     },

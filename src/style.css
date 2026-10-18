@@ -778,3 +778,35 @@ body.mobile-rezept { touch-action: auto; -webkit-user-select: text; user-select:
 #sim-caption .sim-ctl button.on { background: #4f7f5a; }
 #sim-caption .sim-ctl [data-s="next"] { background: #d64527; }
 #sim-caption .sim-ctl { justify-content: center; }
+
+/* Bildschirmaufnahme */
+#btn-rec {
+  position: fixed;
+  z-index: 30;
+  right: calc(12px + var(--safe-r));
+  top: calc(10px + var(--safe-t));
+  width: 70px;
+  height: 46px;
+}
+#btn-rec span { font-size: 16px; color: #e5484d; }
+body.touch-mode #btn-rec { right: calc(156px + var(--safe-r)); }
+#btn-rec[aria-pressed='true'] { border-color: #e5484d; color: #e5484d; }
+#rec-badge {
+  position: fixed;
+  z-index: 30;
+  top: calc(12px + var(--safe-t));
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e5484d;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  pointer-events: none;
+}
+#rec-badge[hidden] { display: none; }
+/* Bei der Tab-Aufnahme verschwinden Aufnahme-Knopf, Anzeige und Tasten-Knopf aus dem Video (Stopp: Taste J oder „Freigabe beenden“ im Browser) */
+body.recording-tab #btn-rec,
+body.recording-tab #rec-badge,
+body.recording-tab #btn-leiste { display: none; }

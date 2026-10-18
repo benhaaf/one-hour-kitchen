@@ -28,6 +28,7 @@ import { HUD } from './ui.js';
 import { setupPWA } from './pwa.js';
 import { Deck } from './deck.js';
 import { runReferent } from './referent.js';
+import { Recorder } from './recorder.js';
 
 // QR-Code-Ziel: Rezeptkarte fürs Handy, kein 3D
 {
@@ -233,6 +234,24 @@ bus.on('png', () => {
   }
   exportDialog.show(url);
 });
+
+// Bildschirmaufnahme (Knopf oben rechts oder Taste J)
+const recBtn = document.createElement('button');
+recBtn.id = 'btn-rec';
+recBtn.className = 'tbtn';
+recBtn.title = 'Bildschirmaufnahme starten/stoppen (Taste J)';
+recBtn.innerHTML = '<span>⏺</span><small>Aufnahme</small>';
+document.body.appendChild(recBtn);
+const recorder = new Recorder({
+  canvas: renderer.domElement,
+  toast: (t, ms) => hud.toast(t, ms),
+  onState: (on) => {
+    recBtn.setAttribute('aria-pressed', String(on));
+    recBtn.querySelector('small').textContent = on ? 'Stopp' : 'Aufnahme';
+  },
+});
+recBtn.addEventListener('click', () => recorder.toggle());
+bus.on('aufnahme', () => recorder.toggle());
 
 // ---------- Etappe 5: Infokarten, Präsentationsmodus, Rahmen ----------
 const panels = new Panels(app, layout);

@@ -488,7 +488,7 @@ const TEX = {
       g.fillText('Heute probieren', 70, 170);
       g.fillStyle = '#c9c4bc';
       g.font = `500 30px ${SANS}`;
-      g.fillText('täglich 11:30–13:30 Uhr · Probieren kostenlos · ab 17:30 Uhr mietbar', 70, 240);
+      g.fillText('täglich 11:30–13:30 Uhr · Probieren kostenlos · 19–22 Uhr mietbar', 70, 240);
       const rows = [['Mo', '#01 Creamy Tomato Pasta'], ['Di', '#04 Gebratene Udon'], ['Mi', '#07 Quesadillas'], ['Do', '#03 Pasta e Fagioli'], ['Fr', '#08 Taco-Abend mit Guacamole'], ['Sa', '#05 Ramen-Abend']];
       rows.forEach(([d, n], i) => {
         const y = 330 + i * 92;

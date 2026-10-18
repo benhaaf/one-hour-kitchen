@@ -1,0 +1,12 @@
+{
+ "hinweis": "Zustand der Folien vor dem Umbau auf Stichpunkte (18.10.2026). Alle Zonenfolien: Minimap 620x508 @ (108,230), 3D-Bild 1060x596.25 @ (760,230), Text @ (108,760) Breite 620, Teamschrift YAFdJsttDqg 27 px, Zeilenhöhe 1.35.",
+ "PB1VBMksTZnJ4b8G": {"map":"LB8zpCrKn2vnGTF7","bild":"LBrr1YSRfCltltSY","text":"23 m² · Übergangszone\nAnkommen, Rollkorb nehmen, Rezept wählen\nBlickachse auf die Showküche bleibt frei"},
+ "PBWdVcsfbGJQjXyD": {"map":"LBxmhpfQj1Xtw4lg","bild":"LBmtPrpq02hT1pNh","text":"20 m² · Warenfläche Frische\nSchräger Stand bremst und lenkt nach links\nVorspeisen-Regal an der linken Wand\nWarenträger: niedriger Holzstand, Ware von oben sichtbar"},
+ "PB4tLd5rWCj7MxyM": {"map":"LB3GJblTcFT5BLtZ","bild":"LBk13l0HYT5WjccR","text":"44 m² · Querplatzierung\nPasta, Asian & Mexican Night\nKreuzblock: Hauptzutat auf Augenhöhe, Marken nach Anlass"},
+ "PBnvFrBWzhrphwq4": {"map":"LBQzshBrtjs6RccV","bild":"LBBDnVLZxFJDYbgs","text":"18 m² · Erlebniszone in der Mitte\nLive-Cooking 11:30–13:30\nTheke mit Sitzplätzen"},
+ "PBWBtzJd1dTPVB0S": {"map":"LBLT00jlLxYSkhNG","bild":"LBVVZsCpJmRsSz8Y","text":"12 m² · Warenfläche gekühlt\nMolkerei, Käse, frische Pasta, Fleisch & Fisch\nAn der Rückwand: zieht in die Tiefe"},
+ "PBFzbBhqkPG1Bnkw": {"map":"LBScQBmL7j0zQMNX","bild":"LBcC1hjfTXzv9bB7","text":"13 m² · Ergänzen\nTiefkühlkost, Desserts, Wein zum Rezept\nErst die Pflicht, dann der Genuss"},
+ "PB3fyzXZsvFV0wdC": {"map":"LB1B6pBDYM9FXD1k","bild":"LBmGvrDvGJzZ12xk","text":"29 m² · Längsplatzierung\nVorratskammer: Öl, Gewürze, Frühstück, Getränke\nÜberblick im Vorbeigehen, Gang 1,75 m"},
+ "PBZwbMrWv5HSKtxV": {"map":"LByzX0jrTmCq3RBt","bild":"LB4TwTNHmfydh3gR","text":"22 m² · direkt am Ausgang\n1 Bedienkasse + 2 SB-Kassen\nImpulsregal „Noch etwas dazu?“"},
+ "PB3DxsmSMrZwJ9PP": {"fakten_text":"246 m² gesamt · 17,8 × 13,8 m\n190 m² Verkaufsraum (77 %)\n49 m² L-Lager mit Kühl- & TK-Zelle\n7 m² Personal & WC\n\nGänge 1,4–1,75 m", "fakten_pos":"(1150,222) Breite 680, 30 px, Zeilenhöhe 1.35", "plan":"980x803 @ (108,222)", "ring":"680x408 @ (1150,545)"}
+}

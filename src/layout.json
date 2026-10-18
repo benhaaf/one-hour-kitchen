@@ -349,7 +349,7 @@
         12,
         13.8
       ],
-      "typ": "sonstige Fläche · Hinterbefüllung",
+      "typ": "sonstige Fläche · Lager",
       "farbe": "#4a4a4f",
       "licht": {
         "kelvin": 3600,
@@ -799,7 +799,7 @@
     },
     {
       "id": "L1",
-      "name": "Kühlzelle +2 °C (Lager & Hinterbefüllung)",
+      "name": "Kühlzelle +2 °C (Lager für Kühlware)",
       "typ": "kuehlzelle",
       "rechteck": [
         2.0,
@@ -811,7 +811,7 @@
       "temp": "+2 °C",
       "dach": "KÜHLZELLE",
       "schild": "KÜHLZELLE · Molkerei, Fleisch, Fisch",
-      "_hinweis": "Begehbare Kühlzelle im Lager: Lagerung der Kühlware und Hinterbefüllung des Kühlregals K1–K6. Zugleich Vorraum zur Tiefkühlzelle."
+      "_hinweis": "Begehbare Kühlzelle im Lager: Lagerung der Kühlware für das Kühlregal K1–K6. Zugleich Vorraum zur Tiefkühlzelle."
     },
     {
       "id": "L5",
@@ -1845,16 +1845,16 @@
           11.8
         ]
       },
-      "entscheidung": "Ein 7,2 m langes Kühlregal (K1–K6) mit Bannern darüber über die ganze linke Rückwand, das vom L-Lager aus über eine Kühlzelle befüllt wird.",
-      "begruendung": "Kühlpflichtige Zutaten stehen auf fast jeder Rezeptkarte und ziehen die Kundschaft in die Tiefe des Raums. Die Befüllung von hinten trennt den Warenweg vom Kundenweg: Nachfüllen ohne Rollwagen im Gang.",
+      "entscheidung": "Ein 7,2 m langes Kühlregal (K1–K6) mit Bannern darüber über die ganze linke Rückwand.",
+      "begruendung": "Kühlpflichtige Zutaten stehen auf fast jeder Rezeptkarte und ziehen die Kundschaft in die Tiefe des Raums.",
       "quelle": "Seminar-Checkliste Tag 2: F4 Warenweg, F5 Arbeitsweg, F6 Wegkreuzungen ✓; Ahlert/Kenning/Brock 2020, S. 297–302 ✓",
       "annahme": "Frische wirkt als Zielartikel (nicht belegt); Kosten der Kühlzelle sind nicht kalkuliert.",
-      "skizze": "Wie in der Skizze (Kühlung hinten links). Neu: Hinterbefüllung aus dem L-Lager.",
+      "skizze": "Wie in der Skizze (Kühlung hinten links).",
       "ebenen": {
         "zonen": false,
         "wege": true
       },
-      "notizen": "Kühlung an der Rückwand, von hinten aus der Kühlzelle befüllt. Alle kühlpflichtigen Zutaten stehen hier in ihren Warengruppen K1 bis K6 – Parmesan zum Beispiel bei Käse in K2. Über den Kühlregalen hängen Banner für die Orientierung."
+      "notizen": "Kühlung an der Rückwand. Alle kühlpflichtigen Zutaten stehen hier in ihren Warengruppen K1 bis K6 – Parmesan zum Beispiel bei Käse in K2. Über den Kühlregalen hängen Banner für die Orientierung."
     },
     {
       "nr": 8,
@@ -2011,16 +2011,16 @@
           9.4
         ]
       },
-      "entscheidung": "Das L-Lager umfasst die Rückseite und die rechte Seite (ca. 49 m²). Hinten links liegen eine begehbare Kühlzelle (+2 °C, ca. 8 m²) und dahinter eine Tiefkühlzelle (−20 °C, ca. 3 m²), die man durch die Kühlzelle betritt. Anlieferung über ein Rolltor hinten rechts, die Lagertür liegt am Basissortiment, das Kühlregal wird von hinten aus der Kühlzelle befüllt.",
+      "entscheidung": "Das L-Lager umfasst die Rückseite und die rechte Seite (ca. 49 m²). Hinten links liegen eine begehbare Kühlzelle (+2 °C, ca. 8 m²) und dahinter eine Tiefkühlzelle (−20 °C, ca. 3 m²), die man durch die Kühlzelle betritt. Anlieferung über ein Rolltor hinten rechts, die Lagertür liegt am Basissortiment.",
       "begruendung": "Waren-, Arbeits- und Kundenweg kreuzen sich kaum: Die Ware kommt hinten rein und geht direkt in Kühlzelle und Regale. Der Personalraum liegt abgetrennt vorn rechts.",
       "quelle": "Seminar-Checkliste Tag 2: F4–F6, E9 Anlieferung ✓",
       "annahme": "Anlieferzeiten und Rolltor sind am Standort zulässig (Fallannahme).",
-      "skizze": "Skizze: „L-Lager“ ohne Lage. Neu: L-Form hinten/rechts mit Anlieferung und Hinterbefüllung.",
+      "skizze": "Skizze: „L-Lager“ ohne Lage. Neu: L-Form hinten/rechts mit Anlieferung und Kühlzelle.",
       "ebenen": {
         "zonen": true,
         "wege": false
       },
-      "notizen": "Das L-Lager hinten und rechts: Anlieferung über das Rolltor, Warenweg und Kundenweg kreuzen sich nicht. Die Kühlung wird von hinten befüllt."
+      "notizen": "Das L-Lager hinten und rechts: Anlieferung über das Rolltor, Warenweg und Kundenweg kreuzen sich nicht."
     },
     {
       "nr": 13,
@@ -2499,7 +2499,7 @@
         },
         "ansicht": "draufsicht",
         "panel": "seite",
-        "notizen": "Den Plan von unten nach oben lesen. Wir betreten den Laden links durch den Eingang; nach etwa drei Metern steht das Matrix-Dashboard, leicht links, damit die Blickachse zur Showküche frei bleibt. Der Rezeptweg (rot) führt am schrägen Obst-und-Gemüse-Stand vorbei in den Rundlauf links, entlang der Gondeln zur Kühlung an der Rückwand, weiter zu Dessert und Wein, durch das Basissortiment und zur Kasse direkt vor dem Ausgang. Das L-Lager liegt hinten und rechts: Anlieferung per Rolltor, die Kühlung wird von hinten befüllt. Der Notausgang liegt links und bleibt frei von Waren."
+        "notizen": "Den Plan von unten nach oben lesen. Wir betreten den Laden links durch den Eingang; nach etwa drei Metern steht das Matrix-Dashboard, leicht links, damit die Blickachse zur Showküche frei bleibt. Der Rezeptweg (rot) führt am schrägen Obst-und-Gemüse-Stand vorbei in den Rundlauf links, entlang der Gondeln zur Kühlung an der Rückwand, weiter zu Dessert und Wein, durch das Basissortiment und zur Kasse direkt vor dem Ausgang. Das L-Lager liegt hinten und rechts: Anlieferung per Rolltor, dazu Kühl- und Tiefkühlzelle. Der Notausgang liegt links und bleibt frei von Waren."
       },
       "optimierung": {
         "typ": "folie",
@@ -2537,7 +2537,7 @@
             ],
             [
               "Kühlung an der Wand",
-              "Hinterbefüllung"
+              "Kühlregal an der Rückwand, Kühlzelle im Lager"
             ],
             [
               "–",

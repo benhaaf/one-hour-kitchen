@@ -1467,70 +1467,6 @@
       "stil": "linie"
     },
     {
-      "id": "schnellweg",
-      "name": "Schnellweg (≤ 15 Min.)",
-      "punkte": [
-        [
-          7.1,
-          -0.6
-        ],
-        [
-          7.3,
-          2.1
-        ],
-        [
-          8.2,
-          2.6
-        ],
-        [
-          8.2,
-          3.45
-        ],
-        [
-          14.2,
-          3.45
-        ],
-        [
-          14.35,
-          4.4
-        ],
-        [
-          14.35,
-          9.85
-        ],
-        [
-          13.1,
-          10
-        ],
-        [
-          12.1,
-          10.0
-        ],
-        [
-          12.1,
-          9.4
-        ],
-        [
-          12.1,
-          3.9
-        ],
-        [
-          11.1,
-          3.55
-        ],
-        [
-          11.1,
-          0.7
-        ],
-        [
-          10.3,
-          -0.6
-        ]
-      ],
-      "farbe": "#46c06a",
-      "stil": "gestrichelt"
-    },
-    {
       "id": "blickachse",
       "name": "Blickachse Eingang → Showküche",
       "punkte": [
@@ -1997,7 +1933,7 @@
           9.5
         ]
       },
-      "entscheidung": "Basissortiment („Vorratskammer“) längs: Wandregal (Öl & Essig, Gewürze & Brühe, Backen) plus eine Gondel (Frühstück, Kaffee & Tee, Süßwaren, Knabberartikel) mit 1,75 m Gang – das ist der Schnellweg vom Eingang zur Kasse. Die Schilder nennen nur die Warengruppe, ohne Kürzel.",
+      "entscheidung": "Basissortiment („Vorratskammer“) längs: Wandregal (Öl & Essig, Gewürze & Brühe, Backen) plus eine Gondel (Frühstück, Kaffee & Tee, Süßwaren, Knabberartikel) mit 1,75 m Gang – auf dem Rundlauf zurück nach vorn zur Kasse. Die Schilder nennen nur die Warengruppe, ohne Kürzel.",
       "begruendung": "Längsplatzierung unterstützt bestehende Kaufabsichten: Wer gezielt Olivenöl sucht, erkennt die Warengruppe im Vorbeigehen, vergleicht und greift. Das Basissortiment sichert die Grundfrequenz (Lehre aus dem Kochhaus).",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3 ✓; Seminarskript: Längsplatzierung → „bestehende Kaufrelevanz“ ✓; Meyer, Tagesspiegel 28.03.2019 (Kochhaus) ✓",
       "annahme": "Schnellkauf ≤ 15 Minuten ist ein Zielwert.",
@@ -2006,7 +1942,7 @@
         "zonen": false,
         "wege": true
       },
-      "notizen": "Das Basissortiment steht längs zum Schnellweg: Wandregal plus Gondel mit 1,75 Meter Gang. Wer gezielt Olivenöl sucht, findet es im Vorbeigehen. Die Schilder zeigen nur die Warengruppe – das ist hier verständlicher als ein Kürzel."
+      "notizen": "Das Basissortiment steht längs zum Weg: Wandregal plus Gondel mit 1,75 Meter Gang. Wer gezielt Olivenöl sucht, findet es im Vorbeigehen. Die Schilder zeigen nur die Warengruppe – das ist hier verständlicher als ein Kürzel."
     },
     {
       "nr": 11,
@@ -2039,7 +1975,7 @@
         "zonen": true,
         "wege": true
       },
-      "notizen": "Kasse mit Band und SB-Kasse direkt vor dem Ausgang, dazu das Impulsregal zum Ergänzen. Die Kassenschlange endet vor der Querung des Schnellwegs."
+      "notizen": "Kasse mit Band und SB-Kasse direkt vor dem Ausgang, dazu das Impulsregal zum Ergänzen."
     },
     {
       "nr": 12,
@@ -2527,11 +2463,6 @@
             "Dashboard → Rundlauf → Kühlung → Kasse"
           ],
           [
-            "#46c06a",
-            "Schnellweg",
-            "Basis längs → Kasse"
-          ],
-          [
             "#f2c230",
             "Blickachse",
             "Eingang → Showküche"
@@ -2556,7 +2487,7 @@
         },
         "ansicht": "draufsicht",
         "panel": "seite",
-        "notizen": "Den Plan von unten nach oben lesen. Wir betreten den Laden links durch den Eingang; nach etwa drei Metern steht das Matrix-Dashboard, leicht links, damit die Blickachse zur Showküche frei bleibt. Der Rezeptweg (rot) führt am schrägen Obst-und-Gemüse-Stand vorbei in den Rundlauf links, entlang der Gondeln zur Kühlung an der Rückwand, weiter zu Dessert und Wein, durch das Basissortiment und zur Kasse direkt vor dem Ausgang. Der Schnellweg (grün gestrichelt) geht direkt ins Basissortiment. Das L-Lager liegt hinten und rechts: Anlieferung per Rolltor, die Kühlung wird von hinten befüllt. Der Notausgang liegt links und bleibt frei von Waren."
+        "notizen": "Den Plan von unten nach oben lesen. Wir betreten den Laden links durch den Eingang; nach etwa drei Metern steht das Matrix-Dashboard, leicht links, damit die Blickachse zur Showküche frei bleibt. Der Rezeptweg (rot) führt am schrägen Obst-und-Gemüse-Stand vorbei in den Rundlauf links, entlang der Gondeln zur Kühlung an der Rückwand, weiter zu Dessert und Wein, durch das Basissortiment und zur Kasse direkt vor dem Ausgang. Das L-Lager liegt hinten und rechts: Anlieferung per Rolltor, die Kühlung wird von hinten befüllt. Der Notausgang liegt links und bleibt frei von Waren."
       },
       "optimierung": {
         "typ": "folie",
@@ -2970,7 +2901,7 @@
               ],
               [
                 "Bei uns",
-                "Wandregal + Gondel am Schnellweg"
+                "Wandregal + Gondel längs zum Weg"
               ]
             ],
             "tag": [
@@ -3266,7 +3197,7 @@
           },
           {
             "titel": "Grundriss",
-            "text": "Rezeptweg und Schnellweg",
+            "text": "Rezeptweg als Rundlauf",
             "tag": [
               "Q",
               "S. 297–302; Larson 2005"
@@ -3369,7 +3300,7 @@
             ],
             [
               "Ich will nur Milch.",
-              "Schnellweg rechts durch die Basis, Kühlung hinten, ca. 25 m.",
+              "Auch dann einmal durch den Rundlauf – die Kühlung liegt bewusst hinten. Das nehmen wir in Kauf, unser Kern ist der Rezeptkunde.",
               "Grundriss"
             ],
             [

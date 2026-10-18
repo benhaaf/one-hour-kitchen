@@ -166,7 +166,7 @@ function faceRect(f, a1, a2, n1, n2) {
 const ANLASS = {
   schnell: { sym: '»', text: 'schnell', sub: '≤ 20 Min.', farbe: '#9c4a34' },
   besonders: { sym: '★', text: 'besonders', sub: 'Menü mit Dessert', farbe: '#6a4f5e' },
-  günstig: { sym: '€', text: 'günstig', sub: '≤ 4 € je Portion', farbe: '#4f6b45' },
+  günstig: { sym: '€', text: 'günstig', sub: 'fürs kleine Budget', farbe: '#4f6b45' },
 };
 // Reihenfolge der Anlass-Zeilen auf der Tafel: besonders oben, darunter schnell, dann günstig
 const ANLASS_REIHE = ['besonders', 'schnell', 'günstig'];
@@ -469,8 +469,8 @@ const TEX = {
           g.fillStyle = '#8a8378';
           g.font = `500 20px ${SANS}`;
           const infoW = qx - tx - 12;
-          g.fillText(clip(g, r.zeit, infoW), tx, y + rh - 48);
-          g.fillText(clip(g, r.preis, infoW), tx, y + rh - 22);
+          // Keine Preise auf der Tafel – nur die Kochzeit
+          g.fillText(clip(g, r.zeit, infoW), tx, y + rh - 22);
         });
       });
     });

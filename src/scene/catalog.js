@@ -279,7 +279,6 @@ export const CATALOG = {
   // ================= Kasse & Regalköpfe =================
   IMPULS: [
     ...reihe('tafel', TAFEL, '#3a2216', '#c9a227', 'Kakaowerk', [['Zartbitter', '70 % · 100 g', 1.99], ['Chili-Schoko', '100 g', 2.29, { c: '#7f2620' }]]),
-    P('becher', [0.1, 0.12, 0.1], '#3f6b3a', '#f3f0e8', 'Hof Neckar', 'Basilikum', 'im Topf', 1.99),
     ...reihe('packung', [0.04, 0.14, 0.03], '#d8c7a2', '#7a3b1e', 'Grünwerk', [['Müsliriegel', 'Bio · 35 g', 0.79], ['Nussriegel', 'Bio · 35 g', 0.99, { a: '#a5823f' }]]),
     P('packung', [0.05, 0.09, 0.02], '#f3f0e8', '#3e6a96', 'Basis+', 'Kaugummi', 'Minze', 0.99),
   ],
@@ -543,7 +542,6 @@ const MEHR2 = {
     S('Grünwerk', 'packung', [0.04, 0.14, 0.03], '#d8c7a2', ['#a8342b', '#3f6b3a', '#c9a227'], ['Dattelriegel', 'Fruchtriegel', 'Haferriegel'], 'Bio · 35 g', 0.99),
     S('Basis+', 'packung', [0.05, 0.09, 0.02], '#f3f0e8', ['#3f6b3a', '#a8342b', '#c9a227'], ['Kaugummi Eukalyptus', 'Kaugummi Erdbeer', 'Pfefferminz'], '10 Stück', 0.99),
     S('Würzhaus', 'packung', [0.06, 0.08, 0.02], '#7f2620', ['#e3d3a4', '#3f6b3a'], ['Ingwer-Bonbons', 'Salbei-Bonbons', 'Zitronen-Bonbons', 'Lakritz'], '75 g', 1.29),
-    S('Hof Neckar', 'becher', [0.1, 0.12, 0.1], '#3f6b3a', ['#f3f0e8'], ['Petersilie', 'Schnittlauch', 'Koriander', 'Thai-Basilikum', 'Minze'], 'im Topf', 1.99),
     S('Limonata', 'flasche', [0.055, 0.18, 0.055], '#d9bf45', ['#1e3d6e', '#a8342b', '#3f6b3a'], ['Limone', 'Aranciata', 'Pompelmo', 'Chinotto'], '0,33 l', 1.29),
     S('Neckarquelle', 'flasche', [0.055, 0.18, 0.055], '#5e8aa6', ['#f3f0e8'], ['Wasser still', 'Wasser medium'], '0,5 l', 0.89),
     S('Teekontor', 'flasche', [0.055, 0.18, 0.055], '#2f4f3a', ['#e3d3a4', '#a8342b'], ['Eistee Pfirsich', 'Mate Zitrone', 'Ingwer-Shot'], '0,33 l', 1.79),
@@ -560,7 +558,7 @@ for (const [k, lists] of Object.entries(MEHR2)) {
 
 // ================= Themenwelten =================
 // Die drei Gondeln folgen den Kochwelten der Anzeigetafel (Gondel 1 = Pasta Night, 2 = Asian Night, 3 = Mexican Night).
-// Jede Gondelseite ist ein Kreuzblock: Warengruppen senkrecht (wg), Marken waagerecht nach Preislage.
+// Jede Gondelseite ist ein Kreuzblock: je Boden eine Warengruppe (wg), senkrecht Blöcke nach Anlass/Preislage.
 // Das allgemeine Trockensortiment ohne Bezug zu den Rezepten (Eintöpfe, Obstkonserven, Getreide) führt der Laden nicht.
 {
   const OLD = { ...CATALOG };
@@ -684,13 +682,87 @@ export const WELTEN = {
 };
 
 // ---------- Planogramm einer Regalfront als Kreuzblock ----------
-// Senkrecht: Warengruppen-Blöcke (wg, z. B. „Lange Pasta“ | „Kurze Pasta“ | „Risotto & Polenta“) – der Kunde sucht mit der Rezeptkarte nach dem Produkt.
-// Waagerecht: Marken nach Preislage – Premium oben in der Sichtzone, klassische Marken und Bio in der Greifzone, Eigenmarke unten.
-// So läuft jede Marke als durchgehendes Band über alle Warengruppen (Kreuzblock nach Ahlert/Kenning/Brock).
+// Waagerecht: je Boden eine Warengruppe (wg) – oben in der Sichtzone die Hauptzutat (z. B. Pasta), darunter Saucen, Extras.
+// Senkrecht: drei Blöcke nach Anlass der Anzeigetafel = Preislage der Marken:
+//   „€ günstig“ (Eigenmarke) · „» schnell“ (klassische Marken, Bio) · „★ besonders“ (Premium) – „besonders“ steht rechts.
+// So bleibt es ein Kreuzblock (Artikelgruppen waagerecht, darin senkrechte Herstellerblöcke, Ahlert/Kenning/Brock 2020, S. 302 f.).
 // Wird für den 3D-Aufbau UND für das Regalbild in der Infokarte verwendet (gleiches Ergebnis).
-// levels = Anzahl normaler Böden (ohne Bückzone ganz unten). Ergebnis: { blocks: [{ wg, brand, w, levels: [[sku…] je Boden von oben]}], bulk: [sku…] }
-const TIER = { premium: 0, molino: 0, feinkost: 0, wein: 0, klassik: 1, asia: 1, mex: 1, gewuerz: 1, regional: 1, drink: 1, bio: 2, eigen: 3 };
-export function planFace(code, levels = 3) {
+// levels = Anzahl normaler Böden (ohne Bückzone ganz unten). Ergebnis: { blocks: [{ key, wg, brand, w, levels: [[sku…] je Boden von oben]}], bulk: [sku…] }
+const TIER = { premium: 0, molino: 0, feinkost: 0, wein: 0, klassik: 1, asia: 1, mex: 1, gewuerz: 1, regional: 1, drink: 1, bio: 1, eigen: 2 };
+export const ANLASS_BLOECKE = [
+  { key: 'günstig', label: '€ günstig' },
+  { key: 'schnell', label: '» schnell' },
+  { key: 'besonders', label: '★ besonders' },
+];
+export function anlassOf(p) {
+  const t = TIER[BRANDS[p.b]?.st] ?? 1;
+  return t === 0 ? 'besonders' : t === 2 ? 'günstig' : 'schnell';
+}
+function planByAnlass(code, levels = 3) {
+  const list = CATALOG[code] || [];
+  const normal = list.filter((p) => !p.g);
+  const bulk = list.filter((p) => p.g);
+  // Warengruppen in Katalog-Reihenfolge; mehr Gruppen als Böden → die letzten teilen sich den untersten Boden
+  const wgs = [];
+  for (const p of normal) if (!wgs.includes(p.wg || '')) wgs.push(p.wg || '');
+  // Weniger Warengruppen als Böden: die erste (Hauptzutat) bekommt zusätzliche Böden, damit kein Boden leer bleibt
+  const extra = Math.max(0, levels - wgs.length);
+  const start = wgs.map((_, i) => (i === 0 ? 0 : i + extra));
+  const spanRow = new Map();
+  if (extra) {
+    const first = normal.filter((p) => (p.wg || '') === wgs[0]);
+    const tot = first.reduce((s, p) => s + p.m[0], 0) || 1;
+    let acc = 0;
+    for (const p of first) {
+      spanRow.set(p, Math.min(extra, Math.floor(((acc + p.m[0] / 2) / tot) * (extra + 1))));
+      acc += p.m[0];
+    }
+  }
+  const rowOf = (p) => (spanRow.has(p) ? spanRow.get(p) : Math.min(levels - 1, start[wgs.indexOf(p.wg || '')]));
+  // Je Boden: Marken nach mittlerem Preis sortieren und in drei etwa gleich breite Drittel teilen –
+  // günstigstes Drittel = „günstig“, mittleres = „schnell“, teuerstes = „besonders“. Marken bleiben zusammen (Herstellerblöcke).
+  const keyOf = new Map();
+  for (let r = 0; r < levels; r++) {
+    const items = normal.filter((p) => rowOf(p) === r);
+    const byBrand = new Map();
+    for (const p of items) {
+      if (!byBrand.has(p.b)) byBrand.set(p.b, []);
+      byBrand.get(p.b).push(p);
+    }
+    // Erst ganze Herstellerblöcke nach Preis in Drittel teilen; bleibt dabei ein Anlass leer, die Sorten einzeln verteilen
+    const assign = (groups) => {
+      const gs = groups.map(([b, ps]) => ({ ps, pr: ps.reduce((s, p) => s + p.pr, 0) / ps.length, w: ps.reduce((s, p) => s + p.m[0], 0) }));
+      gs.sort((x, y) => x.pr - y.pr);
+      const tot = gs.reduce((s, x) => s + x.w, 0) || 1;
+      const out = new Map();
+      let acc = 0;
+      for (const x of gs) {
+        const mid = (acc + x.w / 2) / tot;
+        acc += x.w;
+        const key = gs.length === 1 ? 'schnell' : mid < 1 / 3 ? 'günstig' : mid < 2 / 3 ? 'schnell' : 'besonders';
+        for (const p of x.ps) out.set(p, key);
+      }
+      return out;
+    };
+    let res = assign([...byBrand.entries()]);
+    if (items.length >= 3 && new Set(res.values()).size < 3) res = assign(items.map((p) => [p.b, [p]]));
+    for (const [p, k] of res) keyOf.set(p, k);
+  }
+  const blocks = ANLASS_BLOECKE.map(({ key, label }) => {
+    const lv = Array.from({ length: levels }, () => []);
+    for (const p of normal) if (keyOf.get(p) === key) lv[rowOf(p)].push(p);
+    const need = Math.max(0.01, ...lv.map((r) => r.reduce((s, p) => s + p.m[0], 0)));
+    const brands = [...new Set(lv.flat().map((p) => p.b))];
+    return { key, wg: label, brand: label, brands, need, levels: lv };
+  }).filter((b) => b.levels.some((r) => r.length));
+  const total = blocks.reduce((s, b) => s + b.need, 0) || 1;
+  for (const b of blocks) b.w = b.need / total;
+  return { blocks, bulk, need: total, rows: wgs.slice(0, levels) };
+}
+
+// Übrige Regale (Kühlung, Dessert, Wein, Basis, Impuls): Produktblock – Warengruppen senkrecht, Marken nach Preislage auf den Böden
+const TIER_ALT = { premium: 0, molino: 0, feinkost: 0, wein: 0, klassik: 1, asia: 1, mex: 1, gewuerz: 1, regional: 1, drink: 1, bio: 2, eigen: 3 };
+function planByWarengruppe(code, levels = 3) {
   const list = CATALOG[code] || [];
   const normal = list.filter((p) => !p.g);
   const bulk = list.filter((p) => p.g);
@@ -701,7 +773,7 @@ export function planFace(code, levels = 3) {
     if (!g) groups.push((g = { wg, items: [] }));
     g.items.push(p);
   }
-  const tier = (p) => TIER[BRANDS[p.b]?.st] ?? 1;
+  const tier = (p) => TIER_ALT[BRANDS[p.b]?.st] ?? 1;
   const blocks = groups.map(({ wg, items }) => {
     // stabil nach Preislage sortieren, Sorten einer Marke bleiben zusammen
     const brandOrder = [];
@@ -724,4 +796,9 @@ export function planFace(code, levels = 3) {
   const total = blocks.reduce((s, b) => s + b.need, 0) || 1;
   for (const b of blocks) b.w = b.need / total;
   return { blocks, bulk, need: total };
+}
+
+// Kochwelt-Gondeln (T1–T6): Kreuzblock nach Anlass; alle anderen Regale wie bisher
+export function planFace(code, levels = 3) {
+  return /^T[1-6]$/.test(code) ? planByAnlass(code, levels) : planByWarengruppe(code, levels);
 }

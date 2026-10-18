@@ -999,6 +999,8 @@ const BUILDERS = {
       const plan = ctx.products.placeFace(face.code, {
         along: 'x', from: x1 + 0.04, to: x2 - 0.04, front: f.front, dir: f.dir,
         levels: [{ y: 1.48, maxH: 0.29, depth: 0.24 }, { y: 1.15, maxH: 0.3, depth: 0.24 }, { y: 0.8, maxH: 0.32, depth: 0.24 }, { y: 0.45, maxH: 0.32, depth: 0.24 }, { y: 0.1, maxH: 0.32, depth: 0.24 }],
+        // aus Sicht der Kundin vor der Seite: „besonders“ rechts – auf der Rückseite läuft x andersherum
+        reverse: f.dir[1] > 0,
       });
       // Schild über der Seite: Kochwelt groß, darunter Warengruppen + Fachcode
       const d = f.dir;
@@ -1006,7 +1008,7 @@ const BUILDERS = {
       const sy = 2.3;
       sign(ctx.extra, welt || face.titel, { w: 2.6, h: 0.32, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, accent: wfarbe, sub: `${face.titel} · Fachcode ${face.code}` }, (x1 + x2) / 2, sy, sz, d);
       for (const ox of [-1.15, 1.15]) b.box('metall', [(x1 + x2) / 2 + ox - 0.004, (x1 + x2) / 2 + ox + 0.004, sz - d[1] * 0.006 - 0.004, sz - d[1] * 0.006 + 0.004], sy + 0.16, 3.2);
-      // Warengruppen-Leiste über der Ware: zeigt die senkrechten Blöcke des Kreuzblocks
+      // Anlass-Leiste über der Ware (€ günstig · » schnell · ★ besonders): zeigt die senkrechten Blöcke des Kreuzblocks
       if (plan) {
         let a = x1 + 0.04;
         const W = x2 - x1 - 0.08;
@@ -1014,7 +1016,7 @@ const BUILDERS = {
           const w = bl.w * W;
           if (w > 0.35 && bl.wg) {
             const [px, pz] = f.at(a + w / 2, 0.026);
-            sign(ctx.extra, bl.wg, { w: Math.min(w - 0.06, 1.2), h: 0.075, bg: '#25282a', fg: '#efe7d6', font: '500' }, px, H + 0.04, pz, d);
+            sign(ctx.extra, bl.wg, { w: Math.min(w - 0.06, 1.0), h: 0.09, bg: '#25282a', fg: '#efe7d6', font: '600' }, px, H + 0.045, pz, d);
           }
           a += w;
         }
@@ -1407,7 +1409,7 @@ const BUILDERS = {
     ctx.products.placeFace('IMPULS', { along: 'z', from: z1 + 0.03, to: z2 - 0.03, front: x2, dir: [1, 0], levels: levels.slice().reverse().map((y) => ({ y, maxH: 0.3, depth: x2 - x1 - 0.06 })), rows: 2, tagOut: 0.019, tagDy: -0.043 });
     b.box('akzent', [x1, x2, z1, z2], H - 0.02, H);
     b.box('anthrazit', [x1 + 0.01, x1 + 0.03, (z1 + z2) / 2 - 0.01, (z1 + z2) / 2 + 0.01], H, H + 0.25);
-    sign(ctx.extra, 'Noch etwas dazu?', { w: 1.3, h: 0.28, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Kräuter · Schokolade · Riegel' }, x1 + 0.035, H + 0.33, (z1 + z2) / 2, [1, 0]);
+    sign(ctx.extra, 'Noch etwas dazu?', { w: 1.3, h: 0.28, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: 'Schokolade · Riegel · Getränke' }, x1 + 0.035, H + 0.33, (z1 + z2) / 2, [1, 0]);
   },
 
   glasbruestung(b, m) {

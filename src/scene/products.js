@@ -834,7 +834,7 @@ export class Products {
 
   // Ganze Regalfront nach Planogramm bestücken (keine Wiederholungen: jede Sorte steht genau einmal, mit Facings).
   // levels: Böden von oben nach unten [{ y, maxH, depth }]; der unterste Boden nimmt Großpackungen auf, falls vorhanden.
-  placeFace(code, { along, from, to, front, dir, levels, tagOut = 0.008, tagDy = -0.045, gap = 0.005, rows = 3 }) {
+  placeFace(code, { along, from, to, front, dir, levels, tagOut = 0.008, tagDy = -0.045, gap = 0.005, rows = 3, reverse = false }) {
     const plan = planShelf(code, levels.length);
     const W = to - from;
     const kindOf = new Map((this.byCode[code] || []).map((k) => [k.p, k]));
@@ -892,7 +892,8 @@ export class Products {
         s1 += slot;
       });
     };
-    // Herstellerblöcke nebeneinander, Sorten je Block auf die Böden verteilt
+    // Anlass-Blöcke nebeneinander (aus Kundensicht: günstig links, besonders rechts), Sorten je Block auf die Böden verteilt
+    if (reverse) plan.blocks = plan.blocks.slice().reverse();
     let a = from;
     for (const bl of plan.blocks) {
       const a2 = a + bl.w * W;

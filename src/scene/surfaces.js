@@ -132,6 +132,8 @@ export function buildFloors(layout) {
   add('beton', [-t, W + t, -t, D + t], 0);
   layout.zonen.forEach((z, i) => {
     if (z.boden === 'holz' || z.boden === 'fliese') add(z.boden, z.rechteck, 0.002 + i * 0.0003);
+    // Teilflächen mit anderem Boden (z. B. Fliesen vor der Tiefkühlung, Holz vor dem Wein)
+    (z.bodenteile || []).forEach((t, j) => add(t.boden, t.rechteck, 0.0026 + i * 0.0003 + j * 0.0001));
   });
   return group;
 }

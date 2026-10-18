@@ -277,7 +277,19 @@
       "beschriftung": {
         "x": 10.9,
         "z": 10.85
-      }
+      },
+      "bodenteile": [
+        {
+          "boden": "fliese",
+          "rechteck": [
+            7.6,
+            11.0,
+            10.4,
+            12
+          ],
+          "_hinweis": "Fliesen vor Dessert & Tiefkühlung (Kondenswasser, leicht zu reinigen); vor dem Wein bleibt Holz"
+        }
+      ]
     },
     {
       "id": "Z7",
@@ -938,28 +950,28 @@
         "name": "Reckzone",
         "von": 1.7,
         "bis": 2.2,
-        "inhalt": "Kochwelt-Schild + Warengruppen-Leiste",
+        "inhalt": "Themenschild der Kochwelt, leichte große Packungen",
         "farbe": "#9aa0a6"
       },
       {
         "name": "Sichtzone",
         "von": 1.2,
         "bis": 1.7,
-        "inhalt": "Premiummarken (Band über alle Warengruppen)",
+        "inhalt": "Hauptzutat des Rezepts (z. B. Pasta)",
         "farbe": "#3fbf7f"
       },
       {
         "name": "Greifzone",
         "von": 0.8,
         "bis": 1.2,
-        "inhalt": "klassische Marken und Bio",
+        "inhalt": "Saucen, Gewürze, Extras",
         "farbe": "#f2c230"
       },
       {
         "name": "Bückzone",
         "von": 0,
         "bis": 0.8,
-        "inhalt": "Eigenmarke, Großpackungen",
+        "inhalt": "Schweres und Großpackungen",
         "farbe": "#e06c4f"
       }
     ]
@@ -1800,8 +1812,8 @@
           5.55
         ]
       },
-      "entscheidung": "Jede Gondelseite ist ein Kreuzblock: senkrecht die Warengruppen (hier Tomaten & Passata | Sugo & Pastasaucen | Pesto | Bohnen & Thunfisch), waagerecht die Marken nach Preislage – Premium in der Sichtzone, klassische Marken und Bio in der Greifzone, Eigenmarke und Großpackungen in der Bückzone. Jede Sorte steht genau einmal, mit 1–3 Facings.",
-      "begruendung": "Wir haben die drei Blockarten abgewogen: Ein Herstellerblock passt zu markentreuen Warengruppen (z. B. Kaffee), ein reiner Produktblock zum Vergleich innerhalb einer Warengruppe. Unsere Kundin sucht mit der Rezeptkarte nach einem Produkt („Passata“), nicht nach einer Marke – deshalb Warengruppen senkrecht. Die Marken laufen waagerecht als Band über alle Warengruppen: Wer günstig kocht, findet die Eigenmarke immer unten, wer Premium will, auf Augenhöhe. Facings und Regalhöhe steuern die Aufmerksamkeit.",
+      "entscheidung": "Jede Gondelseite ist ein Kreuzblock wie im Buch: Jeder Boden hat seine Warengruppe – oben in der Sichtzone die Hauptzutat, darunter Saucen und Extras, unten Schweres und Großpackungen. Senkrecht stehen die Marken in drei Blöcken nach Preislage, benannt wie die Zeilen der Anzeigetafel: links „€ günstig“, in der Mitte „» schnell“, rechts „★ besonders“.",
+      "begruendung": "Die Kundin entscheidet zuerst nach der Produktart („Pasta“) und dann nach Marke und Preis. Deshalb bekommt jede Produktart einen Boden, die wichtigste die Sichtzone. Die Anlass-Blöcke wiederholen die Tafel: Wer „günstig“ gewählt hat, greift links, wer „besonders“ kocht, rechts. Kunden empfinden den Kreuzblock laut Buch als besonders logisch.",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 302–303 (Regalzonen; Hersteller-, Produkt- und Kreuzblock) ✓; Chandon et al. 2009, J. of Marketing 73(6), S. 1–17 (Facings & Regalhöhe → Aufmerksamkeit) ✓",
       "annahme": "Sortiment, Markenreihenfolge und Facings sind Fallannahmen; die Wirkung im eigenen Store ist nicht gemessen.",
       "skizze": "Neu ausgearbeitet (in der Skizze nicht enthalten).",
@@ -1811,7 +1823,7 @@
         "regalzonen": true
       },
       "regalbild": "M4",
-      "notizen": "Das Regalbild der Pasta-Night-Gondel: senkrecht die Warengruppen – Tomaten, Sugo, Pesto, Bohnen –, waagerecht die Marken nach Preislage. Oben Premium, in der Mitte klassische Marken und Bio, unten Eigenmarke und Großpackungen. Das ist ein Kreuzblock: Die Kundin findet mit der Karte zuerst das Produkt und vergleicht dann quer die Preise. Die Regalzonen sind eingeblendet."
+      "notizen": "Das Regalbild der Pasta-Night-Gondel: Jeder Boden eine Warengruppe, oben die Hauptzutat. Senkrecht drei Blöcke wie auf der Tafel – günstig links, schnell in der Mitte, besonders rechts. Das ist ein Kreuzblock: Artikelgruppen waagerecht, darin die Marken nebeneinander. Die Regalzonen sind eingeblendet."
     },
     {
       "nr": 7,
@@ -1966,7 +1978,7 @@
           1.6
         ]
       },
-      "entscheidung": "Eine Bedienkasse mit Band und zwei SB-Kassen direkt vor dem Ausgang. Dazu ein Impulsregal (Kräuter, Schokolade, Riegel) an der Warteschlange.",
+      "entscheidung": "Eine Bedienkasse mit Band und zwei SB-Kassen direkt vor dem Ausgang. Dazu ein Impulsregal (Schokolade, Riegel, kleine Getränke) an der Warteschlange.",
       "begruendung": "Die Kasse liegt am Ende beider Wege. SB-Kassen fangen die Spitzen nach Vorlesung und Feierabend ab (Checkliste K8: Wartezeit). Ob SB-Technik angenommen wird, hängt laut Studien vom wahrgenommenen Nutzen ab – deshalb gibt es weiter eine Bedienkasse.",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 297–302 ✓; Inman/Nikolova 2017, J. of Retailing 93(1), S. 7–28 ◐; Seminar-Checkliste K8 ✓",
       "annahme": "Spitzenlast ca. 25 Kunden pro Stunde (Fallannahme).",

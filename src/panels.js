@@ -126,15 +126,15 @@ export class Panels {
     // Zelle: Marken in dieser Zone (Kreuzblock = Marken als waagerechte Bänder) + Anzahl Sorten
     const cell = (zi, bl) => {
       if (zi === 0) return `<b>${esc(m.regal.welt || '')} · ${esc(face.titel)} · ${esc(face.code)}</b>`;
-      const items = zi === 3 ? [...bl.levels.slice(2).flat(), ...plan.bulk.filter((p) => p.wg === bl.wg)] : bl.levels[zi - 1] || [];
+      const items = zi === 3 ? bl.levels.slice(2).flat() : bl.levels[zi - 1] || [];
       if (!items.length) return '–';
       const br = [...new Set(items.map((p) => p.b))];
       return `<b>${esc(br.join(', '))}</b><br><small>${items.length} Sorten, z. B. ${esc(items.slice(0, 2).map(nm).join(', '))}</small>`;
     };
-    return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · ${esc(m.regal.welt || '')} · ${esc(face.titel)} (${esc(face.code)}) · Kreuzblock: Warengruppen senkrecht, Marken waagerecht</span>
+    return `<div class="ic-row"><span class="ic-label">Regalbild ${esc(id)} · ${esc(m.regal.welt || '')} · ${esc(face.titel)} (${esc(face.code)}) · Kreuzblock: je Boden eine Warengruppe, senkrecht nach Anlass (günstig · schnell · besonders)</span>
       <table class="planogram"><thead><tr><th></th>${B.map((bl) => `<th>${esc(bl.brand)}</th>`).join('')}</tr></thead>
       <tbody>${zonen.map((z, zi) => `<tr><th style="border-left:4px solid ${z.farbe}">${esc(z.name)}<small>${fmtH(z)} m</small></th>${zi === 0 ? `<td colspan="${B.length}">${cell(0)}</td>` : B.map((bl) => `<td>${cell(zi, bl)}</td>`).join('')}</tr>`).join('')}</tbody></table>
-      <p class="pg-note">Jede Sorte steht genau einmal (${plan.blocks.reduce((n, b) => n + b.levels.flat().length, 0) + plan.bulk.length} Sorten). Die Marken laufen als waagerechtes Band über alle Warengruppen – oben Premium, unten Eigenmarke. Die Rezeptkarte führt über den Fachcode ${esc(face.code)} hierher.</p></div>`;
+      <p class="pg-note">Jede Sorte steht genau einmal (${plan.blocks.reduce((n, b) => n + b.levels.flat().length, 0) + plan.bulk.length} Sorten). Jeder Boden ist eine Warengruppe (oben die Hauptzutat), darin stehen die Marken nach Preislage in drei Blöcken – links „günstig“, in der Mitte „schnell“, rechts „besonders“, wie die Zeilen der Anzeigetafel. Großpackungen ganz unten. Die Rezeptkarte führt über den Fachcode ${esc(face.code)} hierher.</p></div>`;
   }
 
   hideCard() {

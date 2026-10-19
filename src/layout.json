@@ -441,8 +441,8 @@
         3,
         2.9
       ],
-      "laenge": 2.8,
-      "tiefe": 1.1,
+      "laenge": 2.6,
+      "tiefe": 0.9,
       "richtung": [
         -0.66,
         0.75
@@ -1812,8 +1812,8 @@
           5.55
         ]
       },
-      "entscheidung": "Jede Gondelseite ist ein Kreuzblock wie im Buch: Jeder Boden hat seine Warengruppe – oben in der Sichtzone die Hauptzutat, darunter Saucen und Extras, unten Schweres und Großpackungen. Senkrecht stehen die Marken in drei Blöcken nach Preislage, benannt wie die Zeilen der Anzeigetafel: links „€ günstig“, in der Mitte „» schnell“, rechts „★ besonders“.",
-      "begruendung": "Die Kundin entscheidet zuerst nach der Produktart („Pasta“) und dann nach Marke und Preis. Deshalb bekommt jede Produktart einen Boden, die wichtigste die Sichtzone. Die Anlass-Blöcke wiederholen die Tafel: Wer „günstig“ gewählt hat, greift links, wer „besonders“ kocht, rechts. Kunden empfinden den Kreuzblock laut Buch als besonders logisch.",
+      "entscheidung": "Jede Gondelseite ist ein Kreuzblock wie im Buch: Jeder Boden hat seine Warengruppe – oben in der Sichtzone die Hauptzutat, darunter Saucen und Extras, unten Schweres und Großpackungen. Senkrecht stehen die Marken in drei Blöcken nach Preislage, benannt wie die Zeilen der Anzeigetafel: links „★ besonders“, in der Mitte „» schnell“, rechts „€ günstig“.",
+      "begruendung": "Die Kundin entscheidet zuerst nach der Produktart („Pasta“) und dann nach Marke und Preis. Deshalb bekommt jede Produktart einen Boden, die wichtigste die Sichtzone. Die Anlass-Blöcke wiederholen die Tafel: Wer „besonders“ kocht, greift links, wer „günstig“ gewählt hat, rechts. Kunden empfinden den Kreuzblock laut Buch als besonders logisch.",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 302–303 (Regalzonen; Hersteller-, Produkt- und Kreuzblock) ✓; Chandon et al. 2009, J. of Marketing 73(6), S. 1–17 (Facings & Regalhöhe → Aufmerksamkeit) ✓",
       "annahme": "Sortiment, Markenreihenfolge und Facings sind Fallannahmen; die Wirkung im eigenen Store ist nicht gemessen.",
       "skizze": "Neu ausgearbeitet (in der Skizze nicht enthalten).",
@@ -1823,7 +1823,7 @@
         "regalzonen": true
       },
       "regalbild": "M4",
-      "notizen": "Das Regalbild der Pasta-Night-Gondel: Jeder Boden eine Warengruppe, oben die Hauptzutat. Senkrecht drei Blöcke wie auf der Tafel – günstig links, schnell in der Mitte, besonders rechts. Das ist ein Kreuzblock: Artikelgruppen waagerecht, darin die Marken nebeneinander. Die Regalzonen sind eingeblendet."
+      "notizen": "Das Regalbild der Pasta-Night-Gondel: Jeder Boden eine Warengruppe, oben die Hauptzutat. Senkrecht drei Blöcke wie auf der Tafel – besonders links, schnell in der Mitte, günstig rechts. Das ist ein Kreuzblock: Artikelgruppen waagerecht, darin die Marken nebeneinander. Die Regalzonen sind eingeblendet."
     },
     {
       "nr": 7,

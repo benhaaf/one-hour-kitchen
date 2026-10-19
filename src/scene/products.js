@@ -894,7 +894,7 @@ export class Products {
         s1 += slot;
       });
     };
-    // Anlass-Blöcke nebeneinander (aus Kundensicht: günstig links, besonders rechts), Sorten je Block auf die Böden verteilt
+    // Anlass-Blöcke nebeneinander (Reihenfolge günstig → besonders; die Gondel dreht sie so, dass aus Kundensicht „besonders“ links steht), Sorten je Block auf die Böden verteilt
     if (reverse) plan.blocks = plan.blocks.slice().reverse();
     let a = from;
     for (const bl of plan.blocks) {

@@ -455,7 +455,8 @@ bus.on('aussen', () => {
     hud.toast('Außenansicht von der anderen Straßenseite – über die Straße und durch die Tür geht es hinein (U: zurück)', 2800);
   } else {
     const st = layout.start;
-    Object.assign(player, insidePos || { x: st.position[0], z: st.position[1], yaw: ((st.blickrichtung_grad || 0) * Math.PI) / 180, pitch: 0 });
+    const ip = st.innen || st.position;
+    Object.assign(player, insidePos || { x: ip[0], z: ip[1], yaw: ((st.blickrichtung_grad || 0) * Math.PI) / 180, pitch: 0 });
     insidePos = null;
   }
   player.apply();

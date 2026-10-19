@@ -3768,11 +3768,15 @@
   },
   "start": {
     "position": [
+      6.6,
+      -3.7
+    ],
+    "blickrichtung_grad": -12,
+    "_blickrichtung": "0 = Blick in den Laden (Richtung Rückwand), 90 = nach rechts. Start draußen auf dem Gehweg vor dem Eingang.",
+    "innen": [
       7.1,
       0.6
-    ],
-    "blickrichtung_grad": 0,
-    "_blickrichtung": "0 = Blick in den Laden (Richtung Rückwand), 90 = nach rechts"
+    ]
   },
   "deckenhaenger": [
     {

@@ -116,34 +116,46 @@ export class Simulation {
 
   update(dt, followCamera) {
     if (!this.active) return;
-    const speed = this.cfg.tempo || 1.1;
+    const speed = this.current?.tempo || this.cfg.tempo || 1.1;
     let moving = 0;
-    if (this.wait > 0) {
-      this.wait -= dt;
-      const pt = this.pts[this.i];
-      if (pt.blick) this.turnTowards(Simulation.yawOf(pt.blick[0] - this.pos.x, pt.blick[1] - this.pos.y), dt);
-      if (this.auto && this.wait <= 0 && this.done) {
+    // Restzeit wird weitergereicht (Ankunft mitten im Frame, Ende einer Pause), damit die Gesamtdauer exakt bleibt
+    let time = dt;
+    let guard = 0;
+    while (time > 1e-9 && guard++ < 50) {
+      if (this.wait > 0) {
+        const pt = this.pts[this.i];
+        if (pt.blick) this.turnTowards(Simulation.yawOf(pt.blick[0] - this.pos.x, pt.blick[1] - this.pos.y), dt);
+        if (this.wait === Infinity) break;
+        const use = Math.min(time, this.wait);
+        this.wait -= use;
+        time -= use;
+        if (this.wait > 1e-9) break;
+        this.wait = 0;
+        if (this.auto && this.done) {
+          this.onEnd();
+          return;
+        }
+      } else if (this.done) {
         this.onEnd();
         return;
-      }
-    } else if (this.done) {
-      if (this.auto || this.wait === 0) this.onEnd();
-      return;
-    } else {
-      const [tx, tz] = this.pts[this.i + 1].p;
-      const dx = tx - this.pos.x;
-      const dz = tz - this.pos.y;
-      const dist = Math.hypot(dx, dz);
-      const step = speed * dt;
-      this.turnTowards(Simulation.yawOf(dx, dz), dt, 8);
-      moving = 1;
-      if (dist <= step) {
-        this.pos.set(tx, tz);
-        this.i++;
-        this.arrive();
       } else {
-        this.pos.x += (dx / dist) * step;
-        this.pos.y += (dz / dist) * step;
+        const [tx, tz] = this.pts[this.i + 1].p;
+        const dx = tx - this.pos.x;
+        const dz = tz - this.pos.y;
+        const dist = Math.hypot(dx, dz);
+        const step = speed * time;
+        this.turnTowards(Simulation.yawOf(dx, dz), dt, 8);
+        moving = 1;
+        if (dist <= step) {
+          this.pos.set(tx, tz);
+          time -= dist / speed;
+          this.i++;
+          this.arrive();
+        } else {
+          this.pos.x += (dx / dist) * step;
+          this.pos.y += (dz / dist) * step;
+          time = 0;
+        }
       }
     }
     this.walker.animate(dt, moving);

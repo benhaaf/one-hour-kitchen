@@ -1782,16 +1782,16 @@
           8.2
         ]
       },
-      "entscheidung": "Drei querstehende Gondeln, jede gehört zu einer Kochwelt der Anzeigetafel – in derselben Reihenfolge: Gondel 1 Pasta Night (Pasta & Risotto | Sugo, Pesto & Tomaten), Gondel 2 Asian Night (Nudeln, Reis & Naan | Saucen, Currys & Würzen), Gondel 3 Mexican Night (Tortillas, Kits & Chips | Bohnen, Salsa & Gewürze). Am Regalkopf zum Hauptgang: Küchenhelfer aus der Showküche (Pfanne, Reibe, Pfeffermühle …). Keine Aktionsschilder, nur Bio- und Regional-Kennzeichnung.",
-      "begruendung": "Die Gondeln wiederholen die Spalten der Tafel: Wer „Asian Night“ gewählt hat, geht zur zweiten Gondel und findet dort alle haltbaren Zutaten. Das verbindet Dashboard und Regal zu einer einfachen Orientierung (Cognitive Map). Anders als beim Kochhaus gibt es keine Regale je Rezept, sondern nur drei grobe Welten – innen klassisch nach Warengruppen. Der Regalkopf ist die stärkste Zweitplatzierung: Non-Food aus der Showküche bringt mehr Marge als Lebensmittel und verbindet Küche und Verkaufsraum.",
+      "entscheidung": "Drei querstehende Gondeln, jede gehört zu einer Kochwelt der Anzeigetafel – in derselben Reihenfolge: Gondel 1 Pasta Night (Pasta & Risotto | Sugo, Pesto & Tomaten), Gondel 2 Asian Night (Nudeln, Reis & Naan | Saucen, Currys & Würzen), Gondel 3 Mexican Night (Tortillas, Kits & Chips | Bohnen, Salsa & Gewürze). An beiden Gondelköpfen (zum Hauptgang und zum Rundlauf): Küchenhelfer aus der Showküche (Pfanne, Reibe, Pfeffermühle …). Keine Aktionsschilder, nur Bio- und Regional-Kennzeichnung.",
+      "begruendung": "Die Gondeln wiederholen die Spalten der Tafel: Wer „Asian Night“ gewählt hat, geht zur zweiten Gondel und findet dort alle haltbaren Zutaten. Das verbindet Dashboard und Regal zu einer einfachen Orientierung (Cognitive Map). Anders als beim Kochhaus gibt es keine Regale je Rezept, sondern nur drei grobe Welten – innen klassisch nach Warengruppen. Die Gondelköpfe sind die stärkste Zweitplatzierung – deshalb an beiden Seiten bestückt: Non-Food aus der Showküche bringt mehr Marge als Lebensmittel und verbindet Küche und Verkaufsraum.",
       "quelle": "Ahlert/Kenning/Brock 2020, S. 300–301, Abb. 10.3 (Querplatzierung) ✓; S. 302–303 (Platzierung, Blockbildung) ✓; Scheuch 2001, der markt 40(2–3) (Cognitive Maps) ◐; Larson/Bradlow/Fader 2005, IJRM 22(4) (Laufwege, Gänge) ◐",
-      "annahme": "Höhere Marge bei Non-Food ist eine Branchenannahme; Zusatzkäufe am Regalkopf sind nicht gemessen.",
-      "skizze": "Skizze: drei Gondeln mit ca. 0,7 m Abstand. Neu: 1,4–1,5 m Gänge, Reihenfolge der Gondeln = Spalten der Tafel, Küchenhelfer am Regalkopf.",
+      "annahme": "Höhere Marge bei Non-Food ist eine Branchenannahme; Zusatzkäufe an den Gondelköpfen sind nicht gemessen.",
+      "skizze": "Skizze: drei Gondeln mit ca. 0,7 m Abstand. Neu: 1,4–1,5 m Gänge, Reihenfolge der Gondeln = Spalten der Tafel, Küchenhelfer an beiden Gondelköpfen.",
       "ebenen": {
         "zonen": true,
         "wege": false
       },
-      "notizen": "Die drei Gondeln folgen den Kochwelten der Tafel: erste Gondel Pasta Night, zweite Asian Night, dritte Mexican Night – jeweils beide Seiten. Wer am Dashboard eine Welt wählt, weiß sofort, in welchen Gang er muss. Am Kopf jeder Gondel zum Hauptgang stehen die Küchenhelfer, mit denen unser Koch gerade kocht: Pfanne, Reibe, Pfeffermühle. Das bringt Marge und verbindet die Showküche mit dem Verkaufsraum."
+      "notizen": "Die drei Gondeln folgen den Kochwelten der Tafel: erste Gondel Pasta Night, zweite Asian Night, dritte Mexican Night – jeweils beide Seiten. Wer am Dashboard eine Welt wählt, weiß sofort, in welchen Gang er muss. An beiden Köpfen jeder Gondel – zum Hauptgang und zum Rundlauf – stehen die Küchenhelfer, mit denen unser Koch gerade kocht: Pfanne, Reibe, Pfeffermühle. Das bringt Marge und verbindet die Showküche mit dem Verkaufsraum."
     },
     {
       "nr": 6,
@@ -2662,7 +2662,7 @@
           },
           {
             "titel": "Entdecken",
-            "text": "Vorspeisen am Eingang, Kreuzblock im Gang, Küchenhelfer am Regalkopf"
+            "text": "Vorspeisen am Eingang, Kreuzblock im Gang, Küchenhelfer an beiden Gondelköpfen"
           },
           {
             "titel": "Verführen",
@@ -2888,7 +2888,7 @@
               ],
               [
                 "Händler",
-                "Verbundkäufe in der Welt, Küchenhelfer am Regalkopf"
+                "Verbundkäufe in der Welt, Küchenhelfer an beiden Gondelköpfen"
               ],
               [
                 "Bei uns",
@@ -2939,7 +2939,7 @@
             8.2
           ]
         },
-        "notizen": "Kundenperspektive: kaufrelevant oder nicht; Händlerperspektive: kaufwahrscheinlich oder nicht. Die Kochwelt-Gondeln im Rundlauf schaffen neue Kaufrelevanz – alles für die gewählte Küche steht in einem Gang, am Regalkopf stehen die Küchenhelfer aus der Showküche. Das Basissortiment längs bedient die bestehende Kaufrelevanz."
+        "notizen": "Kundenperspektive: kaufrelevant oder nicht; Händlerperspektive: kaufwahrscheinlich oder nicht. Die Kochwelt-Gondeln im Rundlauf schaffen neue Kaufrelevanz – alles für die gewählte Küche steht in einem Gang, an beiden Gondelköpfen stehen die Küchenhelfer aus der Showküche. Das Basissortiment längs bedient die bestehende Kaufrelevanz."
       },
       "matrix": {
         "typ": "folie",
@@ -3067,7 +3067,7 @@
               "mehr Eintritte nicht belegt"
             ],
             [
-              "Küchenhelfer am Regalkopf",
+              "Küchenhelfer an beiden Gondelköpfen",
               "Non-Food aus der Showküche, Zweitplatzierung",
               "Mehrumsatz nicht belegt"
             ]
@@ -3440,7 +3440,7 @@
               0.9
             ],
             "text": "Kommt nach der Vorlesung rein – der Blick fällt sofort auf die Showküche, links stehen die Rollkörbe",
-            "dauer": 2.4,
+            "dauer": 1.7,
             "blick": [
               9.7,
               5.4
@@ -3452,7 +3452,7 @@
               1.4
             ],
             "text": "Nimmt einen Rollkorb: kein Wagen nötig, der Korb rollt durch die 1,4–1,5 m breiten Gänge",
-            "dauer": 2.2,
+            "dauer": 1.56,
             "blick": [
               5.55,
               0.5
@@ -3464,7 +3464,7 @@
               2.2
             ],
             "text": "Matrix-Dashboard: „Asian Night“ × „günstig“ → Rezept #06 Gemüse-Fried-Rice. Sie zieht die Karte – oder scannt den QR-Code fürs Handy.",
-            "dauer": 3.5,
+            "dauer": 2.48,
             "blick": [
               6.5,
               3.2
@@ -3482,7 +3482,7 @@
               1.08
             ],
             "text": "Obst & Gemüse (O1): Lauchzwiebeln – der schräge Stand lenkt nach links",
-            "dauer": 2.5,
+            "dauer": 1.77,
             "blick": [
               2.9,
               2.8
@@ -3500,7 +3500,7 @@
               2.65
             ],
             "text": "Vorspeisen-Regal (V2): geröstete Edamame als Vorspeise – passt zur Asian Night",
-            "dauer": 2.6,
+            "dauer": 1.84,
             "blick": [
               0.3,
               2.65
@@ -3508,7 +3508,7 @@
           },
           {
             "p": [
-              1.0,
+              0.8,
               6.3
             ]
           },
@@ -3518,7 +3518,7 @@
               6.3
             ],
             "text": "Gondel 2 · Asian Night (T3): Jasmin-Reis – die Hauptzutat steht auf Augenhöhe",
-            "dauer": 3,
+            "dauer": 2.12,
             "blick": [
               2.8,
               7.05
@@ -3526,13 +3526,13 @@
           },
           {
             "p": [
-              1.0,
+              0.8,
               6.3
             ]
           },
           {
             "p": [
-              1.0,
+              0.8,
               8.35
             ]
           },
@@ -3542,7 +3542,7 @@
               8.35
             ],
             "text": "Gegenüber (T4): Sojasauce – beide Seiten der Gondel gehören zur Asian Night",
-            "dauer": 2.6,
+            "dauer": 1.84,
             "blick": [
               2.4,
               7.6
@@ -3550,13 +3550,13 @@
           },
           {
             "p": [
-              1.0,
+              0.8,
               8.35
             ]
           },
           {
             "p": [
-              1.0,
+              0.8,
               10.35
             ]
           },
@@ -3566,7 +3566,7 @@
               10.35
             ],
             "text": "Kühlung: Eier aus K1 – laut Karte der einzige Kühlartikel",
-            "dauer": 2.5,
+            "dauer": 1.77,
             "blick": [
               1.5,
               11.6
@@ -3578,7 +3578,7 @@
               10.35
             ],
             "text": "Dessert & TK: TK-Gemüse aus D3 – das Eis daneben lacht sie an (Licensing)",
-            "dauer": 2.8,
+            "dauer": 1.98,
             "blick": [
               8.6,
               11.6
@@ -3614,7 +3614,7 @@
               2.0
             ],
             "text": "SB-Kasse: 5 Artikel, keine Schlange – Einkauf in gut 10 Minuten",
-            "dauer": 2.5,
+            "dauer": 1.77,
             "blick": [
               15.0,
               2.0
@@ -3638,9 +3638,10 @@
               -3.0
             ],
             "text": "Verlässt den Laden durch den Ausgang – Rezeptweg komplett",
-            "dauer": 2
+            "dauer": 1.4
           }
-        ]
+        ],
+        "tempo": 1.5
       }
     ]
   },

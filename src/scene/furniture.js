@@ -652,60 +652,63 @@ const HELFER = {
 function priceTag(ctx, text, x, y, z, dir) {
   sign(ctx.extra, text, { w: 0.09, h: 0.04, bg: '#fbf8f2', fg: '#1f2120', font: '700' }, x, y, z, dir);
 }
-function kuechenhelfer(b, ctx, welt, x2, z1, z2, H) {
-  const X = x2 + 0.005;
+function kuechenhelfer(b, ctx, welt, x2, z1, z2, H, s = 1) {
+  // s = +1: Kopf an der +x-Stirnseite, s = −1: gespiegelt an der −x-Stirnseite
+  const ox = (d) => x2 + s * d;
+  const xr = (a, c) => [Math.min(a, c), Math.max(a, c)];
+  const X0 = 0.005;
   const D = 0.19;
   const zc = (z1 + z2) / 2;
   const L = z2 - z1 - 0.08;
-  const dir = [1, 0];
+  const dir = [s, 0];
   const items = HELFER[welt] || HELFER['Pasta Night'];
   if (!b.materials.bambus) b.materials.bambus = std(0xc9a46a, 0.75);
   if (!b.materials.guss) b.materials.guss = std(0x1c1c1e, 0.55, 0.35);
   // Rahmen: Sockel, Rückwand als Lochblech, zwei Eichenböden mit Messingkante
-  b.box('schwarzMatt', [x2 - 0.03, X + D, z1, z2], 0, 0.1);
-  b.box('anthrazit', [X, X + 0.012, z1 + 0.03, z2 - 0.03], 0.1, H - 0.03);
+  b.box('schwarzMatt', [...xr(ox(-0.03), ox(X0 + D)), z1, z2], 0, 0.1);
+  b.box('anthrazit', [...xr(ox(X0), ox(X0 + 0.012)), z1 + 0.03, z2 - 0.03], 0.1, H - 0.03);
   for (const y of [0.46, 0.9]) {
-    b.box('eiche', [X, X + D, z1 + 0.03, z2 - 0.03], y - 0.03, y);
-    b.box('messing', [X + D - 0.004, X + D, z1 + 0.03, z2 - 0.03], y - 0.03, y - 0.01);
+    b.box('eiche', [...xr(ox(X0), ox(X0 + D)), z1 + 0.03, z2 - 0.03], y - 0.03, y);
+    b.box('messing', [...xr(ox(X0 + D - 0.004), ox(X0 + D)), z1 + 0.03, z2 - 0.03], y - 0.03, y - 0.01);
   }
   // Lochblech-Punkte (dezent)
   const hole = new THREE.CircleGeometry(0.0045, 6);
-  for (let y = 1.0; y < H - 0.1; y += 0.06) for (let z = z1 + 0.07; z < z2 - 0.05; z += 0.06) b.geo('schwarz', hole, X + 0.0125, y, z, Math.PI / 2);
-  const front = X + D;
+  for (let y = 1.0; y < H - 0.1; y += 0.06) for (let z = z1 + 0.07; z < z2 - 0.05; z += 0.06) b.geo('schwarz', hole, ox(X0 + 0.0125), y, z, s * Math.PI / 2);
+  const front = ox(X0 + D);
   const zl = zc - L / 4;
   const zr = zc + L / 4;
   // unten: verpackte Ware im Karton mit Aufdruck
   for (const [k, z] of [[3, zl], [2, zr]]) {
-    b.box(k === 3 ? 'weiss' : 'anthrazit', [X + 0.02, front - 0.01, z - L / 4 + 0.015, z + L / 4 - 0.015], 0.1, 0.34);
+    b.box(k === 3 ? 'weiss' : 'anthrazit', [...xr(ox(X0 + 0.02), ox(X0 + D - 0.01)), z - L / 4 + 0.015, z + L / 4 - 0.015], 0.1, 0.34);
     const [n, pr] = items[k];
-    sign(ctx.extra, n, { w: L / 2 - 0.05, h: 0.12, bg: k === 3 ? '#f3efe7' : '#2b2c30', fg: k === 3 ? '#2b2c30' : '#efe7d6', font: '600', sub: 'aus der Showküche' }, front - 0.009, 0.24, z, dir);
-    priceTag(ctx, pr, front + 0.002, 0.37, z - L / 4 + 0.07, dir);
+    sign(ctx.extra, n, { w: L / 2 - 0.05, h: 0.12, bg: k === 3 ? '#f3efe7' : '#2b2c30', fg: k === 3 ? '#2b2c30' : '#efe7d6', font: '600', sub: 'aus der Showküche' }, front - s * 0.009, 0.24, z, dir);
+    priceTag(ctx, pr, front + s * 0.002, 0.37, z - L / 4 + 0.07, dir);
   }
   // Boden 1 (0,46): große Geräte; Boden 2 (0,9): Kleingeräte; Lochblech: hängende Pfanne/Utensilien
   const y1 = 0.46;
   const y2 = 0.9;
-  const xm = X + D / 2 + 0.01;
+  const xm = ox(X0 + D / 2 + 0.01);
   if (welt === 'Asian Night') {
     b.geo('guss', new THREE.CylinderGeometry(0.15, 0.06, 0.09, 28, 1, true), xm, y1 + 0.05, zl);
     b.geo('holz', G.box(0.02, 0.02, 0.16), xm, y1 + 0.08, zl - 0.2);
     for (let i = 0; i < 2; i++) b.geo('bambus', G.disc(0.085, 0.055, 24), xm, y2 + 0.03 + i * 0.058, zl);
     b.geo('bambus', G.disc(0.088, 0.012, 24), xm, y2 + 0.122, zl);
-    for (let i = 0; i < 4; i++) b.geo('schwarz', G.box(0.012, 0.012, 0.22), xm - 0.04 + i * 0.025, y2 + 0.01, zr, 0.05 * i);
-    b.geo('edelstahl', G.box(0.004, 0.09, 0.18), X + 0.02, 1.38, zr);
-    b.geo('holzDunkel', G.box(0.02, 0.03, 0.11), X + 0.02, 1.38, zr + 0.14);
-    b.geo('guss', new THREE.CylinderGeometry(0.11, 0.04, 0.06, 24, 1, true), X + 0.05, 1.42, zl, 0, 0, Math.PI / 2);
+    for (let i = 0; i < 4; i++) b.geo('schwarz', G.box(0.012, 0.012, 0.22), xm + s * (-0.04 + i * 0.025), y2 + 0.01, zr, 0.05 * i);
+    b.geo('edelstahl', G.box(0.004, 0.09, 0.18), ox(X0 + 0.02), 1.38, zr);
+    b.geo('holzDunkel', G.box(0.02, 0.03, 0.11), ox(X0 + 0.02), 1.38, zr + 0.14);
+    b.geo('guss', new THREE.CylinderGeometry(0.11, 0.04, 0.06, 24, 1, true), ox(X0 + 0.05), 1.42, zl, 0, 0, Math.PI / 2);
   } else if (welt === 'Mexican Night') {
     b.geo('stein', new THREE.CylinderGeometry(0.1, 0.075, 0.08, 20), xm, y1 + 0.07, zl);
-    for (const a of [0, 2.1, 4.2]) b.geo('stein', G.disc(0.015, 0.04, 8), xm + Math.cos(a) * 0.05, y1 + 0.02, zl + Math.sin(a) * 0.05);
-    b.geo('stein', G.disc(0.022, 0.12, 10), xm + 0.02, y1 + 0.14, zl + 0.03, 0, 0.5);
+    for (const a of [0, 2.1, 4.2]) b.geo('stein', G.disc(0.015, 0.04, 8), xm + s * Math.cos(a) * 0.05, y1 + 0.02, zl + Math.sin(a) * 0.05);
+    b.geo('stein', G.disc(0.022, 0.12, 10), xm + s * 0.02, y1 + 0.14, zl + 0.03, 0, 0.5);
     for (let i = 0; i < 3; i++) b.geo('guss', G.disc(0.12, 0.03, 28), xm, y1 + 0.016 + i * 0.032, zr);
     b.geo('guss', G.disc(0.09, 0.025, 24), xm, y2 + 0.015, zl);
     b.geo('guss', G.disc(0.09, 0.025, 24), xm, y2 + 0.05, zl);
-    b.geo('guss', G.box(0.03, 0.02, 0.2), xm, y2 + 0.075, zl + 0.08, 0, 0.25);
+    b.geo('guss', G.box(0.03, 0.02, 0.2), xm, y2 + 0.075, zl + 0.08, 0, s * 0.25);
     b.geo('gelb', G.box(0.05, 0.03, 0.17), xm, y2 + 0.02, zr, 0.4);
-    b.geo('guss', G.disc(0.13, 0.025, 28), X + 0.03, 1.45, zl + 0.05, 0, 0, Math.PI / 2);
-    b.geo('guss', G.box(0.02, 0.2, 0.03), X + 0.03, 1.22, zl + 0.05);
-    b.geo('holz', G.box(0.02, 0.26, 0.05), X + 0.02, 1.4, zr + 0.06);
+    b.geo('guss', G.disc(0.13, 0.025, 28), ox(X0 + 0.03), 1.45, zl + 0.05, 0, 0, Math.PI / 2);
+    b.geo('guss', G.box(0.02, 0.2, 0.03), ox(X0 + 0.03), 1.22, zl + 0.05);
+    b.geo('holz', G.box(0.02, 0.26, 0.05), ox(X0 + 0.02), 1.4, zr + 0.06);
   } else {
     b.geo('edelstahl', G.disc(0.1, 0.17, 28), xm, y1 + 0.085, zl);
     b.geo('edelstahl', G.disc(0.104, 0.012, 28), xm, y1 + 0.176, zl);
@@ -717,17 +720,17 @@ function kuechenhelfer(b, ctx, welt, x2, z1, z2, H) {
       b.geo(i === 1 ? 'holzDunkel' : 'eiche', new THREE.CylinderGeometry(0.026, 0.03, 0.2, 16), xm, y2 + 0.1, z);
       b.geo('messing', G.disc(0.012, 0.03, 10), xm, y2 + 0.215, z);
     }
-    b.geo('edelstahl', G.disc(0.13, 0.02, 28), X + 0.03, 1.45, zl + 0.05, 0, 0, Math.PI / 2);
-    b.geo('schwarz', G.box(0.02, 0.2, 0.03), X + 0.03, 1.22, zl + 0.05);
-    b.geo('edelstahl', G.box(0.012, 0.3, 0.025), X + 0.02, 1.4, zr + 0.08);
-    b.geo('edelstahl', G.disc(0.035, 0.015, 14), X + 0.025, 1.24, zr + 0.08, 0, 0, Math.PI / 2);
+    b.geo('edelstahl', G.disc(0.13, 0.02, 28), ox(X0 + 0.03), 1.45, zl + 0.05, 0, 0, Math.PI / 2);
+    b.geo('schwarz', G.box(0.02, 0.2, 0.03), ox(X0 + 0.03), 1.22, zl + 0.05);
+    b.geo('edelstahl', G.box(0.012, 0.3, 0.025), ox(X0 + 0.02), 1.4, zr + 0.08);
+    b.geo('edelstahl', G.disc(0.035, 0.015, 14), ox(X0 + 0.025), 1.24, zr + 0.08, 0, 0, Math.PI / 2);
   }
-  priceTag(ctx, items[2][1], front + 0.002, y1 - 0.03, zl - 0.12, dir);
-  priceTag(ctx, items[1][1], front + 0.002, y1 - 0.03, zr + 0.06, dir);
-  priceTag(ctx, items[0][1], front + 0.002, y2 - 0.03, zc - 0.03, dir);
-  sign(ctx.extra, 'Aus unserer Showküche', { w: 0.5, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: `${items[0][0]} · ${items[2][0]} – damit kocht unser Koch` }, X + 0.04, H + 0.2, zc, dir);
-  b.box('schwarzMatt', [x2 - 0.02, x2 + 0.03, zc - 0.02, zc + 0.02], H, H + 0.3);
-  sign(ctx.extra, welt, { w: L, h: 0.09, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: WELT_FARBE[welt] }, X + 0.014, H - 0.1, zc, dir);
+  priceTag(ctx, items[2][1], front + s * 0.002, y1 - 0.03, zl - 0.12, dir);
+  priceTag(ctx, items[1][1], front + s * 0.002, y1 - 0.03, zr + 0.06, dir);
+  priceTag(ctx, items[0][1], front + s * 0.002, y2 - 0.03, zc - 0.03, dir);
+  sign(ctx.extra, 'Aus unserer Showküche', { w: 0.5, h: 0.2, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, sub: `${items[0][0]} · ${items[2][0]} – damit kocht unser Koch` }, ox(X0 + 0.04), H + 0.2, zc, dir);
+  b.box('schwarzMatt', [...xr(ox(-0.02), ox(0.03)), zc - 0.02, zc + 0.02], H, H + 0.3);
+  sign(ctx.extra, welt, { w: L, h: 0.09, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, accent: WELT_FARBE[welt] }, ox(X0 + 0.014), H - 0.1, zc, dir);
 }
 
 // ---------- Möbeltypen ----------
@@ -1024,13 +1027,12 @@ const BUILDERS = {
         }
       }
     }
-    // Stirnseite zum Rundlauf (−x): Kochwelt mit beiden Warengruppen
-    b.box('eicheDunkel', [x1 - 0.012, x1, z1 + 0.02, z2 - 0.02], 0.1, H - 0.03);
-    const titles = ['vorne', 'hinten'].map((sd) => m.regal?.[sd]).filter((t) => t && t.code);
-    sign(ctx.extra, welt, { w: 0.5, h: 0.24, bg: '#25282a', fg: '#efe7d6', font: '400', serif: true, brass: true, accent: wfarbe, sub: titles.map((t) => t.code).join(' · ') }, x1 - 0.016, 1.45, zc, [-1, 0]);
-    // Regalkopf zum Hauptgang (+x): Küchenhelfer aus der Showküche (Non-Food, Zweitplatzierung)
-    kuechenhelfer(b, ctx, welt, x2, z1, z2, H);
+    // Gondelköpfe an beiden Stirnseiten: Küchenhelfer aus der Showküche (Non-Food, Zweitplatzierung)
+    // +x zum Hauptgang, −x zum Rundlauf an der Außenwand
+    kuechenhelfer(b, ctx, welt, x2, z1, z2, H, 1);
+    kuechenhelfer(b, ctx, welt, x1, z1, z2, H, -1);
     ctx.colliders.push([x2, x2 + 0.2, z1, z2]);
+    ctx.colliders.push([x1 - 0.2, x1, z1, z2]);
   },
 
   kuehlregal(b, m, ctx) {

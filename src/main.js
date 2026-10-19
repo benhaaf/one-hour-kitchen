@@ -420,6 +420,8 @@ function startSimulation() {
   if (exportDialog.visible) exportDialog.hide();
   simSaved = { x: player.x, z: player.z, yaw: player.yaw, pitch: player.pitch };
   const k = sim.start();
+  // Während einer Aufnahme läuft der Rundgang automatisch durch (Lena: genau 60 s)
+  if (recorder.active) sim.setAuto(true);
   syncSimMode();
   document.body.classList.add('simulating');
   touch.setActive('simulation', true);
